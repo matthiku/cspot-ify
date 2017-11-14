@@ -12,6 +12,7 @@
         <v-list-tile
           v-for="(item, i) in menuItems"
           :key="i"
+          :to="{ name: item.link }"
           value="true"
           v-if="(item.auth=='user' && user.id) || (!user.id && !item.auth) || (item.auth=='admin' && user.isAdmin)"
         >
@@ -26,23 +27,25 @@
     </v-navigation-drawer>
 
 
-    <v-toolbar fixed app :clipped-left="clipped" class="primary">
+    <v-toolbar fixed app :clipped-left="clipped" class="white--text primary">
 
       <v-toolbar-side-icon 
         @click.stop="drawer = !drawer"
         :class="[ user.isAdmin ? '' : 'hidden-sm-and-up' ]"
       ></v-toolbar-side-icon>
 
-      <v-btn icon>
-        <router-link to="/"><img src="/static/cspoticon36.png" alt="c-SPOT icon" width="30px"></router-link>
+      <v-btn icon :to="{ name: 'home' }">
+        <img src="/static/cspoticon36.png" alt="c-SPOT icon" width="30px">
       </v-btn>
 
       <v-toolbar-title v-text="title"></v-toolbar-title>      
 
       <v-toolbar-items class="hidden-xs-only">        
         <v-btn flat
+          class="white--text"
           v-for="(item, i) in menuItems"
           :key="i"
+          :to="{ name: item.link}"
           v-if="(item.auth=='user' && user.id) || (!user.id && !item.auth) || (item.auth=='admin' && user.isAdmin)"
         ><v-icon>{{ item.icon }}</v-icon>{{ item.title }}</v-btn>
       </v-toolbar-items>
@@ -95,51 +98,51 @@
       return {
         title: 'c-SPOT',
         user: {
-          id: 123,
-          isAdmin: false
+          id: 1234,
+          isAdmin: true
         },
+        rightDrawer: false,
         clipped: true,
         drawer: true,
+        right: true,
         menuItems: [
           {
             icon: 'bubble_chart',
             title: 'Administration',
-            component: 'admin',
+            link: 'admin',
             auth: 'admin'
           },
           {
             icon: 'group',
             title: 'User List',
-            component: 'userlist',
+            link: 'users',
             auth: 'admin'
           },
           {
             icon: 'change_history',
             title: 'Next Sunday',
-            component: 'nextplan',
+            link: 'nextplan',
             auth: 'user'
           },
           {
             icon: 'perm_identity',
             title: 'Profile',
-            component: 'profile',
+            link: 'profile',
             auth: 'user'
           },
           {
             icon: 'face',
             title: 'Sign in',
-            component: 'signin',
+            link: 'signin',
             auth: false
           },
           {
             icon: 'lock_open',
             title: 'Sign up',
-            component: 'signup',
+            link: 'signup',
             auth: false
           }
-        ],
-        right: true,
-        rightDrawer: false
+        ]
       }
     }
   }
