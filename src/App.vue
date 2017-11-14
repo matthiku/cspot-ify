@@ -10,9 +10,10 @@
     >
       <v-list>
         <v-list-tile
-          v-for="(item, i) in items"
-          value="true"
+          v-for="(item, i) in menuItems"
           :key="i"
+          value="true"
+          v-if="(item.auth=='user' && user.id) || (!user.id && !item.auth) || (item.auth=='admin' && user.isAdmin)"
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
@@ -24,18 +25,34 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-toolbar fixed app :clipped-left="clipped">
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+
+    <v-toolbar fixed app :clipped-left="clipped" class="primary">
+
+      <v-toolbar-side-icon 
+        @click.stop="drawer = !drawer"
+        :class="[ user.isAdmin ? '' : 'hidden-sm-and-up' ]"
+      ></v-toolbar-side-icon>
+
       <v-btn icon>
-        <img src="/static/cspoticon36.png" alt="c-SPOT icon" width="20px">
+        <router-link to="/"><img src="/static/cspoticon36.png" alt="c-SPOT icon" width="30px"></router-link>
       </v-btn>
-      <v-btn flat>Next Sunday</v-btn>
 
-      <v-spacer></v-spacer>
       <v-toolbar-title v-text="title"></v-toolbar-title>      
+
+      <v-toolbar-items class="hidden-xs-only">        
+        <v-btn flat
+          v-for="(item, i) in menuItems"
+          :key="i"
+          v-if="(item.auth=='user' && user.id) || (!user.id && !item.auth) || (item.auth=='admin' && user.isAdmin)"
+        ><v-icon>{{ item.icon }}</v-icon>{{ item.title }}</v-btn>
+      </v-toolbar-items>
+
       <v-spacer></v-spacer>
 
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
+      <v-btn icon 
+        @click.stop="rightDrawer = !rightDrawer"
+        class="hidden-sm-and-up"
+        >
         <v-icon>menu</v-icon>
       </v-btn>
     </v-toolbar>
@@ -43,23 +60,7 @@
 
     <main>
       <v-content>
-        <v-container fluid>
-          <v-slide-y-transition mode="out-in">
-
-            <v-layout column align-center>
-              <img src="/static/cspoticon.png" alt="c-SPOT icon" class="mb-5">
-              <blockquote>
-                &#8220;Leave the presence of a fool, for there you do not meet words of knowledge.&#8221;
-                <footer>
-                  <small>
-                    <em>&mdash;King Solomon</em>
-                  </small>
-                </footer>
-              </blockquote>
-            </v-layout>
-
-          </v-slide-y-transition>
-        </v-container>
+        <router-view></router-view>
       </v-content>
     </main>
 
@@ -68,6 +69,7 @@
       temporary
       :right="right"
       v-model="rightDrawer"
+      class="hidden-sm-and-up"
       app
     >
       <v-list>
@@ -91,21 +93,53 @@
   export default {
     data () {
       return {
+        title: 'c-SPOT',
+        user: {
+          id: 123,
+          isAdmin: false
+        },
         clipped: true,
         drawer: true,
-        items: [
+        menuItems: [
           {
             icon: 'bubble_chart',
-            title: 'Administration'
+            title: 'Administration',
+            component: 'admin',
+            auth: 'admin'
           },
           {
             icon: 'group',
-            title: 'User List'
+            title: 'User List',
+            component: 'userlist',
+            auth: 'admin'
+          },
+          {
+            icon: 'change_history',
+            title: 'Next Sunday',
+            component: 'nextplan',
+            auth: 'user'
+          },
+          {
+            icon: 'perm_identity',
+            title: 'Profile',
+            component: 'profile',
+            auth: 'user'
+          },
+          {
+            icon: 'face',
+            title: 'Sign in',
+            component: 'signin',
+            auth: false
+          },
+          {
+            icon: 'lock_open',
+            title: 'Sign up',
+            component: 'signup',
+            auth: false
           }
         ],
         right: true,
-        rightDrawer: false,
-        title: 'c-SPOT'
+        rightDrawer: false
       }
     }
   }
