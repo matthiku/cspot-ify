@@ -33,12 +33,16 @@
                     <v-container fluid>
                       <v-layout row>
 
+                        <v-flex v-if="!plan" xs7 sm8 md9>
+                          No plan found
+                        </v-flex>
+
                         <!-- show title, date and location -->
-                        <v-flex xs7 sm8 md9>
+                        <v-flex v-else xs7 sm8 md9>
                           <v-card-title primary-title class="mb-0 pb-0">
                             <div>                  
                               <h5 class="white--text mb-0">{{ plan.title }}</h5>
-                              <div>{{ plan.date }} in {{ plan.info }}</div>
+                              <div>{{ plan.date }} Details: {{ plan.info }}</div>
                             </div>
                           </v-card-title>
 
@@ -48,7 +52,7 @@
                               :flat="!userOwnsPlan(plan.id)" 
                               :class="userOwnsPlan(plan.id) ? 'info' : ''">
                               <v-icon left>{{ userOwnsPlan(plan.id) ? 'edit' : 'arrow_forward' }}</v-icon>
-                              {{ userOwnsPlan(plan.id) ? 'Edit' : 'View' }} Plan
+                              {{ userOwnsPlan(plan.id) ? 'Edita' : 'View' }} Plan
                             </v-btn>
                           </v-card-actions>
                         </v-flex>
@@ -71,14 +75,18 @@
 
 <script>
 export default {
+  props: ['id'],
   data () {
     return {
-      user: [
-        { id: 1, name: 'Antone Malone' }
-      ],
-      plan:
-        { id: 0, date: new Date(), title: 'Sunday Service', info: 'info' },
       error: { message: 'this is a long winded error message saying nothing at all but tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com filling up some space to test thigns out ' }
+    }
+  },
+  computed: {
+    user () {
+      return this.$store.getters.user
+    },
+    plan () {
+      return this.$store.getters.singlePlan(this.id)
     }
   },
   methods: {

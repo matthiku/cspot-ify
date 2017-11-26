@@ -33,9 +33,10 @@ export default new Router({
       component: Users
     },
     {
-      path: '/admin/users/{id}',
+      path: '/admin/users/:id',
       name: 'user',
-      component: User
+      component: User,
+      props: true
     },
     {
       path: '/items',
@@ -43,9 +44,11 @@ export default new Router({
       component: Items
     },
     {
-      path: '/items/{id}',
+      path: '/items/:id',
       name: 'item',
-      component: Item
+      component: Item,
+      props: true
+
     },
     {
       path: '/createitem',
@@ -63,9 +66,10 @@ export default new Router({
       component: Plans
     },
     {
-      path: '/plans/{id}',
+      path: '/plans/:id',
       name: 'plan',
-      component: Plan
+      component: Plan,
+      props: true
     },
     {
       path: '/nextplan',

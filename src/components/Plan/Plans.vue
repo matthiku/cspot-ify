@@ -34,7 +34,7 @@
                 </v-flex>
 
                 <!-- iterate through each registered plan -->
-                <v-flex xs12 key="plan.id" v-for="plan in plans">
+                <v-flex xs12 :key="plan.id" v-for="plan in plans">
                   <v-card class="primary mb-2">
                     <v-container fluid>
                       <v-layout row>
@@ -77,22 +77,24 @@
 export default {
   data () {
     return {
-      user: [
-        { id: 1, name: 'Antone Malone' }
-      ],
-      plans: [
-        { id: 0, date: new Date(), title: 'Sunday Service', info: 'info' },
-        { id: 1, date: new Date(), title: 'Midweek Service', info: 'info' }
-      ],
-      error: { message: 'this is a long winded error message saying nothing at all but tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com filling up some space to test thigns out ' }
+      error: { message: 'this is a long winded error message saying nothing at all but Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com filling up some space to test thigns out ' }
+    }
+  },
+  computed: {
+    plans () {
+      return this.$store.getters.upcomingPlans
+    },
+    user () {
+      return this.$store.getters.user
     }
   },
   methods: {
     onDismissed () {
       this.error = false
     },
-    showSinglePlan () {
-      return
+    showSinglePlan (planId) {
+      console.log('trying to open plan id: ' + planId)
+      this.$router.push({ name: 'plan', params: {id: planId} })
     },
     userOwnsPlan (id) {
       return true
