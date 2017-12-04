@@ -17,8 +17,26 @@ export const store = new Vuex.Store({
       registeredPlans: {}
     }
   },
-  mutations: {},
-  actions: {},
+
+  // Need to use mutations to change items within the state
+  mutations: {
+    createPlan (state, payload) {
+      state.plans.push(payload)
+    }
+  },
+
+  // Actions are being used to perform async tasks and then call the mutations accordingly
+  actions: {
+    createPlan ({commit}, payload) {
+      console.log(payload)
+      // TODO: reach out to our DB and store it
+      // the database call will get us an id, which we need to add a new plan to the store
+      let plan = Object.assign(payload, {id: 9})
+      commit('createPlan', plan)
+    }
+  },
+
+  // getters give us access to the data within the state (or the items/objects etc)
   getters: {
     plans (state) {
       // return all plans ordered by date
