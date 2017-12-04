@@ -2,9 +2,10 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
 
-      <v-layout column align-center>
-        <img src="/static/cspoticon.png" alt="c-SPOT icon" class="mb-5">
-        <p>Create New Plan</p>
+      <v-layout row>
+        <v-flex xs-12>
+          <h4 class="primary--text">Create New Plan</h4 class="text--primary">
+        </v-flex>
       </v-layout>
 
     </v-slide-y-transition>

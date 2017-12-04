@@ -17,7 +17,7 @@
             </v-toolbar>
 
             <!-- Alert Panel -->
-            <v-container v-if="error">
+            <v-container v-if="error.message">
               <v-layout row>
                 <v-flex xs12>
                   <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
@@ -71,19 +71,27 @@
 
 <script>
 export default {
+  name: 'showSinglePlan',
+  props: ['id'],
+  computed: {
+    plan () {
+      if (this.$route.name === 'nextsunday') {
+        return this.$store.getters.nextSunday
+      }
+      return this.$store.getters.plan(this.$route.params.planId)
+    }
+  },
   data () {
     return {
       user: [
-        { id: 1, name: 'Antone Malone' }
+        { id: 1, name: 'Antonie Malone' }
       ],
-      plan:
-        { id: 0, date: new Date(), title: 'Sunday Service', info: 'info' },
-      error: { message: 'this is a long winded error message saying nothing at all but tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com filling up some space to test thigns out ' }
+      error: { message: '' }
     }
   },
   methods: {
     onDismissed () {
-      this.error = false
+      this.error = ''
     },
     showSinglePlan () {
       return
