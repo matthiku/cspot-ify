@@ -10,6 +10,7 @@
     <v-layout row>
       <v-flex xs12>
         <form @submit.prevent="onCreatePlan">
+
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-text-field 
@@ -20,6 +21,63 @@
                 required></v-text-field>
             </v-flex>
           </v-layout>
+
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-layout row>
+                <v-flex xs11 sm5>
+                  <v-dialog
+                    persistent
+                    v-model="modalDate"
+                    lazy
+                  >
+                    <v-text-field
+                      slot="activator"
+                      label="Pick a date"
+                      v-model="date"
+                      prepend-icon="event"
+                      readonly
+                    ></v-text-field>
+                    <v-date-picker v-model="date" scrollable actions>
+                      <template slot-scope="{ save, cancel }">
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn flat color="primary" @click="cancel">Cancel</v-btn>
+                          <v-btn flat color="primary" @click="save">OK</v-btn>
+                        </v-card-actions>
+                      </template>
+                    </v-date-picker>
+                  </v-dialog>
+                </v-flex>
+                <v-spacer></v-spacer>
+                <v-flex xs11 sm5>
+                  <v-dialog
+                    persistent
+                    v-model="modalTime"
+                    lazy
+                  >
+                    <v-text-field
+                      slot="activator"
+                      label="Pick a time"
+                      v-model="time"                      
+                      prepend-icon="watch"
+                      readonly
+                    ></v-text-field>
+                    <v-time-picker v-model="time" format="24hr" scrollable actions>
+                      <template slot-scope="{ save, cancel }">
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn flat color="primary" @click="cancel">Cancel</v-btn>
+                          <v-btn flat color="primary" @click="save">OK</v-btn>
+                        </v-card-actions>
+                      </template>
+                    </v-time-picker>
+                  </v-dialog>
+                </v-flex>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-text-field 
@@ -31,6 +89,7 @@
                 required></v-text-field>
             </v-flex>
           </v-layout>
+
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-btn type="submit" class="primary":disabled="!formIsValid">Create Plan</v-btn>
@@ -44,39 +103,47 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        date: new Date(),
-        typeId: null,
-        title: '',
-        staff: [{ id: null, role: '' }],
-        info: 'info'
-      }
-    },
+import * as moment from 'moment'
 
-    computed: {
-      formIsValid () {
-        return this.title !== ''
-      }
+export default {
+  data () {
+    return {
+      date: null,
+      typeId: null,
+      title: '',
+      staff: [{ id: null, role: '' }],
+      info: 'info',
+      time: moment().format('HH:MM'),
+      modalDate: false,
+      modalTime: false
+    }
+  },
+
+  computed: {
+    formIsValid () {
+      return this.title !== '' && this.dateTime.isValid()
     },
-    methods: {
-      onCreatePlan () {
-        if (!this.formIsValid) {
-          return
-        }
-        const planData = {
-          date: this.date,
-          typeId: this.typeId,
-          title: this.title,
-          staff: [{ id: null, role: '' }],
-          info: this.info
-        }
-        this.$store.dispatch('createPlan', planData)
-        this.$router.push({name: 'plan', params: {planId: 9}})
+    dateTime () {
+      return moment(this.date + 'T' + this.time)
+    }
+  },
+  methods: {
+    onCreatePlan () {
+      if (!this.formIsValid) {
+        return
       }
+      const planData = {
+        date: this.dateTime.format(),
+        typeId: this.typeId,
+        title: this.title,
+        staff: [{ id: null, role: '' }],
+        info: this.info
+      }
+      this.$store.dispatch('createPlan', planData)
+      this.$router.push({name: 'plan', params: {planId: 9}})
     }
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

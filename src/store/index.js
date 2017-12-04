@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state: {
     plans: [
+      // create 4 dummy events, 2 past ones and 2 future ones
       { id: 0, date: moment().isoWeekday(-2), typeId: 1, title: 'Midweek Service', staff: [{ id: 1, role: 'leader' }], info: 'info' },
       { id: 1, date: moment().isoWeekday(-7), typeId: 0, title: 'Sunday Service', staff: [{ id: 1, role: 'leader' }, { id: 0, role: 'teacher' }], info: 'info' },
       { id: 2, date: moment().isoWeekday(2), typeId: 1, title: 'Midweek Service', staff: [{ id: 1, role: 'leader' }], info: 'info' },

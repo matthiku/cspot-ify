@@ -49,7 +49,7 @@
                           <v-card-title primary-title class="mb-0 pb-0">
                             <div>                  
                               <h5 class="white--text mb-0">{{ plan.title }}</h5>
-                              <div>{{ plan.date }} in {{ plan.info }}</div>
+                              <div>{{ plan.date | date }} in {{ plan.info }}</div>
                             </div>
                           </v-card-title>
 

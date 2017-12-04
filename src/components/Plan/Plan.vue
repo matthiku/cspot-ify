@@ -42,7 +42,7 @@
                           <v-card-title primary-title class="mb-0 pb-0">
                             <div>                  
                               <h5 class="white--text mb-0">{{ plan.title }}</h5>
-                              <div>{{ plan.date }} Details: {{ plan.info }}</div>
+                              <div>{{ plan.date | date }} Details: {{ plan.info }}</div>
                             </div>
                           </v-card-title>
 
@@ -76,8 +76,13 @@
 <script>
 export default {
   name: 'showSinglePlan',
+
   props: ['id'],
+
   computed: {
+    user () {
+      return this.$store.getters.user
+    },
     plan () {
       if (this.$route.name === 'nextsunday') {
         return this.$store.getters.nextSunday
@@ -85,22 +90,13 @@ export default {
       return this.$store.getters.plan(this.$route.params.planId)
     }
   },
+
   data () {
     return {
-      user: [
-        { id: 1, name: 'Antonie Malone' }
-      ],
       error: { message: '' }
     }
   },
-  computed: {
-    user () {
-      return this.$store.getters.user
-    },
-    plan () {
-      return this.$store.getters.singlePlan(this.id)
-    }
-  },
+
   methods: {
     onDismissed () {
       this.error = ''

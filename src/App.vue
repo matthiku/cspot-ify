@@ -131,6 +131,12 @@
             auth: 'user'
           },
           {
+            icon: 'notes',
+            title: 'All Plans',
+            link: 'plans',
+            auth: 'user'
+          },
+          {
             icon: 'perm_identity',
             title: 'Profile',
             link: 'profile',
