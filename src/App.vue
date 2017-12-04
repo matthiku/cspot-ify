@@ -119,9 +119,15 @@
             auth: 'admin'
           },
           {
+            icon: 'note_add',
+            title: 'Create Plan',
+            link: 'createplan',
+            auth: 'admin'
+          },
+          {
             icon: 'change_history',
             title: 'Next Sunday',
-            link: 'nextplan',
+            link: 'nextsunday',
             auth: 'user'
           },
           {

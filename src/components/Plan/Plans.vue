@@ -9,7 +9,7 @@
 
             <v-toolbar color="blue">
               <v-toolbar-side-icon></v-toolbar-side-icon>
-              <v-toolbar-title class="white--text">Upcoming Plans</v-toolbar-title>
+              <v-toolbar-title class="white--text">All Plans</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn icon>
                 <v-icon>search</v-icon>
@@ -17,7 +17,7 @@
             </v-toolbar>
 
             <!-- Alert Panel -->
-            <v-container v-if="error">
+            <v-container v-if="error.message">
               <v-layout row>
                 <v-flex xs12>
                   <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
@@ -75,26 +75,27 @@
 
 <script>
 export default {
-  data () {
-    return {
-      error: { message: 'this is a long winded error message saying nothing at all but Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com tsforum Reflection@attachmate.com filling up some space to test thigns out ' }
-    }
-  },
+  name: 'AllPlansList',
   computed: {
     plans () {
-      return this.$store.getters.upcomingPlans
-    },
-    user () {
-      return this.$store.getters.user
+      return this.$store.getters.plans
+    }
+  },
+  data () {
+    return {
+      user: [
+        { id: 1, name: 'Antone Malone' }
+      ],
+      error: { message: '' }
     }
   },
   methods: {
     onDismissed () {
       this.error = false
     },
-    showSinglePlan (planId) {
-      console.log('trying to open plan id: ' + planId)
-      this.$router.push({ name: 'plan', params: {id: planId} })
+    showSinglePlan (id) {
+      // navigate to single plan form
+      this.$router.push({name: 'plan', params: {planId: id}})
     },
     userOwnsPlan (id) {
       return true

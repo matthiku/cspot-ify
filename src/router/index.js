@@ -33,7 +33,7 @@ export default new Router({
       component: Users
     },
     {
-      path: '/admin/users/:id',
+      path: '/admin/users/:userId',
       name: 'user',
       component: User,
       props: true
@@ -44,7 +44,7 @@ export default new Router({
       component: Items
     },
     {
-      path: '/items/:id',
+      path: '/items/:itemId',
       name: 'item',
       component: Item,
       props: true
@@ -66,14 +66,14 @@ export default new Router({
       component: Plans
     },
     {
-      path: '/plans/:id',
+      path: '/plans/:planId',
       name: 'plan',
-      component: Plan,
-      props: true
+      props: true,
+      component: Plan
     },
     {
-      path: '/nextplan',
-      name: 'nextplan',
+      path: '/nextsunday',
+      name: 'nextsunday',
       component: Plan
     },
     {
