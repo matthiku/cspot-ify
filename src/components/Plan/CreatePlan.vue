@@ -22,6 +22,15 @@
             </v-flex>
           </v-layout>
 
+          <!-- Alert Panel -->
+          <v-container v-if="error">
+            <v-layout row>
+              <v-flex xs12>
+                <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+              </v-flex>
+            </v-layout>
+          </v-container>
+
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-layout row>
@@ -60,7 +69,7 @@
                       slot="activator"
                       label="Pick a time"
                       v-model="time"                      
-                      prepend-icon="watch"
+                      prepend-icon="schedule"
                       readonly
                     ></v-text-field>
                     <v-time-picker v-model="time" format="24hr" scrollable actions>
@@ -92,7 +101,17 @@
 
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
-              <v-btn type="submit" class="primary":disabled="!formIsValid">Create Plan</v-btn>
+              <v-btn 
+                type="submit" 
+                class="primary"
+                :disabled="!formIsValid" 
+                :loading="loading"
+                @click="loader = 'loading'"
+                >Create Plan
+                <span slot="loader" class="custom-loader">
+                  <v-icon light>cached</v-icon>
+                </span>
+              </v-btn>
             </v-flex>
           </v-layout>
         </form>
@@ -111,15 +130,27 @@ export default {
       date: null,
       typeId: null,
       title: '',
-      staff: [{ id: null, role: '' }],
+      staff: [{ id: 0, role: 'dummy' }],
       info: 'info',
-      time: moment().format('HH:MM'),
+      time: '',
       modalDate: false,
       modalTime: false
     }
   },
 
   computed: {
+    planId () {
+      return this.$store.getters.newPlanId
+    },
+    user () {
+      return this.$store.getters.user
+    },
+    error () {
+      return this.$store.getters.error
+    },
+    loading () {
+      return this.$store.getters.loading
+    },
     formIsValid () {
       return this.title !== '' && this.dateTime.isValid()
     },
@@ -127,6 +158,7 @@ export default {
       return moment(this.date + 'T' + this.time)
     }
   },
+
   methods: {
     onCreatePlan () {
       if (!this.formIsValid) {
@@ -136,11 +168,18 @@ export default {
         date: this.dateTime.format(),
         typeId: this.typeId,
         title: this.title,
-        staff: [{ id: null, role: '' }],
+        staff: [{ id: 0, role: 'dummy' }],
         info: this.info
       }
       this.$store.dispatch('createPlan', planData)
-      this.$router.push({name: 'plan', params: {planId: 9}})
+    }
+  },
+
+  watch: {
+    // check if the new plan was added to the array of plans
+    // then open the new plan
+    planId () {
+      this.$router.push({ name: 'plan', params: { planId: this.planId } })
     }
   }
 }

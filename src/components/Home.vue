@@ -22,10 +22,10 @@
             </v-toolbar>
 
             <!-- Alert Panel -->
-            <v-container v-if="error.message">
+            <v-container v-if="error">
               <v-layout row>
                 <v-flex xs12>
-                  <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
+                  <app-alert @dismissed="onDismissed" :text="error"></app-alert>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -97,14 +97,15 @@ export default {
   computed: {
     upcomingPlans () {
       return this.$store.getters.futurePlans
-    }
-  },
-  data () {
-    return {
-      user: [
-        { id: 1, name: 'Antone Malone' }
-      ],
-      error: { message: '' }
+    },
+    user () {
+      return this.$store.getters.user
+    },
+    error () {
+      return this.$store.getters.error
+    },
+    loading () {
+      return this.$store.getters.loading
     }
   },
   methods: {

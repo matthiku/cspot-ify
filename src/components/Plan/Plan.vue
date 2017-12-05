@@ -17,10 +17,10 @@
             </v-toolbar>
 
             <!-- Alert Panel -->
-            <v-container v-if="error.message">
+            <v-container v-if="error">
               <v-layout row>
                 <v-flex xs12>
-                  <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
+                  <app-alert @dismissed="onDismissed" :text="error"></app-alert>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -83,17 +83,17 @@ export default {
     user () {
       return this.$store.getters.user
     },
+    error () {
+      return this.$store.getters.error
+    },
+    loading () {
+      return this.$store.getters.loading
+    },
     plan () {
       if (this.$route.name === 'nextsunday') {
         return this.$store.getters.nextSunday
       }
       return this.$store.getters.plan(this.$route.params.planId)
-    }
-  },
-
-  data () {
-    return {
-      error: { message: '' }
     }
   },
 

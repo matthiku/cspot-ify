@@ -6,15 +6,14 @@
       :clipped="clipped"
       v-model="drawer"
       enable-resize-watcher
-      app
-    >
+      app>
       <v-list>
         <v-list-tile
           v-for="(item, i) in menuItems"
           :key="i"
           :to="{ name: item.link }"
           value="true"
-          v-if="(item.auth=='user' && user.id) || (!user.id && !item.auth) || (item.auth=='admin' && user.isAdmin)"
+          v-if="(item.auth!='admin' || item.auth=='admin' && userIsAdmin) && item.where!='toolbar'"
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
@@ -31,14 +30,19 @@
 
       <v-toolbar-side-icon 
         @click.stop="drawer = !drawer"
-        :class="[ user.isAdmin ? '' : 'hidden-sm-and-up' ]"
+        :class="[ userIsAdmin ? '' : 'hidden-sm-and-up' ]"
       ></v-toolbar-side-icon>
 
       <v-btn icon :to="{ name: 'home' }">
         <img src="/static/cspoticon36.png" alt="c-SPOT icon" width="30px">
       </v-btn>
 
-      <v-toolbar-title v-text="title"></v-toolbar-title>      
+      <router-link 
+        tag="v-toolbar-title"
+        :to="{ name: 'home' }" 
+        style="cursor: pointer"
+        v-text="appTitle">
+      </router-link>      
 
       <v-toolbar-items class="hidden-xs-only">        
         <v-btn flat
@@ -46,11 +50,20 @@
           v-for="(item, i) in menuItems"
           :key="i"
           :to="{ name: item.link}"
-          v-if="(item.auth=='user' && user.id) || (!user.id && !item.auth) || (item.auth=='admin' && user.isAdmin)"
+          v-if="(item.auth!='admin' || (item.auth=='admin' && userIsAdmin)) && item.where!='drawer'"
         ><v-icon>{{ item.icon }}</v-icon>{{ item.title }}</v-btn>
       </v-toolbar-items>
 
       <v-spacer></v-spacer>
+
+      <v-toolbar-items v-if="userIsAuthenticated">
+        <v-btn flat
+          class="white--text"
+          @click="onLogout"
+          >
+          <v-icon>lock_open</v-icon>Logout
+        </v-btn>
+      </v-toolbar-items>
 
       <v-btn icon 
         @click.stop="rightDrawer = !rightDrawer"
@@ -73,8 +86,7 @@
       :right="right"
       v-model="rightDrawer"
       class="hidden-sm-and-up"
-      app
-    >
+      app>
       <v-list>
         <v-list-tile @click="right = !right">
           <v-list-tile-action>
@@ -96,65 +108,89 @@
   export default {
     data () {
       return {
-        title: 'c-SPOT',
-        user: {
-          id: 1234,
-          isAdmin: true
-        },
+        appTitle: 'c-SPOT',
         rightDrawer: false,
         clipped: true,
         drawer: true,
-        right: true,
-        menuItems: [
-          {
-            icon: 'bubble_chart',
-            title: 'Administration',
-            link: 'admin',
-            auth: 'admin'
-          },
-          {
-            icon: 'group',
-            title: 'User List',
-            link: 'users',
-            auth: 'admin'
-          },
-          {
-            icon: 'note_add',
-            title: 'Create Plan',
-            link: 'createplan',
-            auth: 'admin'
-          },
-          {
-            icon: 'change_history',
-            title: 'Next Sunday',
-            link: 'nextsunday',
-            auth: 'user'
-          },
-          {
-            icon: 'notes',
-            title: 'All Plans',
-            link: 'plans',
-            auth: 'user'
-          },
-          {
-            icon: 'perm_identity',
-            title: 'Profile',
-            link: 'profile',
-            auth: 'user'
-          },
+        right: true
+      }
+    },
+    computed: {
+      menuItems () {
+        let menuItems = [
           {
             icon: 'face',
             title: 'Sign in',
             link: 'signin',
-            auth: false
+            auth: false,
+            where: 'toolbar'
           },
           {
             icon: 'lock_open',
             title: 'Sign up',
             link: 'signup',
-            auth: false
+            auth: false,
+            where: 'toolbar'
           }
         ]
+        if (this.userIsAuthenticated) {
+          menuItems = [
+            {
+              icon: 'bubble_chart',
+              title: 'Administration',
+              link: 'admin',
+              auth: 'admin',
+              where: 'both'
+            },
+            {
+              icon: 'group',
+              title: 'User List',
+              link: 'users',
+              auth: 'admin',
+              where: 'drawer'
+            },
+            {
+              icon: 'note_add',
+              title: 'Create Plan',
+              link: 'createplan',
+              auth: 'admin',
+              where: 'drawer'
+            },
+            {
+              icon: 'change_history',
+              title: 'Next Sunday',
+              link: 'nextsunday',
+              auth: 'user',
+              where: 'both'
+            },
+            {
+              icon: 'notes',
+              title: 'All Plans',
+              link: 'plans',
+              auth: 'user',
+              where: 'drawer'
+            },
+            {
+              icon: 'perm_identity',
+              title: 'Profile',
+              link: 'profile',
+              auth: 'user',
+              where: 'both'
+            }
+          ]
+        }
+        return menuItems
+      },
+      userIsAuthenticated () {
+        return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+      },
+      userIsAdmin  () {
+        return true
+      }
+    },
+    methods: {
+      onLogout () {
+        this.$store.dispatch('signUserOut')
       }
     }
   }
