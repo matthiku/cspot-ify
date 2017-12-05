@@ -29,12 +29,13 @@ new Vue({
   store,
   render: h => h(App),
   created () {
-    // check if a user is already logged on in the session
+    // check if a user is already logged on in the browser session
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
         store.dispatch('setUser', user)
       } else {
-        router.replace('./signin')
+        let from = router.currentRoute.name
+        router.replace('./signin' + from && from !== 'signin' ? '?from=' + from : '')
         console.log('No user is signed in.')
       }
     })

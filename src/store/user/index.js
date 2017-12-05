@@ -2,21 +2,28 @@ import { firebaseApp } from '../../firebaseApp'
 
 export default {
   state: {
+    oldRoute: null,
     user: null
   },
 
   mutations: {
+    setOldRoute (state, payload) {
+      state.oldRoute = payload
+    },
     setUser (state, payload) {
       state.user = payload
     }
   },
 
   actions: {
-    setUser ({commit}, payload) {
-      const userData = {
-        id: payload.uid
-      }
+    setUser ({commit, state}, payload) {
+      const userData = { id: payload.uid }
       commit('setUser', userData)
+      console.log(state.oldRoute)
+      if (payload && state.oldRoute) {
+        console.log('navigating to ', state.oldRoute)
+        this.$route.push({name: state.oldRoute})
+      }
     },
     signUserOut ({commit}) {
       commit('setLoading', true)
@@ -76,10 +83,16 @@ export default {
             console.log(error)
           }
         )
+    },
+    setOldRoute ({commit}, payload) {
+      commit('setOldRoute', payload)
     }
   },
 
   getters: {
+    oldRoute (state) {
+      return state.oldRoute
+    },
     user (state) {
       return state.user
     }

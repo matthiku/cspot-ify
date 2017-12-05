@@ -24,7 +24,7 @@ export default {
   actions: {
 
     // load existing plans from the DB
-    loadPlans ({ commit, state }, payload) {
+    loadPlans ({ commit }, payload) {
       let plans = []
       // payload is a firebase data snapshot
       payload.forEach(plan => {
@@ -46,9 +46,9 @@ export default {
           commit('setLoading', false)
         })
         .catch(error => {
-          commit('setLoading', false)
           commit('setError', error)
           console.log(error)
+          commit('setLoading', false)
         })
     }
   },

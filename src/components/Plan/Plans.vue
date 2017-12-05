@@ -17,10 +17,10 @@
             </v-toolbar>
 
             <!-- Alert Panel -->
-            <v-container v-if="error.message">
+            <v-container v-if="error">
               <v-layout row>
                 <v-flex xs12>
-                  <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
+                  <app-alert @dismissed="onDismissed" :text="error"></app-alert>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -28,9 +28,13 @@
             <v-container>
               <v-layout row wrap>
 
-                <v-flex xs12 mb-2 v-if="!plans.length">
+                <v-flex xs12 mb-2 v-if="!plans.length && !loading">
                   There are currently no upcoming Plans.<br>
                   <v-btn :to="{name: 'createplan'}">Create one!</v-btn>
+                </v-flex>
+
+                <v-flex xs12 mb-2 v-if="loading">
+                  <v-progress-linear v-bind:indeterminate="true"></v-progress-linear>
                 </v-flex>
 
                 <!-- iterate through each registered plan -->
@@ -77,18 +81,20 @@
 export default {
   name: 'AllPlansList',
   computed: {
+    user () {
+      return this.$store.getters.user
+    },
+    error () {
+      return this.$store.getters.error
+    },
+    loading () {
+      return this.$store.getters.loading
+    },
     plans () {
       return this.$store.getters.plans
     }
   },
-  data () {
-    return {
-      user: [
-        { id: 1, name: 'Antone Malone' }
-      ],
-      error: { message: '' }
-    }
-  },
+
   methods: {
     onDismissed () {
       this.error = false

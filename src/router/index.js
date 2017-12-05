@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import AuthGuard from './auth-guard'
+
 import Home from '@/components/Home'
 
 import Admin from '@/components/Admin/Admin'
@@ -25,61 +27,71 @@ export default new Router({
     {
       path: '/admin',
       name: 'admin',
-      component: Admin
+      component: Admin,
+      beforeEnter: AuthGuard
     },
     {
       path: '/admin/users',
       name: 'users',
-      component: Users
+      component: Users,
+      beforeEnter: AuthGuard
     },
     {
       path: '/admin/users/:userId',
       name: 'user',
       component: User,
+      beforeEnter: AuthGuard,
       props: true
     },
     {
       path: '/items',
       name: 'items',
-      component: Items
+      component: Items,
+      beforeEnter: AuthGuard
     },
     {
       path: '/items/:itemId',
       name: 'item',
       component: Item,
+      beforeEnter: AuthGuard,
       props: true
-
     },
     {
       path: '/createitem',
       name: 'createitem',
-      component: CreateItem
+      component: CreateItem,
+      beforeEnter: AuthGuard
     },
     {
       path: '/createplan',
       name: 'createplan',
-      component: CreatePlan
+      component: CreatePlan,
+      beforeEnter: AuthGuard
     },
     {
       path: '/plans',
       name: 'plans',
-      component: Plans
+      component: Plans,
+      beforeEnter: AuthGuard
     },
     {
       path: '/plans/:planId',
       name: 'plan',
       props: true,
-      component: Plan
+      component: Plan,
+      beforeEnter: AuthGuard
     },
     {
       path: '/nextsunday',
       name: 'nextsunday',
-      component: Plan
+      component: Plan,
+      beforeEnter: AuthGuard
     },
     {
       path: '/profile',
       name: 'profile',
-      component: Profile
+      component: Profile,
+      beforeEnter: AuthGuard
     },
     {
       path: '/signin',

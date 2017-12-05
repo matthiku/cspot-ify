@@ -33,9 +33,13 @@
             <v-container>
               <v-layout row wrap>
 
-                <v-flex xs12 mb-2 v-if="!upcomingPlans">
+                <v-flex xs12 mb-2 v-if="!upcomingPlans && !loading">
                   There are currently no upcoming Plans.<br>
                   <v-btn :to="{name: 'createplan'}">Create one!</v-btn>
+                </v-flex>
+
+                <v-flex xs12 mb-2 v-if="loading">
+                  <v-progress-linear v-bind:indeterminate="true"></v-progress-linear>
                 </v-flex>
 
                 <!-- iterate through each registered plan -->
