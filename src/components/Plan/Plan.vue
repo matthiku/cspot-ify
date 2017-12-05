@@ -29,22 +29,66 @@
               <v-layout row wrap>
 
                 <v-flex xs12>
-                  <v-card class="primary mb-2">
+                  <v-card class="mb-2">
                     <v-container fluid>
                       <v-layout row>
 
-                        <v-flex v-if="!plan" xs7 sm8 md9>
+                        <v-flex v-if="!plan" xs12>
                           No plan found
                         </v-flex>
 
                         <!-- show title, date and location -->
-                        <v-flex v-else xs7 sm8 md9>
-                          <v-card-title primary-title class="mb-0 pb-0">
+                        <v-flex v-else xs12>
+                          <v-card-text class="mb-0 pt-0 pb-0">
                             <div>                  
-                              <h5 class="white--text mb-0">{{ plan.title }}</h5>
-                              <div>{{ plan.date | date }} Details: {{ plan.info }}</div>
+                              <h5 class="mb-0">{{ plan.title }}</h5>
+                              <div>{{ plan.date | date }}</div>
+                              <v-expansion-panel>
+                                <v-expansion-panel-content v-model="showPlanStaff">
+                                  <div slot="header">Staff <span v-if="!showPlanStaff" class="caption">(Leader: Andy, Teacher: Bob)</span></div>
+                                  <v-card>
+                                    <v-card-text class="grey lighten-3">
+                                      {{ plan.staff }}
+                                    </v-card-text>
+                                  </v-card>
+                                </v-expansion-panel-content>
+                              </v-expansion-panel>
+                              <v-divider></v-divider>
+                              <v-expansion-panel>
+                                <v-expansion-panel-content v-model="showPlanDetails">
+                                  <div slot="header">Details <span v-if="!showPlanDetails" class="caption">({{ plan.info.substr(0,55) }}...)</span></div>
+                                  <v-card>
+                                    <v-card-text 
+                                      @click="checkEditing('info')" 
+                                      v-if="editing!=='info'"
+                                      class="grey lighten-3">{{ plan.info }}</v-card-text>
+                                    <v-text-field
+                                      v-if="editing==='info'"
+                                      v-model="plan.info"
+                                      @blur="onFieldEdited('info')"
+                                      class="mt-0"
+                                      multi-line rows="2"
+                                      autofocus full-width
+                                      ref="input-info"
+                                      label="Enter/Edit plan details"
+                                    ></v-text-field>
+                                  </v-card>
+                                </v-expansion-panel-content>
+                              </v-expansion-panel>
+                              <v-divider></v-divider>
+                              <v-expansion-panel>
+                                <v-expansion-panel-content v-model="showPlanItems">
+                                  <div slot="header">Items <v-chip outline color="primary">3</v-chip></div>
+                                  <v-card>
+                                    <v-card-text class="grey lighten-3">item 1 Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae, veritatis?</v-card-text>
+                                    <v-card-text class="grey lighten-3">item 2 Lorem ipsum dolor sit amet. </v-card-text>
+                                    <v-card-text class="grey lighten-3">item 3 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae explicabo repellendus repellat maiores similique quis quo sed? Rem doloremque blanditiis voluptatem molestiae! </v-card-text>
+                                  </v-card>
+                                </v-expansion-panel-content>
+                              </v-expansion-panel>
                             </div>
-                          </v-card-title>
+                            </div>
+                          </v-card-text>
 
                           <v-card-actions>
                             <v-btn 
@@ -52,7 +96,7 @@
                               :flat="!userOwnsPlan(plan.id)" 
                               :class="userOwnsPlan(plan.id) ? 'info' : ''">
                               <v-icon left>{{ userOwnsPlan(plan.id) ? 'edit' : 'arrow_forward' }}</v-icon>
-                              {{ userOwnsPlan(plan.id) ? 'Edita' : 'View' }} Plan
+                              {{ userOwnsPlan(plan.id) ? 'Edit' : 'View' }} Plan
                             </v-btn>
                           </v-card-actions>
                         </v-flex>
@@ -79,6 +123,14 @@ export default {
 
   props: ['id'],
 
+  data () {
+    return {
+      showPlanStaff: false,
+      showPlanDetails: false,
+      showPlanItems: false,
+      editing: ''
+    }
+  },
   computed: {
     user () {
       return this.$store.getters.user
@@ -106,6 +158,15 @@ export default {
     },
     userOwnsPlan (id) {
       return true
+    },
+    checkEditing (what) {
+      if (!this.userOwnsPlan) return
+      this.editing = what
+    },
+    onFieldEdited (that) {
+      this.editing = ''
+      // asdf
+      // update plan set info = this.plan[that]
     }
   }
 }
