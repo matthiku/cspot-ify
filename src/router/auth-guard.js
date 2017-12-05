@@ -5,6 +5,6 @@ export default (to, from, next) => {
     next()
   } else {
     store.dispatch('setOldRoute', to.name)
-    next('/signin?from=' + to.name)
+    next('/signin')
   }
 }

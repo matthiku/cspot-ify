@@ -19,11 +19,6 @@ export default {
     setUser ({commit, state}, payload) {
       const userData = { id: payload.uid }
       commit('setUser', userData)
-      console.log(state.oldRoute)
-      if (payload && state.oldRoute) {
-        console.log('navigating to ', state.oldRoute)
-        this.$route.push({name: state.oldRoute})
-      }
     },
     signUserOut ({commit}) {
       commit('setLoading', true)

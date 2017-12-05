@@ -34,9 +34,14 @@ new Vue({
       if (user) {
         store.dispatch('setUser', user)
       } else {
-        let from = router.currentRoute.name
-        router.replace('./signin' + from && from !== 'signin' ? '?from=' + from : '')
-        console.log('No user is signed in.')
+        let from = store.getters.oldRoute
+        if (from && from !== 'signin' && from !== 'home') {
+          from = '?from=' + from
+        } else {
+          from = false
+        }
+        router.replace('./signin' + from ? from : '')
+        console.log('No user is signed in. FROM: ', from)
       }
     })
 

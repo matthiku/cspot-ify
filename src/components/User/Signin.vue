@@ -99,7 +99,12 @@ export default {
     // before we navigate to the main app
     user (value) {
       if (value !== null && value !== undefined) {
-        this.$router.push('/')
+        if (this.$store.getters.oldRoute) {
+          this.$router.push({ name: this.$store.getters.oldRoute })
+          this.$store.dispatch('setOldRoute', false)
+        } else {
+          this.$router.push('/')
+        }
       }
     }
   },

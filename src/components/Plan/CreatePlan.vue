@@ -11,6 +11,16 @@
       <v-flex xs12>
         <form @submit.prevent="onCreatePlan">
 
+          <!-- Alert Panel -->
+          <v-container v-if="error">
+            <v-layout row>
+              <v-flex xs12>
+                <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+              </v-flex>
+            </v-layout>
+          </v-container>
+
+          <!-- TITLE -->
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-text-field 
@@ -22,15 +32,7 @@
             </v-flex>
           </v-layout>
 
-          <!-- Alert Panel -->
-          <v-container v-if="error">
-            <v-layout row>
-              <v-flex xs12>
-                <app-alert @dismissed="onDismissed" :text="error"></app-alert>
-              </v-flex>
-            </v-layout>
-          </v-container>
-
+          <!-- DATE and TIME Picker -->
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-layout row>
@@ -46,6 +48,7 @@
                       v-model="date"
                       prepend-icon="event"
                       readonly
+                      required
                     ></v-text-field>
                     <v-date-picker v-model="date" scrollable actions>
                       <template slot-scope="{ save, cancel }">
@@ -70,7 +73,7 @@
                       label="Pick a time"
                       v-model="time"                      
                       prepend-icon="schedule"
-                      readonly
+                      readonly required
                     ></v-text-field>
                     <v-time-picker v-model="time" format="24hr" scrollable actions>
                       <template slot-scope="{ save, cancel }">
@@ -87,6 +90,7 @@
             </v-flex>
           </v-layout>
 
+          <!-- Description -->
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-text-field 
@@ -95,11 +99,31 @@
                 id="info"
                 v-model="info"
                 multi-line
-                required></v-text-field>
+                ></v-text-field>
             </v-flex>
           </v-layout>
 
+          <!-- Default BG image for this plan -->
           <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-btn small raised class="secondary" @click="onPickFile">Upload Image</v-btn>
+              <input 
+                type="file" 
+                style="display: none" 
+                ref="fileInput" 
+                accept="image/*"
+                @change="onFilePicked">
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <!-- IMAGE preview -->
+            <v-flex xs12 sm6 offset-sm3>
+              <img :src="imageB64" height="150px" alt="As optional default background image for this plan">
+            </v-flex>
+          </v-layout>
+
+          <!-- SUBMIT -->
+          <v-layout row class="mt-5">
             <v-flex xs12 sm6 offset-sm3>
               <v-btn 
                 type="submit" 
@@ -132,6 +156,8 @@ export default {
       title: '',
       staff: [{ id: 0, role: 'dummy' }],
       info: 'info',
+      imageB64: null,
+      image: null,
       time: '',
       modalDate: false,
       modalTime: false
@@ -152,7 +178,7 @@ export default {
       return this.$store.getters.loading
     },
     formIsValid () {
-      return this.title !== '' && moment(this.dateTime).isValid()
+      return this.title !== '' && this.dateTime && moment(this.dateTime).isValid()
     },
     dateTime () {
       if (!this.date || !this.time) return null
@@ -161,10 +187,34 @@ export default {
   },
 
   methods: {
+    onFilePicked (event) {
+      const files = event.target.files
+      let filename = files[0].name
+      if (filename.lastIndexOf('.') <= 0) {
+        this.error = 'Please add a valid file!'
+      }
+      // turn the file into a base64 encoded strimg
+      const fileReader = new FileReader()
+      // check when the file reading is finished, then continue
+      fileReader.addEventListener('load', () => {
+        // saves the file as base64 (the img tag can handle that in the src attribute!)
+        this.imageB64 = fileReader.result
+      })
+      // trigger the actual file reading
+      fileReader.readAsDataURL(files[0])
+      // also store the actual file
+      this.image = files[0]
+    },
+
+    onPickFile () {
+      this.$refs.fileInput.click()
+    },
+
     onCreatePlan () {
       if (!this.formIsValid) {
         return
       }
+      this.$store.dispatch('setLoading', true)
       const planData = {
         date: this.dateTime.format(),
         typeId: this.typeId,
@@ -172,7 +222,14 @@ export default {
         staff: [{ id: 0, role: 'dummy' }],
         info: this.info
       }
-      this.$store.dispatch('createPlan', planData)
+      // send 2 sep. objects as payload to the store
+      this.$store.dispatch('createPlan', {
+        planData,
+        image: this.image
+      })
+    },
+    onDismissed () {
+      this.$store.dispatch('clearError')
     }
   },
 

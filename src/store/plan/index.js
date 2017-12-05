@@ -1,4 +1,4 @@
-import { plansRef } from '../../firebaseApp'
+import { plansRef, firebaseApp } from '../../firebaseApp'
 import * as moment from 'moment'
 
 export default {
@@ -37,16 +37,44 @@ export default {
     },
 
     createPlan ({ commit }, payload) {
-      // TODO: reach out to our DB and store it
-      plansRef.push(payload)
+      // reach out to our DB and store it
+      let imageUrl
+      let key
+      let planData = Object.assign({}, payload.planData)
+      plansRef.push(planData)
         .then(data => {
           // the database call will get us an id, which we need to add a new plan to the store
-          commit('createPlan', Object.assign(payload, {id: data.key}))
-          // commit('createPlan', { ...payload, id: data.key })
+          key = data.key
+          return key
+        })
+        // now check if there is a file to be uploaded
+        .then((key) => {
+          if (payload.image) {
+            const filename = payload.image.name
+            const ext = filename.slice(filename.lastIndexOf('.'))
+            return firebaseApp.storage().ref('plans/' + key + ext).put(payload.image)
+          }
+        })
+        // if applicable, write the newly uploaded image ULR to the plan data
+        .then((fileData) => {
+          if (fileData) {
+            imageUrl = fileData.metadata.downloadURLs[0]
+            return plansRef.child(key).update({imageUrl: imageUrl})
+          }
+        })
+        // now write the complete plan data to the local plan list
+        .then(() => {
+          Object.assign(
+            planData, {
+              id: key,
+              imageUrl: imageUrl
+            })
+          commit('createPlan', planData)
           commit('setLoading', false)
         })
+
         .catch(error => {
-          commit('setError', error)
+          commit('setError', error.toString())
           console.log(error)
           commit('setLoading', false)
         })
