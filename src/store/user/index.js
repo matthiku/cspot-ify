@@ -1,4 +1,4 @@
-import * as firebase from 'firebase'
+import { firebaseApp } from '../../firebaseApp'
 
 export default {
   state: {
@@ -21,7 +21,7 @@ export default {
     signUserOut ({commit}) {
       commit('setLoading', true)
       commit('clearError')
-      firebase.auth().signOut()
+      firebaseApp.auth().signOut()
         .then(() => {
           // Sign-out successful.
           commit('setLoading', false)
@@ -36,7 +36,7 @@ export default {
     signUserIn ({commit}, payload) {
       commit('setLoading', true)
       commit('clearError')
-      firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+      firebaseApp.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(
           user => {
             commit('setLoading', false)
@@ -58,7 +58,7 @@ export default {
     signUserUp ({commit}, payload) {
       commit('setLoading', true)
       commit('clearError')
-      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
+      firebaseApp.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(
           user => {
             commit('setLoading', false)

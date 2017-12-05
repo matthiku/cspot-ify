@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 
 // external packages
-import * as firebase from 'firebase'
+import { firebaseApp, plansRef } from './firebaseApp'
 
 // use customized styling
 import './stylus/main.styl'
@@ -29,17 +29,8 @@ new Vue({
   store,
   render: h => h(App),
   created () {
-    firebase.initializeApp({
-      apiKey: 'AIzaSyDkBwk4y_0owfwnO5ojDvIYved6gOLzppc',
-      authDomain: 'cspot-ify.firebaseapp.com',
-      databaseURL: 'https://cspot-ify.firebaseio.com',
-      projectId: 'cspot-ify',
-      storageBucket: 'cspot-ify.appspot.com',
-      messagingSenderId: '154842492597'
-    })
-
     // check if a user is already logged on in the session
-    firebase.auth().onAuthStateChanged(user => {
+    firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
         store.dispatch('setUser', user)
       } else {
@@ -48,7 +39,9 @@ new Vue({
       }
     })
 
-    // load existing meetups from firebase
-    store.dispatch('loadPlans')
+    // sync with  existing plans from firebase
+    plansRef.on('value', snap => {
+      store.dispatch('loadPlans', snap)
+    })
   }
 })

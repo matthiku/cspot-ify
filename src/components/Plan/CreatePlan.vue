@@ -152,9 +152,10 @@ export default {
       return this.$store.getters.loading
     },
     formIsValid () {
-      return this.title !== '' && this.dateTime.isValid()
+      return this.title !== '' && moment(this.dateTime).isValid()
     },
     dateTime () {
+      if (!this.date || !this.time) return null
       return moment(this.date + 'T' + this.time)
     }
   },
