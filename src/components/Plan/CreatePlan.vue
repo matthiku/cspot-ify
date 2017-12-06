@@ -211,9 +211,8 @@ export default {
     },
 
     onCreatePlan () {
-      if (!this.formIsValid) {
-        return
-      }
+      if (!this.formIsValid) return
+
       this.$store.dispatch('setLoading', true)
       const planData = {
         date: this.dateTime.format(),

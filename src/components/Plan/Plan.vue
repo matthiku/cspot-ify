@@ -37,16 +37,20 @@
                       <v-layout row>
 
                         <v-flex v-if="!plan" xs12>
-                          No plan found
+                          No plan found!
                         </v-flex>
 
                         <!-- show title, date and location -->
                         <v-flex v-else xs12 class=" grey lighten-2">
                           <v-card-text class="mb-0 pt-1 pb-2">
                             <div>                  
-                              <h6 class="mb-0">{{ plan.date | date }}
-                                <template v-if="true">
-                                  <app-edit-plan-date-dialog :plan="plan"></app-edit-plan-date-dialog>
+                              <h6 class="mb-0" @click="openDateEditingDlg = !openDateEditingDlg"
+                              >{{
+                                plan.date | date 
+                              }}<template v-if="true">
+                                  <app-edit-plan-date-dialog
+                                    :dateEditingDialog="openDateEditingDlg"
+                                    :plan="plan"></app-edit-plan-date-dialog>
                                 </template>
                               </h6>
 
@@ -190,7 +194,7 @@ export default {
         info: false,
         items: false
       },
-      dateEditingDlg: false,
+      openDateEditingDlg: false,
       editing: ''
     }
   },

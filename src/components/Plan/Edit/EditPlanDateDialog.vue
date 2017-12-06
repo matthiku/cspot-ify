@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dateEditingDlg" max-width="500px">
 
-    <v-btn flat icon color="green" 
+    <v-btn flat icon color="gray" 
       @click.stop="dateEditingDlg = true" 
       slot="activator"
     ><v-icon>edit</v-icon></v-btn>
@@ -59,11 +59,11 @@
                 min-width="290px"
               >
                 <v-text-field
-                  slot="activator"
-                  label="Picker in menu"
                   v-model="startTime"
-                  prepend-icon="access_time"
                   @change="saveDate"
+                  slot="activator"
+                  label="Pick the start time"
+                  prepend-icon="access_time"
                   readonly
                 ></v-text-field>
                 <v-time-picker format="24hr" v-model="startTime" autosave></v-time-picker>
@@ -74,7 +74,9 @@
         </template>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" flat @click.stop="dateEditingDlg=false">Close</v-btn>
+        <v-btn color="secondary" flat @click.stop="dateEditingDlg=false">Close</v-btn>
+        <v-btn color="primary" flat @click.stop="saveDate">Submit</v-btn>
+        <v-spacer></v-spacer>
       </v-card-actions>
     </v-card>
 
@@ -85,27 +87,47 @@
 import * as moment from 'moment'
 
 export default {
-  props: ['plan'],
+  name: 'editPlanDateDialog',
+  props: ['plan', 'dateEditingDialog'],
   data () {
     return {
       dateEditingDlg: false,
       startDateMenu: false,
       startTimeMenu: false,
       endTimeMenu: false,
-      startDate: moment(this.plan.date).format('YYYY-MM-DD'),
-      startTime: moment(this.plan.date).format('HH:mm')
+      startDate: null,
+      startTime: null,
+      endTime: null
     }
   },
   methods: {
     saveDate () {
-      let date = moment(this.date + 'T' + this.time)
-      this.plan.date = moment(date).format()
+      this.dateEditingDlg = false
+      let date = moment(this.startDate + 'T' + this.startTime).format()
+      // do not submit if nothing has changed
+      if (date === this.plan.date) return
       this.$store.dispatch('updatePlan', {
         id: this.plan.id,
         field: 'date',
-        value: this.plan.date
+        value: date
       })
+    },
+    updateDates () {
+      if (!this.plan) return
+      this.startDate = moment(this.plan.date).format('YYYY-MM-DD')
+      this.startTime = moment(this.plan.date).format('HH:mm')
     }
+  },
+  watch: {
+    plan () {
+      this.updateDates()
+    },
+    dateEditingDialog () {
+      this.dateEditingDlg = this.dateEditingDialog
+    }
+  },
+  created () {
+    this.updateDates()
   }
 }
 </script>
