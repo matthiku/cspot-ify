@@ -7,27 +7,85 @@
         <v-card>
           <v-card-text>
 
+            <!-- TITLE area -->
             <v-toolbar color="blue">
-              <v-toolbar-side-icon></v-toolbar-side-icon>
+              <v-menu open-on-hover bottom right offset-y>
+                <v-btn icon slot="activator" dark>
+                  <v-toolbar-side-icon></v-toolbar-side-icon>
+                </v-btn>
+                <v-list>
+                  <v-list-tile v-for="item in planMenuItems" :key="item.title" @click="planAction(item.action)">
+                    <v-icon>{{ item.icon }}</v-icon>&nbsp;
+                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile v-if="userOwnsPlan">
+                    <template>
+                      <app-delete-plan-dialog :plan="plan"></app-delete-plan-dialog>
+                    </template>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+              
               <v-toolbar-title class="white--text">
                 {{ pageTitle }}: 
-                <v-chip outline color="black">{{ plan.title }}</v-chip>
+                <v-chip large outline color="black">{{ plan ? plan.title : 'Plan gone' }}</v-chip>
               </v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>search</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <v-speed-dial
+                  v-model="fab" bottom right hover
+                  slot="activator"
+                  direction="left"
+                  transition="slide-x-transition"
+                >
+                  <v-btn
+                    v-model="fab" dark fab hover
+                    slot="activator"
+                    color="blue darken-2"
+                  >
+                    <v-icon>airplay</v-icon>
+                    <v-icon>close</v-icon>
+                  </v-btn>
+                  <v-tooltip bottom>
+                    <v-btn fab dark small color="green" slot="activator">
+                      <v-icon>airplay</v-icon>
+                    </v-btn>
+                    <span>Full Presentation</span>
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <v-btn fab dark small color="indigo" slot="activator">
+                      <v-icon>account_circle</v-icon>
+                    </v-btn>
+                    <span>Leader</span>
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <v-btn fab dark small color="indigo" slot="activator">
+                      <v-icon>queue_music</v-icon>
+                    </v-btn>
+                    <span>Chords</span>
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <v-btn fab dark small color="red" slot="activator">
+                      <v-icon>music_video</v-icon>
+                    </v-btn>
+                    <span>Sheetmusic</span>
+                  </v-tooltip>
+                </v-speed-dial>
+              <span>Select Show Mode</span>
+              </v-tooltip>
             </v-toolbar>
 
             <!-- Alert Panel -->
-            <v-container v-if="error">
+            <v-container v-if="error || message">
               <v-layout row>
                 <v-flex xs12>
-                  <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+                  <app-alert v-if="error" @dismissed="onDismissed('clearError')" :text="error"></app-alert>
+                  <app-success v-if="message" @dismissed="onDismissed('clearMessage')" :text="message"></app-success>
                 </v-flex>
               </v-layout>
             </v-container>
 
+            <!-- PLAN DETAILS -->
             <v-container>
               <v-layout row wrap>
 
@@ -36,12 +94,10 @@
                     <v-container fluid>
                       <v-layout row>
 
-                        <v-flex v-if="!plan" xs12>
-                          No plan found!
-                        </v-flex>
+                        <v-flex v-if="!plan" xs12>No plan found!</v-flex>
 
                         <!-- show title, date and location -->
-                        <v-flex v-else xs12 class=" grey lighten-2">
+                        <v-flex v-else xs12 class="grey lighten-2">
                           <v-card-text class="mb-0 pt-1 pb-2">
                             <div>                  
                               <h6 class="mb-0" @click="openDateEditingDlg = !openDateEditingDlg"
@@ -58,7 +114,7 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.info">
                                   <div slot="header">
-                                    <span class="body-2">Subtitle</span> 
+                                    <span class="body-2">Info</span> 
                                     <span v-if="!showDetails.info" class="caption">({{ plan.info.substr(0,55) }}...)</span>
                                   </div>
                                   <v-card>
@@ -180,13 +236,17 @@
 
 <script>
 export default {
-  name: 'showSinglePlan',
-
-  props: ['id'],
 
   data () {
     return {
       pageTitle: 'Current Plan',
+      planMenuItems: [
+        { icon: 'account_circle', action: 'lead', title: 'Lead' },
+        { icon: 'airplay', action: 'present', title: 'Present' },
+        { icon: 'queue_music', action: 'chords', title: 'Chords' },
+        { icon: 'music_video', action: 'music', title: 'Music' }
+      ],
+      fab: false,
       showDetails: {
         staff: false,
         resources: false,
@@ -205,6 +265,9 @@ export default {
     error () {
       return this.$store.getters.error
     },
+    message () {
+      return this.$store.getters.message
+    },
     loading () {
       return this.$store.getters.loading
     },
@@ -218,11 +281,8 @@ export default {
   },
 
   methods: {
-    onDismissed () {
-      this.$store.dispatch('clearError')
-    },
-    showSinglePlan () {
-      return
+    onDismissed (what) {
+      this.$store.dispatch(what)
     },
     userOwnsPlan (id) {
       return true
@@ -242,6 +302,15 @@ export default {
         field: that,
         value: this.plan[that]
       })
+    },
+    planAction (what) {
+      // we need to show a confirmation message somehow!
+    }
+  },
+  watch: {
+    plan () {
+      if (this.plan) return
+      this.$router.push({name: 'plans'})
     }
   }
 }

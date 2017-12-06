@@ -15,7 +15,8 @@ export default {
     },
 
     createPlan (state, payload) {
-      state.plans.push(payload)
+      // not needed, as we get an update through firebase!
+      // state.plans.push(payload)
       state.newPlanId = payload.id
     }
   },
@@ -82,7 +83,7 @@ export default {
     },
 
     // update an existing plan
-    // payload contains planID and field name
+    // - - payload contains planID and field name
     updatePlan ({ commit, state }, payload) {
       commit('setLoading', true)
       const updateObj = {}
@@ -90,12 +91,32 @@ export default {
       plansRef.child(payload.id).update(updateObj)
         .then(() => {
           commit('setLoading', false)
+          commit('setMessage', 'Plan successfully updated.')
         })
         .catch((error) => {
           console.log(error)
           commit('setError', error)
           commit('setLoading', false)
         })
+    },
+
+    // delete a plan
+    // - - payload must be the full plan, as we send it to the bin and then delete it
+    deletePlan ({ commit, state }, payload) {
+      commit('setLoading', true)
+      firebaseApp.database().ref().child('bin').push(payload)
+      .then(() => {
+        plansRef.child(payload.id).remove()
+        .then(() => {
+          commit('setLoading', false)
+          commit('setMessage', 'Plan removed into the bin.')
+        })
+        .catch((error) => {
+          console.log(error)
+          commit('setError', error)
+          commit('setLoading', false)
+        })
+      })
     }
   },
 

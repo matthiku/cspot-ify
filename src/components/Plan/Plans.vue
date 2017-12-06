@@ -17,10 +17,11 @@
             </v-toolbar>
 
             <!-- Alert Panel -->
-            <v-container v-if="error">
+            <v-container v-if="error || message">
               <v-layout row>
                 <v-flex xs12>
-                  <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+                  <app-alert v-if="error" @dismissed="onDismissed('clearError')" :text="error"></app-alert>
+                  <app-success v-if="message" @dismissed="onDismissed('clearMessage')" :text="message"></app-success>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -94,6 +95,9 @@ export default {
     error () {
       return this.$store.getters.error
     },
+    message () {
+      return this.$store.getters.message
+    },
     loading () {
       return this.$store.getters.loading
     },
@@ -103,8 +107,8 @@ export default {
   },
 
   methods: {
-    onDismissed () {
-      this.$store.dispatch('clearError')
+    onDismissed (what) {
+      this.$store.dispatch(what)
     },
     showSinglePlan (id) {
       // navigate to single plan form

@@ -15,9 +15,13 @@ import { store } from './store'
 import DateFilter from './filters/date'
 
 import AlertCmp from './components/shared/Alert.vue'
+import SuccessCmp from './components/shared/Success.vue'
 import EditPlanDateDialog from './components/Plan/Edit/EditPlanDateDialog'
+import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 Vue.component('app-alert', AlertCmp)
+Vue.component('app-success', SuccessCmp)
 Vue.component('app-edit-plan-date-dialog', EditPlanDateDialog)
+Vue.component('app-delete-plan-dialog', DeletePlanDialog)
 
 Vue.use(Vuetify)
 Vue.config.productionTip = false
@@ -47,7 +51,7 @@ new Vue({
       }
     })
 
-    // sync with  existing plans from firebase
+    // sync with existing plans from firebase
     plansRef.on('value', snap => {
       store.dispatch('loadPlans', snap)
     })
