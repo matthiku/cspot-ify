@@ -80,6 +80,13 @@
 <script>
 export default {
   name: 'AllPlansList',
+
+  date () {
+    return {
+      error: ''
+    }
+  },
+
   computed: {
     user () {
       return this.$store.getters.user
@@ -97,7 +104,7 @@ export default {
 
   methods: {
     onDismissed () {
-      this.error = false
+      this.$store.dispatch('clearError')
     },
     showSinglePlan (id) {
       // navigate to single plan form

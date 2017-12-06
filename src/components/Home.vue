@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     onDismissed () {
-      this.error = false
+      this.$store.dispatch('clearError')
     },
     showSinglePlan (id) {
       // navigate to single plan form

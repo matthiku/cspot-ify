@@ -98,7 +98,7 @@
                 label="Description"
                 id="info"
                 v-model="info"
-                multi-line
+                multi-line rows="2"
                 ></v-text-field>
             </v-flex>
           </v-layout>

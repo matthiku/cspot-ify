@@ -36,6 +36,7 @@ export default {
       commit('setPlans', plans)
     },
 
+    // create a new Plan item and possibly upload an image file
     createPlan ({ commit }, payload) {
       // reach out to our DB and store it
       let imageUrl
@@ -76,6 +77,23 @@ export default {
         .catch(error => {
           commit('setError', error.toString())
           console.log(error)
+          commit('setLoading', false)
+        })
+    },
+
+    // update an existing plan
+    // payload contains planID and field name
+    updatePlan ({ commit, state }, payload) {
+      commit('setLoading', true)
+      const updateObj = {}
+      updateObj[payload.field] = payload.value
+      plansRef.child(payload.id).update(updateObj)
+        .then(() => {
+          commit('setLoading', false)
+        })
+        .catch((error) => {
+          console.log(error)
+          commit('setError', error)
           commit('setLoading', false)
         })
     }

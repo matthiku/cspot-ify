@@ -15,7 +15,9 @@ import { store } from './store'
 import DateFilter from './filters/date'
 
 import AlertCmp from './components/shared/Alert.vue'
+import EditPlanDateDialog from './components/Plan/Edit/EditPlanDateDialog'
 Vue.component('app-alert', AlertCmp)
+Vue.component('app-edit-plan-date-dialog', EditPlanDateDialog)
 
 Vue.use(Vuetify)
 Vue.config.productionTip = false
