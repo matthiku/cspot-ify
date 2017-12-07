@@ -11,14 +11,14 @@ export default {
   },
   actions: {
 
-    // load existing plans from the DB
+    // load existing types from the DB
     loadTypes ({ commit }, payload) {
       let types = []
       // payload is a firebase data snapshot
-      payload.forEach(plan => {
-        let pl = plan.val()
-        pl.id = plan.key
-        types.push(pl)
+      payload.forEach(type => {
+        let item = type.val()
+        item.id = type.key
+        types.push(item)
       })
       commit('setLoading', false)
       commit('setTypes', types)

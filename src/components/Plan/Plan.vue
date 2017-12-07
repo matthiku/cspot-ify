@@ -13,17 +13,21 @@
                 <v-btn icon slot="activator" dark>
                   <v-toolbar-side-icon></v-toolbar-side-icon>
                 </v-btn>
-                <v-list>
-                  <v-list-tile v-for="item in planMenuItems" :key="item.title" @click="planAction(item.action)">
-                    <v-icon>{{ item.icon }}</v-icon>&nbsp;
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                  </v-list-tile>
-                  <v-list-tile v-if="userOwnsPlan">
-                    <template>
-                      <app-delete-plan-dialog :plan="plan"></app-delete-plan-dialog>
-                    </template>
-                  </v-list-tile>
-                </v-list>
+                <v-card>
+                  <v-card-title class="pb-0">Select Show Mode:</v-card-title class="mb-0">
+                  <v-list class="mt-0">
+                    <v-list-tile v-for="item in planMenuItems" :key="item.title" @click="planAction(item.action)">
+                      <v-icon>{{ item.icon }}</v-icon>&nbsp;
+                      <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                    </v-list-tile>
+                    <hr>
+                    <v-list-tile v-if="userOwnsPlan">
+                      <template>
+                        <app-delete-plan-dialog :plan="plan"></app-delete-plan-dialog>
+                      </template>
+                    </v-list-tile>
+                  </v-list>
+                </v-card>
               </v-menu>
               
               <v-toolbar-title class="white--text">
