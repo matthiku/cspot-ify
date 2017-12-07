@@ -21,25 +21,22 @@
             </v-layout>
           </v-container>
 
-          <!-- TITLE -->
+          <!-- TITLE and DATE picker-->
           <v-layout row>
             <v-flex xs12 md6 offset-md3>
-              <v-select
-              v-bind:items="types"
-              v-model="typeId"
-              item-text="name"
-              item-value="id"
-              label="Select type"
-              single-line
-              bottom required
-            ></v-select>
-            </v-flex>
-          </v-layout>
-
-          <!-- DATE and TIME Picker -->
-          <v-layout row>
-            <v-flex xs12 md6 offset-md3>
-              <v-layout row>
+              <v-layout row wrap>
+                <v-flex xs11 sm5>
+                  <v-select
+                    v-bind:items="types"
+                    v-model="typeId"
+                    item-text="name"
+                    item-value="id"
+                    label="Select type"
+                    single-line
+                    bottom required
+                  ></v-select>
+                </v-flex>
+                <v-spacer></v-spacer>
                 <v-flex xs11 sm5>
                   <v-dialog
                     persistent
@@ -48,14 +45,13 @@
                   >
                     <v-text-field
                       slot="activator"
-                      label="Pick a date"
+                      label="Select the date"
                       v-model="date"
                       prepend-icon="event"                      
-                      readonly
-                      required
+                      readonly required
                     ></v-text-field>
                     <v-date-picker 
-                      v-model="date"
+                      v-model="date" no-title
                       first-day-of-week="0"
                       :allowed-dates="onlyFutureDays"
                       scrollable actions>
@@ -69,7 +65,14 @@
                     </v-date-picker>
                   </v-dialog>
                 </v-flex>
-                <v-spacer></v-spacer>
+            </v-layout>
+            </v-flex>
+          </v-layout>
+
+          <!-- Start and End TIME Picker -->
+          <v-layout row>
+            <v-flex xs12 md6 offset-md3>
+              <v-layout row wrap>
                 <v-flex xs11 sm5>
                   <v-dialog
                     persistent
@@ -78,12 +81,41 @@
                   >
                     <v-text-field
                       slot="activator"
-                      label="Pick a time"
+                      label="Select start time"
                       v-model="time"                      
                       prepend-icon="schedule"
                       readonly required
                     ></v-text-field>
-                    <v-time-picker v-model="time" format="24hr" scrollable actions>
+                    <v-time-picker 
+                      v-model="time" format="24hr" scrollable actions>
+                      <template slot-scope="{ save, cancel }">
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn flat color="primary" @click="cancel">Cancel</v-btn>
+                          <v-btn flat color="primary" @click="save">OK</v-btn>
+                        </v-card-actions>
+                      </template>
+                    </v-time-picker>
+                  </v-dialog>
+                </v-flex>
+                <v-spacer></v-spacer>
+                <v-flex xs11 sm5>
+                  <v-dialog
+                    persistent
+                    v-model="modalEndTime"
+                    lazy
+                  >
+                    <v-text-field
+                      slot="activator"
+                      label="Select end time"
+                      v-model="endTime"                      
+                      prepend-icon="schedule"
+                      readonly
+                    ></v-text-field>
+                    <v-time-picker
+                      v-model="endTime"
+                      :allowed-hours="minMaxHourValues" 
+                      format="24hr" scrollable actions>
                       <template slot-scope="{ save, cancel }">
                         <v-card-actions>
                           <v-spacer></v-spacer>
@@ -102,10 +134,8 @@
           <v-layout row>
             <v-flex xs12 md6 offset-md3>
               <v-text-field 
-                name="info" 
-                label="Description"
+                label="Further event details"
                 hint="e.g. a location - this is used for announcements"
-                id="info"
                 v-model="info"
                 multi-line rows="2"
                 ></v-text-field>
@@ -115,7 +145,10 @@
           <!-- Default BG image for this plan -->
           <v-layout row>
             <v-flex xs12 md6 offset-md3>
-              <v-btn small raised class="secondary" @click="onPickFile">Upload Image</v-btn>
+              <v-tooltip right>
+                <v-btn small raised slot="activator" class="secondary" @click="onPickFile"><v-icon>image</v-icon>&nbsp; Add Image ?</v-btn>
+                <span>(Optional: select an image to be the default background for this plan)</span>
+              </v-tooltip>
               <input 
                 type="file" 
                 style="display: none" 
@@ -124,15 +157,16 @@
                 @change="onFilePicked">
             </v-flex>
           </v-layout>
-          <v-layout row>
+          <v-layout v-if="imageB64" row>
             <!-- IMAGE preview -->
             <v-flex xs12 md6 offset-md3>
-              <img :src="imageB64" height="150px" alt="As optional default background image for this plan">
+              <img :src="imageB64" height="150px">
             </v-flex>
           </v-layout>
 
+          <hr class="mt-2">
           <!-- SUBMIT -->
-          <v-layout row class="mt-5">
+          <v-layout row class="mt-2">
             <v-flex xs12 md6 offset-md3>
               <v-btn 
                 type="submit" 
@@ -140,13 +174,13 @@
                 :disabled="!formIsValid" 
                 :loading="loading"
                 @click="loader = 'loading'"
-                >Create Plan
+                ><v-icon>add_box</v-icon>&nbsp;Create Plan
                 <span slot="loader" class="custom-loader">
                   <v-icon light>cached</v-icon>
                 </span>
               </v-btn>
-              <small>*indicates required field</small>
             </v-flex>
+            <small>*indicates required fields</small>
           </v-layout>
         </form>
       </v-flex>
@@ -168,10 +202,13 @@ export default {
       imageB64: null,
       image: null,
       date: null,
-      onlyFutureDays: {min: null, max: null},
+      onlyFutureDays: {min: moment().format('YYYY-MM-DD'), max: '2099-12-31'},
       time: '',
+      endTime: '',
+      minMaxHourValues: {min: 0, max: 23},
       modalDate: false,
-      modalTime: false
+      modalTime: false,
+      modalEndTime: false
     }
   },
 
@@ -195,11 +232,17 @@ export default {
       return this.$store.getters.loading
     },
     formIsValid () {
-      return this.typeId !== '' && this.dateTime && moment(this.dateTime).isValid()
+      return this.typeId && this.dateTime && moment(this.dateTime).isValid()
     },
     dateTime () {
       if (!this.date || !this.time) return null
       return moment(this.date + 'T' + this.time)
+    },
+    endDateTime () {
+      if (!this.date) return null
+      // end time is not required - just use the start time
+      if (!this.endTime) return this.dateTime
+      return moment(this.date + 'T' + this.endTime)
     }
   },
 
@@ -233,6 +276,7 @@ export default {
       this.$store.dispatch('setLoading', true)
       const planData = {
         date: this.dateTime.format(),
+        end: this.endDateTime.format(),
         typeId: this.typeId,
         staff: [{ id: 0, role: 'dummy' }],
         info: this.info
@@ -249,15 +293,19 @@ export default {
   },
 
   watch: {
-    // check if the new plan was added to the array of plans
+    // wait until the new plan was added to the array of plans
     // then open the new plan
     planId () {
       this.$router.push({ name: 'plan', params: { planId: this.planId } })
+    },
+    time () {
+      // set the minimal hour for the end time to be the same as the start time hour
+      this.minMaxHourValues.min = (this.time).substr(0, 2) * 1
+      // if the start time is changed and the end time not set yet,
+      // set the end time to the start time
+      if (this.endTime && this.endTime > this.time) return
+      this.endTime = this.time
     }
-  },
-  mounted () {
-    this.onlyFutureDays.min = moment().format('YYYY-MM-DD')
-    this.onlyFutureDays.max = '2099-12-31'
   }
 }
 </script>

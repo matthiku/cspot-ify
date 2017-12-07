@@ -48,7 +48,7 @@
                         <v-flex xs7 sm8 md9>
                           <v-card-title primary-title class="mb-0 pb-0">
                             <div>                  
-                              <h5 class="white--text mb-0">{{ plan.title }}</h5>
+                              <h5 class="white--text mb-0">{{ types[plan.typeId].name }}</h5>
                               <div>{{ plan.date | date }} in {{ plan.info }}</div>
                             </div>
                           </v-card-title>
@@ -103,6 +103,9 @@ export default {
     },
     plans () {
       return this.$store.getters.plans
+    },
+    types () {
+      return this.$store.getters.types
     }
   },
 
