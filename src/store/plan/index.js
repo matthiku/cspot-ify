@@ -23,6 +23,17 @@ export default {
   // A C T I O N S
   actions: {
 
+    refreshPlans ({ commit, dispatch }) {
+      plansRef.once('value')
+      .then((data) => {
+        dispatch('loadPlans', data)
+      })
+      .catch((error) => {
+        commit('setError', error.toString())
+        console.log(error)
+        commit('setLoading', false)
+      })
+    },
     // load existing plans from the DB
     loadPlans ({ commit }, payload) {
       let plans = []
@@ -32,8 +43,8 @@ export default {
         pl.id = plan.key
         plans.push(pl)
       })
-      commit('setLoading', false)
       commit('setPlans', plans)
+      commit('setLoading', false)
     },
 
     // create a new Plan item and possibly upload an image file

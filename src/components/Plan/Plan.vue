@@ -28,7 +28,7 @@
               
               <v-toolbar-title class="white--text">
                 {{ pageTitle }}: 
-                <v-chip large outline color="black">{{ plan ? types[plan.typeId].name : 'Plan gone' }}</v-chip>
+                <v-chip large outline color="black">{{ plan ? types.length ? types[plan.typeId].name : plan.typeId : 'Plan gone' }}</v-chip>
               </v-toolbar-title>
               <v-spacer></v-spacer>
               <v-tooltip bottom>
@@ -275,7 +275,7 @@ export default {
       return this.$store.getters.types
     },
     plan () {
-      if (this.$route.name === 'nextsunday') {
+      if (this.$route && this.$route.name === 'nextsunday') {
         this.pageTitle = 'This Sunday\'s Plan'
         return this.$store.getters.nextSunday
       }

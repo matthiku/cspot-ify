@@ -46,7 +46,8 @@ new Vue({
         } else {
           from = false
         }
-        router.replace('./signin' + from ? from : '')
+        // router.replace('./signin' + from ? from : '')
+        router.replace('/signin')
         console.log('No user is signed in. FROM: ', from)
       }
     })

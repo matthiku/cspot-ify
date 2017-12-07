@@ -8,7 +8,18 @@
           <v-card-text>
 
             <v-toolbar color="blue">
-              <v-toolbar-side-icon></v-toolbar-side-icon>
+              <v-menu open-on-hover bottom right offset-y>
+                <v-btn icon slot="activator" dark>
+                  <v-toolbar-side-icon></v-toolbar-side-icon>
+                </v-btn>
+                <v-list>
+                  <v-list-tile v-for="item in planMenuItems" :key="item.title" @click="planAction(item.action)">
+                    <v-icon>{{ item.icon }}</v-icon>&nbsp;
+                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+
               <v-toolbar-title class="white--text">All Plans</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn icon>
@@ -48,7 +59,7 @@
                         <v-flex xs7 sm8 md9>
                           <v-card-title primary-title class="mb-0 pb-0">
                             <div>                  
-                              <h5 class="white--text mb-0">{{ types[plan.typeId].name }}</h5>
+                              <h5 class="white--text mb-0">{{ types.length ? types[plan.typeId].name : plan.typeId }}</h5>
                               <div>{{ plan.date | date }} in {{ plan.info }}</div>
                             </div>
                           </v-card-title>
@@ -82,9 +93,11 @@
 export default {
   name: 'AllPlansList',
 
-  date () {
+  data () {
     return {
-      error: ''
+      planMenuItems: [
+        { icon: 'replay', action: 'refresh', title: 'Refresh Plan List' }
+      ]
     }
   },
 
@@ -119,6 +132,11 @@ export default {
     },
     userOwnsPlan (id) {
       return true
+    },
+    planAction (what) {
+      if (what === 'refresh') {
+        this.$store.dispatch('refreshPlans')
+      }
     }
   }
 }
