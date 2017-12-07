@@ -1,4 +1,4 @@
-import { firebaseApp } from '../../firebaseApp'
+import { firebaseApp, usersRef } from '../../firebaseApp'
 
 export default {
   state: {
@@ -17,9 +17,28 @@ export default {
 
   actions: {
     setUser ({commit, state}, payload) {
-      const userData = { id: payload.uid }
+      const userData = {
+        id: payload.uid,
+        email: payload.email,
+        verified: payload.emailVerified,
+        name: payload.displayName
+      }
       commit('setUser', userData)
     },
+
+    fetchUserData ({commit}, payload) {
+      usersRef.child(payload.uid).once('value')
+        .then((data) => {
+          const values = data.val()
+          console.log(values)
+        })
+        .catch((error) => {
+          console.log(error)
+          commit('setError', error)
+          commit('setLoading', false)
+        })
+    },
+
     signUserOut ({commit}) {
       commit('setLoading', true)
       commit('clearError')
@@ -35,6 +54,7 @@ export default {
           console.log(error)
         })
     },
+
     signUserIn ({commit}, payload) {
       commit('setLoading', true)
       commit('clearError')
@@ -57,6 +77,7 @@ export default {
           }
         )
     },
+
     signUserUp ({commit}, payload) {
       commit('setLoading', true)
       commit('clearError')
@@ -79,6 +100,7 @@ export default {
           }
         )
     },
+
     setOldRoute ({commit}, payload) {
       commit('setOldRoute', payload)
     }

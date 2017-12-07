@@ -112,7 +112,7 @@
     </v-navigation-drawer>
 
     <v-footer fixed app>
-      <span>c-SPOT-ify</span>
+      <span><a target="new" href="https://github.com/matthiku/cspot-ify">c-SPOT-ify</a></span>
       <v-spacer></v-spacer>
       <span>&copy; 2017 Matthias Kuhs</span>
     </v-footer>

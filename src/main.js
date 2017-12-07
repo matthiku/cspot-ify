@@ -39,6 +39,7 @@ new Vue({
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
         store.dispatch('setUser', user)
+        store.dispatch('fetchUserData', user)
       } else {
         let from = store.getters.oldRoute
         if (from && from !== 'signin' && from !== 'home') {
