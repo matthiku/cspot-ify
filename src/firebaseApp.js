@@ -12,3 +12,5 @@ const config = {
 export const firebaseApp = firebase.initializeApp(config)
 
 export const plansRef = firebaseApp.database().ref().child('plans')
+
+export const typesRef = firebaseApp.database().ref().child('types')

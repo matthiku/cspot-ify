@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 
 // external packages
-import { firebaseApp, plansRef } from './firebaseApp'
+import { firebaseApp, plansRef, typesRef } from './firebaseApp'
 
 // use customized styling
 import './stylus/main.styl'
@@ -54,6 +54,11 @@ new Vue({
     // sync with existing plans from firebase
     plansRef.on('value', snap => {
       store.dispatch('loadPlans', snap)
+    })
+
+    // sync with types table
+    typesRef.on('value', snap => {
+      store.dispatch('loadTypes', snap)
     })
   }
 })

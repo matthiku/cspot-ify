@@ -15,8 +15,7 @@ export default {
     },
 
     createPlan (state, payload) {
-      // not needed, as we get an update through firebase!
-      // state.plans.push(payload)
+      // state.plans.push(payload) // not needed, as we get an update through firebase!
       state.newPlanId = payload.id
     }
   },
@@ -100,9 +99,9 @@ export default {
         })
     },
 
-    // delete a plan
+    // move a plan to the bin
     // - - payload must be the full plan, as we send it to the bin and then delete it
-    deletePlan ({ commit, state }, payload) {
+    binPlan ({ commit, state }, payload) {
       commit('setLoading', true)
       firebaseApp.database().ref().child('bin').push(payload)
       .then(() => {
@@ -117,6 +116,21 @@ export default {
           commit('setLoading', false)
         })
       })
+    },
+
+    // delete a plan finally
+    deletePlan ({ commit, state }, payload) {
+      commit('setLoading', true)
+      plansRef.child(payload.id).remove()
+        .then(() => {
+          commit('setLoading', false)
+          commit('setMessage', 'Plan was erased.')
+        })
+        .catch((error) => {
+          console.log(error)
+          commit('setError', error)
+          commit('setLoading', false)
+        })
     }
   },
 

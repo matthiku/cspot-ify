@@ -2,7 +2,7 @@
   <v-container fluid>
 
     <v-layout row>
-      <v-flex xs12 sm6 offset-sm3>
+      <v-flex xs12 md6 offset-md3>
         <h4 class="secondary--text">Create New Plan</h4 class="text--primary">
       </v-flex>
     </v-layout>
@@ -12,29 +12,33 @@
         <form @submit.prevent="onCreatePlan">
 
           <!-- Alert Panel -->
-          <v-container v-if="error">
+          <v-container v-if="error || message">
             <v-layout row>
               <v-flex xs12>
-                <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+                <app-alert @dismissed="onDismissed('clearError')" :text="error"></app-alert>
+                <app-message @dismissed="onDismissed('clearMessage')" :text="message"></app-message>
               </v-flex>
             </v-layout>
           </v-container>
 
           <!-- TITLE -->
           <v-layout row>
-            <v-flex xs12 sm6 offset-sm3>
-              <v-text-field 
-                name="title" 
-                label="Title"
-                id="title"
-                v-model="title"
-                required></v-text-field>
+            <v-flex xs12 md6 offset-md3>
+              <v-select
+              v-bind:items="types"
+              v-model="typeId"
+              item-text="name"
+              item-value="id"
+              label="Select type"
+              single-line
+              bottom required
+            ></v-select>
             </v-flex>
           </v-layout>
 
           <!-- DATE and TIME Picker -->
           <v-layout row>
-            <v-flex xs12 sm6 offset-sm3>
+            <v-flex xs12 md6 offset-md3>
               <v-layout row>
                 <v-flex xs11 sm5>
                   <v-dialog
@@ -46,11 +50,15 @@
                       slot="activator"
                       label="Pick a date"
                       v-model="date"
-                      prepend-icon="event"
+                      prepend-icon="event"                      
                       readonly
                       required
                     ></v-text-field>
-                    <v-date-picker v-model="date" scrollable actions>
+                    <v-date-picker 
+                      v-model="date"
+                      first-day-of-week="0"
+                      :allowed-dates="onlyFutureDays"
+                      scrollable actions>
                       <template slot-scope="{ save, cancel }">
                         <v-card-actions>
                           <v-spacer></v-spacer>
@@ -92,10 +100,11 @@
 
           <!-- Description -->
           <v-layout row>
-            <v-flex xs12 sm6 offset-sm3>
+            <v-flex xs12 md6 offset-md3>
               <v-text-field 
                 name="info" 
                 label="Description"
+                hint="e.g. a location - this is used for announcements"
                 id="info"
                 v-model="info"
                 multi-line rows="2"
@@ -105,7 +114,7 @@
 
           <!-- Default BG image for this plan -->
           <v-layout row>
-            <v-flex xs12 sm6 offset-sm3>
+            <v-flex xs12 md6 offset-md3>
               <v-btn small raised class="secondary" @click="onPickFile">Upload Image</v-btn>
               <input 
                 type="file" 
@@ -117,14 +126,14 @@
           </v-layout>
           <v-layout row>
             <!-- IMAGE preview -->
-            <v-flex xs12 sm6 offset-sm3>
+            <v-flex xs12 md6 offset-md3>
               <img :src="imageB64" height="150px" alt="As optional default background image for this plan">
             </v-flex>
           </v-layout>
 
           <!-- SUBMIT -->
           <v-layout row class="mt-5">
-            <v-flex xs12 sm6 offset-sm3>
+            <v-flex xs12 md6 offset-md3>
               <v-btn 
                 type="submit" 
                 class="primary"
@@ -136,6 +145,7 @@
                   <v-icon light>cached</v-icon>
                 </span>
               </v-btn>
+              <small>*indicates required field</small>
             </v-flex>
           </v-layout>
         </form>
@@ -151,13 +161,14 @@ import * as moment from 'moment'
 export default {
   data () {
     return {
-      date: null,
       typeId: null,
       title: '',
       staff: [{ id: 0, role: 'dummy' }],
-      info: 'info',
+      info: '',
       imageB64: null,
       image: null,
+      date: null,
+      onlyFutureDays: {min: null, max: null},
       time: '',
       modalDate: false,
       modalTime: false
@@ -168,17 +179,23 @@ export default {
     planId () {
       return this.$store.getters.newPlanId
     },
+    types () {
+      return this.$store.getters.types
+    },
     user () {
       return this.$store.getters.user
     },
     error () {
       return this.$store.getters.error
     },
+    message () {
+      return this.$store.getters.message
+    },
     loading () {
       return this.$store.getters.loading
     },
     formIsValid () {
-      return this.title !== '' && this.dateTime && moment(this.dateTime).isValid()
+      return this.typeId !== '' && this.dateTime && moment(this.dateTime).isValid()
     },
     dateTime () {
       if (!this.date || !this.time) return null
@@ -217,7 +234,6 @@ export default {
       const planData = {
         date: this.dateTime.format(),
         typeId: this.typeId,
-        title: this.title,
         staff: [{ id: 0, role: 'dummy' }],
         info: this.info
       }
@@ -227,8 +243,8 @@ export default {
         image: this.image
       })
     },
-    onDismissed () {
-      this.$store.dispatch('clearError')
+    onDismissed (what) {
+      this.$store.dispatch(what)
     }
   },
 
@@ -238,6 +254,10 @@ export default {
     planId () {
       this.$router.push({ name: 'plan', params: { planId: this.planId } })
     }
+  },
+  mounted () {
+    this.onlyFutureDays.min = moment().format('YYYY-MM-DD')
+    this.onlyFutureDays.max = '2099-12-31'
   }
 }
 </script>
