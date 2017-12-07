@@ -96,20 +96,16 @@
 </template>
 
 <script>
+import genericMixins from '../mixins/'
+
 export default {
   name: 'Home',
+
+  mixins: [genericMixins],
+
   computed: {
     upcomingPlans () {
       return this.$store.getters.futurePlans
-    },
-    user () {
-      return this.$store.getters.user
-    },
-    error () {
-      return this.$store.getters.error
-    },
-    loading () {
-      return this.$store.getters.loading
     }
   },
   methods: {

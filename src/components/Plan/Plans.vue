@@ -90,8 +90,12 @@
 </template>
 
 <script>
+import genericMixins from '../../mixins/'
+
 export default {
   name: 'AllPlansList',
+
+  mixins: [genericMixins],
 
   data () {
     return {
@@ -102,30 +106,12 @@ export default {
   },
 
   computed: {
-    user () {
-      return this.$store.getters.user
-    },
-    error () {
-      return this.$store.getters.error
-    },
-    message () {
-      return this.$store.getters.message
-    },
-    loading () {
-      return this.$store.getters.loading
-    },
     plans () {
       return this.$store.getters.plans
-    },
-    types () {
-      return this.$store.getters.types
     }
   },
 
   methods: {
-    onDismissed (what) {
-      this.$store.dispatch(what)
-    },
     showSinglePlan (id) {
       // navigate to single plan form
       this.$router.push({name: 'plan', params: {planId: id}})

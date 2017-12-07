@@ -239,7 +239,12 @@
 </template>
 
 <script>
+import genericMixins from '../../mixins/'
+
 export default {
+  name: 'SinglePlan',
+
+  mixins: [genericMixins],
 
   data () {
     return {
@@ -263,21 +268,6 @@ export default {
     }
   },
   computed: {
-    user () {
-      return this.$store.getters.user
-    },
-    error () {
-      return this.$store.getters.error
-    },
-    message () {
-      return this.$store.getters.message
-    },
-    loading () {
-      return this.$store.getters.loading
-    },
-    types () {
-      return this.$store.getters.types
-    },
     plan () {
       if (this.$route && this.$route.name === 'nextsunday') {
         this.pageTitle = 'This Sunday\'s Plan'
@@ -288,9 +278,6 @@ export default {
   },
 
   methods: {
-    onDismissed (what) {
-      this.$store.dispatch(what)
-    },
     userOwnsPlan (id) {
       return true
     },
@@ -309,11 +296,9 @@ export default {
         field: that,
         value: this.plan[that]
       })
-    },
-    planAction (what) {
-      // we need to show a confirmation message somehow!
     }
   },
+
   watch: {
     plan () {
       if (this.plan) return

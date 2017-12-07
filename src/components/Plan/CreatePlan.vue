@@ -190,6 +190,7 @@
 </template>
 
 <script>
+import genericMixins from '../../mixins/'
 import * as moment from 'moment'
 
 export default {
@@ -212,24 +213,11 @@ export default {
     }
   },
 
+  mixins: [genericMixins],
+
   computed: {
     planId () {
       return this.$store.getters.newPlanId
-    },
-    types () {
-      return this.$store.getters.types
-    },
-    user () {
-      return this.$store.getters.user
-    },
-    error () {
-      return this.$store.getters.error
-    },
-    message () {
-      return this.$store.getters.message
-    },
-    loading () {
-      return this.$store.getters.loading
     },
     formIsValid () {
       return this.typeId && this.dateTime && moment(this.dateTime).isValid()
@@ -286,9 +274,6 @@ export default {
         planData,
         image: this.image
       })
-    },
-    onDismissed (what) {
-      this.$store.dispatch(what)
     }
   },
 
