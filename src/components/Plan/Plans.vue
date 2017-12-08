@@ -45,10 +45,6 @@
                   <v-btn :to="{name: 'createplan'}">Create one!</v-btn>
                 </v-flex>
 
-                <v-flex xs12 mb-2 v-if="loading">
-                  <v-progress-linear v-bind:indeterminate="true"></v-progress-linear>
-                </v-flex>
-
                 <!-- iterate through each registered plan -->
                 <app-show-list-of-plans :plans="plans"></app-show-list-of-plans>
 

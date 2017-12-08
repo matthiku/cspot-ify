@@ -11,12 +11,12 @@
       app>
       <v-list>
         <v-list-tile
-          v-for="(item, i) in menuItems"
-          :key="i"
-          :to="{ name: item.link }"
-          value="true"
-          v-if="(item.auth!='admin' || item.auth=='admin' && userIsAdmin) && item.where!='toolbar'"
-        >
+            v-for="(item, i) in menuItems"
+            :key="i"
+            :to="{ name: item.link }"
+            value="true"
+            v-if="(item.auth!='admin' || item.auth=='admin' && userIsAdmin) && item.where!='toolbar'"
+          >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
           </v-list-tile-action>
@@ -33,7 +33,7 @@
       <v-toolbar-side-icon 
         v-if="userIsAuthenticated"
         @click.stop="drawer = !drawer"
-        :class="[ userIsAdmin ? '' : 'hidden-sm-and-up' ]"
+        :class="[ userIsAdmin ? '' : 'hidden-lg-and-up' ]"
       ></v-toolbar-side-icon>
 
       <v-btn icon :to="{ name: 'home' }">
@@ -54,7 +54,13 @@
           :key="i"
           :to="{ name: item.link}"
           v-if="(item.auth!='admin' || (item.auth=='admin' && userIsAdmin)) && item.where!='drawer'"
-        ><v-icon>{{ item.icon }}</v-icon>{{ item.title }}</v-btn>
+        >
+          <v-badge v-if="item.note" color="red">
+            <v-icon slot="badge" dark>notifications</v-icon>
+            <v-icon>{{ item.icon }}</v-icon>{{ item.title }}
+          </v-badge>
+          <span v-else><v-icon>{{ item.icon }}</v-icon>{{ item.title }}</span>
+        </v-btn>
       </v-toolbar-items>
 
       <v-spacer></v-spacer>
@@ -76,9 +82,17 @@
 
 
     <main>
+
       <v-content>
+
+        <v-flex xs12 v-if="loading">
+          <v-progress-linear class="ma-0 pa-0" v-bind:indeterminate="true"></v-progress-linear>
+        </v-flex>
+
         <router-view></router-view>
+
       </v-content>
+
     </main>
 
 
@@ -192,6 +206,7 @@
               title: 'Profile',
               link: 'profile',
               auth: 'user',
+              note: !this.userIsVerified,
               where: 'both'
             }
           ]
@@ -200,6 +215,12 @@
       },
       userIsAuthenticated () {
         return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+      },
+      userIsVerified () {
+        return this.$store.getters.user && this.$store.getters.user.verified
+      },
+      loading () {
+        return this.$store.getters.loading
       },
       userIsAdmin  () {
         return this.$store.getters.userIsAdmin

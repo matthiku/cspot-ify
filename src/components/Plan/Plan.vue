@@ -1,7 +1,7 @@
 <template>
   <v-container fluid grid-list-xl>
 
-    <!-- Show upcoming plans -->
+    <!-- Show singe Plan -->
     <v-layout row justify-center>
       <v-flex sm12 md10 lg8 xl6>
         <v-card>
@@ -20,12 +20,14 @@
                       <v-icon>{{ item.icon }}</v-icon>&nbsp;
                       <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                     </v-list-tile>
-                    <hr>
-                    <v-list-tile v-if="userOwnsPlan">
-                      <template>
-                        <app-delete-plan-dialog :plan="plan"></app-delete-plan-dialog>
-                      </template>
-                    </v-list-tile>
+                    <div v-if="userOwnsPlan">
+                      <hr>
+                      <v-list-tile>
+                        <template>
+                          <app-delete-plan-dialog :plan="plan"></app-delete-plan-dialog>
+                        </template>
+                      </v-list-tile>
+                    </div>
                   </v-list>
                 </v-card>
               </v-menu>
@@ -240,11 +242,12 @@
 
 <script>
 import genericMixins from '../../mixins/'
+import planMixins from './mixins'
 
 export default {
   name: 'SinglePlan',
 
-  mixins: [genericMixins],
+  mixins: [genericMixins, planMixins],
 
   data () {
     return {
@@ -278,9 +281,6 @@ export default {
   },
 
   methods: {
-    userOwnsPlan (id) {
-      return true
-    },
     checkEditing (what) {
       if (!this.userOwnsPlan) return
       this.editing = what
