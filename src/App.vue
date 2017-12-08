@@ -202,7 +202,7 @@
         return this.$store.getters.user !== null && this.$store.getters.user !== undefined
       },
       userIsAdmin  () {
-        return true
+        return this.$store.getters.userIsAdmin
       }
     },
     methods: {

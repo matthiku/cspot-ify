@@ -43,35 +43,8 @@
                 </v-flex>
 
                 <!-- iterate through each registered plan -->
-                <v-flex xs12 :key="plan.id" v-for="plan in upcomingPlans">
-                  <v-card class="primary mb-2">
-                    <v-container fluid>
-                      <v-layout row>
-
-                        <!-- show title, date and location -->
-                        <v-flex xs7 sm8 md9>
-                          <v-card-title primary-title class="mb-0 pb-0">
-                            <div>                  
-                              <h5 class="white--text mb-0">{{ plan.title }}</h5>
-                              <div>{{ plan.date | date }} in {{ plan.info }}</div>
-                            </div>
-                          </v-card-title>
-
-                          <v-card-actions>
-                            <v-btn 
-                              @click="showSinglePlan(plan.id)"
-                              :flat="!userOwnsPlan(plan.id)" 
-                              :class="userOwnsPlan(plan.id) ? 'info' : ''">
-                              <v-icon left>{{ userOwnsPlan(plan.id) ? 'edit' : 'arrow_forward' }}</v-icon>
-                              {{ userOwnsPlan(plan.id) ? 'Edit' : 'View' }} Plan
-                            </v-btn>
-                          </v-card-actions>
-                        </v-flex>
-
-                      </v-layout>
-                    </v-container>
-                  </v-card>
-                </v-flex>
+                <app-show-list-of-plans :plans="upcomingPlans"></app-show-list-of-plans>
+                
               </v-layout>
             </v-container>
           </v-card-text>
@@ -92,6 +65,7 @@
         </blockquote>
       </v-flex>
     </v-layout>
+
   </v-container>
 </template>
 
@@ -99,25 +73,13 @@
 import genericMixins from '../mixins/'
 
 export default {
-  name: 'Home',
+  name: 'HomeView',
 
   mixins: [genericMixins],
 
   computed: {
     upcomingPlans () {
       return this.$store.getters.futurePlans
-    }
-  },
-  methods: {
-    onDismissed () {
-      this.$store.dispatch('clearError')
-    },
-    showSinglePlan (id) {
-      // navigate to single plan form
-      this.$router.push({name: 'plan', params: {planId: id}})
-    },
-    userOwnsPlan (id) {
-      return true
     }
   }
 }

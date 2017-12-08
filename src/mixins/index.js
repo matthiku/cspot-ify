@@ -4,6 +4,9 @@ export default {
     user () {
       return this.$store.getters.user
     },
+    users () {
+      return this.$store.getters.users
+    },
     error () {
       return this.$store.getters.error
     },
@@ -15,6 +18,9 @@ export default {
     },
     types () {
       return this.$store.getters.types
+    },
+    userIsAdmin  () {
+      return this.$store.getters.userIsAdmin
     }
   },
 

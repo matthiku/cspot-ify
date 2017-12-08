@@ -42,17 +42,22 @@
 
                 <v-layout row>
                   <v-flex xs12>
-                    <v-btn 
-                      type="submit" 
-                      class="primary"
-                      :disabled="!formIsValid" 
-                      :loading="loading"
-                      @click="loader = 'loading'"
-                      >Sign In
-                      <span slot="loader" class="custom-loader">
-                        <v-icon light>cached</v-icon>
-                      </span>
-                    </v-btn>
+                    <v-card-actions>
+                      <v-btn 
+                        type="submit" 
+                        class="primary"
+                        :disabled="!formIsValid" 
+                        :loading="loading"
+                        @click="loader = 'loading'"
+                        >Sign In
+                        <span slot="loader" class="custom-loader">
+                          <v-icon light>cached</v-icon>
+                        </span>
+                      </v-btn>
+                      <v-spacer></v-spacer>
+                      Not signed up yet? 
+                      <router-link :to="{ name: 'signup'}">Sign Up</router-link>
+                    </v-card-actions>
                   </v-flex>
                 </v-layout>
               </form>
