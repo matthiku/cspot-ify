@@ -21,12 +21,12 @@ export default function startUpActions (store, router) {
     }
   })
 
-  // sync with existing plans from firebase
+  // sync with existing PLANS from firebase
   plansRef.on('value', snap => {
     store.dispatch('loadPlans', snap)
   })
 
-  // sync with types table
+  // sync with TYPES table
   typesRef.on('value', snap => {
     if (!snap) {
       console.log('error when trying to fetch types table!')
@@ -34,12 +34,12 @@ export default function startUpActions (store, router) {
     store.dispatch('loadTypes', snap)
   })
 
-  // sync with roles table
+  // sync with ROLES table
   rolesRef.on('value', snap => {
     store.dispatch('loadRoles', snap)
   })
 
-  // sync with roles table
+  // sync with USERS table
   usersRef.on('value', snap => {
     store.dispatch('loadUsers', snap)
   })

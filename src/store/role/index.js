@@ -11,15 +11,8 @@ export default {
 
     // load existing roles from the DB
     loadRoles ({ commit }, payload) {
-      let roles = []
-      // payload is a firebase data snapshot
-      payload.forEach(role => {
-        let item = role.val()
-        item.id = role.key
-        roles.push(item)
-      })
+      commit('setRoles', payload.val())
       commit('setLoading', false)
-      commit('setRoles', roles)
     }
 
   },

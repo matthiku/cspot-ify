@@ -1,4 +1,4 @@
-import { firebaseApp, usersRef } from '../../firebaseApp'
+import { firebaseApp, usersRef, rolesRef } from '../../firebaseApp'
 
 export default {
   state: {
@@ -26,7 +26,9 @@ export default {
   },
 
   actions: {
-    setUser ({commit}, payload) {
+    // called from startUpActions only!
+    // Triggered by a change in the Auth state of firebase
+    setUser ({commit, dispatch}, payload) {
       const userData = {
         id: payload.uid,
         email: payload.email,
@@ -34,6 +36,19 @@ export default {
         name: payload.displayName
       }
       commit('setUser', userData)
+      dispatch('updateUser', userData)
+    },
+
+    // update our own user table with the firebase user data
+    updateUser ({commit}, payload) {
+      usersRef.child(payload.id).update(payload)
+        .then((data) => {
+          console.log(data)
+        })
+        .catch((error) => {
+          console.log(error)
+          commit('setError', error)
+        })
     },
 
     loadUsers ({commit}) {
@@ -55,7 +70,7 @@ export default {
       usersRef.child(payload.uid).once('value')
         .then((data) => {
           const values = data.val()
-          if (values.roles) {
+          if (values && values.roles) {
             commit('setUserRoles', values.roles)
           }
           commit('setLoading', false)
@@ -106,13 +121,24 @@ export default {
           usersRef.once('value').then((data) => {
             if (!data.val()) {
               console.log('We have the first user and she/he will become Admin!')
-              newUser.roles = [0]
+              newUser.roles = ['admin']
+            } else {
+              newUser.roles = ['user']
+              console.log('new user signed up!', newUser)
             }
             // add new user to our own users table
             usersRef.child(newUser.id).set(newUser)
               .then(() => {
-                dispatch('loadUsers')
-                commit('setLoading', false)
+                rolesRef.child(newUser.roles[0]).push(newUser.id)
+                  .then(() => {
+                    dispatch('loadUsers')
+                    commit('setLoading', false)
+                  })
+                  .catch((error) => {
+                    commit('setError', error)
+                    console.log(error)
+                    commit('setLoading', false)
+                  })
               }).catch((error) => {
                 commit('setError', error)
                 console.log(error)
@@ -148,7 +174,7 @@ export default {
     },
     userIsAdmin (state) {
       if (!state.user || !state.users || !state.users[state.user.id] || !state.users[state.user.id].roles) { return false }
-      return state.users[state.user.id].roles.indexOf(0) > -1
+      return state.users[state.user.id].roles.indexOf('admin') > -1
     }
   }
 }

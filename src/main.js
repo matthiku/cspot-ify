@@ -15,6 +15,7 @@ Vue.config.productionTip = false
 import DateFilter from './filters/date'
 Vue.filter('date', DateFilter)
 
+// register the generic components
 import sharedComponents from './sharedComponents'
 sharedComponents()
 
