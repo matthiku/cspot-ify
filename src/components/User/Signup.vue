@@ -80,6 +80,13 @@
 
             </v-container>
           </v-card-text>
+          <v-card-text>
+              <v-divider></v-divider>
+              or sign in via 
+              <v-btn @click="providerSignup('google')">
+                Google
+              </v-btn>
+          </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -149,6 +156,10 @@ export default {
 
     onDismissed () {
       this.$store.dispatch('clearError')
+    },
+
+    providerSignup (provider) {
+      this.$store.dispatch('singinViaProvider', provider)
     }
   }
 }

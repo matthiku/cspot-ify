@@ -21,7 +21,19 @@
               <v-layout>
                 <v-flex xs12>
 
-                  <h4>Your User Profile</h4>
+                  <v-card-title>
+                    <h4>Your User Profile</h4>
+                    <v-spacer></v-spacer>
+                    <v-avatar
+                        size="60"
+                        class="grey lighten-4">
+                      <img 
+                        v-if="user.providerData && user.providerData.length && user.providerData[0].photoURL"
+                        style="max-height:60px!important"
+                        :src="user.providerData[0].photoURL" :alt="user.displayName">
+                      <img v-else style="max-height:60px!important" src="\static\cspoticon72.png" alt="this could be your photo!">
+                    </v-avatar>
+                  </v-card-title>
 
                   <v-form ref="form" lazy-validation
                       v-model="valid">
@@ -39,8 +51,8 @@
                       ></v-text-field>
 
                     <div class="mt-0 mb-3" :class="[user.verified ? '' : 'red--text']">Email
-                        {{ user.verified ? 'verified' : 'unverified!' }}
-                      <v-icon>
+                        {{ user.verified ? 'verified?' : 'unverified!' }}
+                      <v-icon class="primary--text">
                         {{ user.verified ? 'done' : 'warning' }}
                       </v-icon>
                       <span v-if="!user.verified" class="small">You have only limited access.</span>
@@ -52,18 +64,24 @@
                     </div>
 
                     <v-divider></v-divider>
-                    <v-card-actions>
-                      <v-btn
-                        @click="submit"
-                        :disabled="!valid"
-                      >
-                        submit
-                      </v-btn>
-
+                    <v-card-actions class="pa-3">
+                      <v-btn @click="submit" :disabled="!valid">submit</v-btn>
                       <v-spacer></v-spacer>
                       <v-btn @click="resendEmailVerification">Re-send Email-Verification</v-btn>
                     </v-card-actions>
-                    
+
+                    <v-divider></v-divider>
+                    <v-card class="mt-2 pa-0" v-if="user.providerData && user.providerData.length">
+                      <div v-for="(prov, id) in user.providerData" :key="id">
+                        <v-card-text>
+                          <span class="blue--text">Authentication Provider:</span> {{ prov.providerId }}
+                          <v-spacer></v-spacer>
+                          <span class="blue--text">Photo URL:</span> {{ prov.photoURL }}
+                        </v-card-text>
+                        <v-divider></v-divider>
+                      </div>
+                    </v-card>
+
                   </v-form>
                 </v-flex>
               </v-layout>
