@@ -1,6 +1,8 @@
 export default {
   methods: {
     userOwnsPlan (plan) {
+      if (!plan) return false
+
       // get plan from store and investigate the roles
       let user = this.$store.getters.user
       let check = false

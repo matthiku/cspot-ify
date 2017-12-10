@@ -1,5 +1,5 @@
 <template>
-  <v-alert color="success" icon="success" dismissible @input="onClose" :value="true">
+  <v-alert v-if="text" color="success" icon="success" dismissible @input="onClose" :value="true">
     {{ text }}
   </v-alert>
 </template>

@@ -16,7 +16,7 @@
             <v-layout row>
               <v-flex xs12>
                 <app-alert @dismissed="onDismissed('clearError')" :text="error"></app-alert>
-                <app-message @dismissed="onDismissed('clearMessage')" :text="message"></app-message>
+                <app-success @dismissed="onDismissed('clearMessage')" :text="message"></app-success>
               </v-flex>
             </v-layout>
           </v-container>

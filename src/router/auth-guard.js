@@ -3,7 +3,9 @@ import { store } from '../store'
 export default (to, from, next) => {
   // change title of the HTML document to the route name or meta tag
   document.title = store.getters.appName + ' - ' + (to.meta.title ? to.meta.title : to.name)
-  // document.title = to.meta.title(to)
+
+  // reset app messages
+  store.dispatch('clearMessage')
 
   if (store.getters.user) {
     next()

@@ -20,7 +20,7 @@
                       <v-icon>{{ item.icon }}</v-icon>&nbsp;
                       <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                     </v-list-tile>
-                    <div v-if="userOwnsPlan">
+                    <div v-if="userOwnsThisPlan">
                       <hr>
                       <v-list-tile>
                         <template>
@@ -106,10 +106,10 @@
                         <v-flex v-else xs12 class="grey lighten-2">
                           <v-card-text class="mb-0 pt-1 pb-2">
                             <div>                  
-                              <h6 class="mb-0" @click="openDateEditingDlg = !openDateEditingDlg"
+                              <h6 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openDateEditing"
                               >{{
                                 plan.date | date 
-                              }}<template v-if="true">
+                                }}<template v-if="userOwnsThisPlan">
                                   <app-edit-plan-date-dialog
                                     :dateEditingDialog="openDateEditingDlg"
                                     :plan="plan"></app-edit-plan-date-dialog>
@@ -278,15 +278,23 @@ export default {
         return this.$store.getters.nextSunday
       }
       return this.$store.getters.plan(this.$route.params.planId)
+    },
+    userOwnsThisPlan () {
+      return this.userOwnsPlan(this.plan)
     }
   },
 
   methods: {
+    openDateEditing () {
+      if (!this.userOwnsThisPlan) return
+      this.openDateEditingDlg = !this.openDateEditingDlg
+    },
     checkEditing (what) {
-      if (!this.userOwnsPlan) return
+      if (!this.userOwnsThisPlan) return
       this.editing = what
     },
     onFieldEdited (that) {
+      if (!this.userOwnsThisPlan) return
       this.editing = ''
       this.showDetails[that] = false
       // check if there were any changes
