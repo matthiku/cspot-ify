@@ -3,7 +3,7 @@
 
     <!-- Show upcoming plans -->
     <v-layout row justify-center>
-      <v-flex sm12 md10 lg8 xl6>
+      <v-flex sm12 md11 lg10 xl9>
         <v-card>
           <v-card-text>
 

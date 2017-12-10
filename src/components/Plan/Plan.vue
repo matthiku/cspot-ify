@@ -126,7 +126,8 @@
                                   <v-card>
                                     <!-- non-editable -->
                                     <v-card-text v-if="editing !== 'info'"
-                                      @click="checkEditing('info')" 
+                                      @click="checkEditing('info')"
+                                      title="click to edit"
                                       class="grey lighten-3">
                                       <pre>{{ plan.info }}</pre>
                                     </v-card-text>
@@ -134,19 +135,19 @@
                                     <v-card-text v-if="editing === 'info'"
                                       class="pt-0 mr-2 mb-0">
                                       <v-btn                                       
-                                        class="mr-5 mb-4"
-                                        color="green"
-                                        bottom right
-                                        small absolute fab
-                                      ><v-icon>check_circle</v-icon>
+                                          class="mr-5 mb-4"
+                                          color="green"
+                                          bottom right
+                                          small absolute fab
+                                        ><v-icon>check_circle</v-icon>
                                       </v-btn>
                                       <v-text-field v-model="plan.info"
-                                        class="mt-0 mb-0 mr-4 pb-0 grey lighten-3"
-                                        @blur="onFieldEdited('info')"                                        
+                                        class="mt-0 mb-0 mr-4 pb-0 grey textbox-recessed lighten-3 elevation-8"
                                         multi-line rows="2"
+                                        @blur="onFieldEdited('info')"                                   
                                         autofocus full-width
                                         ref="input-info"
-                                        label="Enter/Edit plan details.">
+                                        label="Enter/Edit plan details:">
                                       </v-text-field>
                                     </v-card-text>
                                   </v-card>
@@ -241,7 +242,7 @@
 </template>
 
 <script>
-import genericMixins from '../../mixins/'
+import genericMixins from '../../mixins'
 import planMixins from './mixins'
 
 export default {

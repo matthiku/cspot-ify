@@ -19,7 +19,7 @@ export default {
     types () {
       return this.$store.getters.types
     },
-    userIsAdmin  () {
+    userIsAdmin () {
       return this.$store.getters.userIsAdmin
     }
   },

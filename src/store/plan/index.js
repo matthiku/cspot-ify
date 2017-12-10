@@ -171,7 +171,7 @@ export default {
     futurePlans (state, getters) {
       // return only future plans (ordered by date)
       return getters.plans.filter(plan => {
-        return moment(plan.date).isSameOrAfter(moment())
+        return moment(plan.date).isSameOrAfter(moment(), 'day')
       })
     },
 

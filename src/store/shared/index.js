@@ -1,6 +1,7 @@
 export default {
 
   state: {
+    appName: 'c-SPOT-ify',
     loading: false,
     message: null,
     error: null
@@ -48,6 +49,9 @@ export default {
     },
     loading (state) {
       return state.loading
+    },
+    appName (state) {
+      return state.appName
     }
   }
 }

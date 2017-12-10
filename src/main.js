@@ -12,8 +12,9 @@ import { store } from './store'
 Vue.use(Vuetify)
 Vue.config.productionTip = false
 
-import DateFilter from './filters/date'
-Vue.filter('date', DateFilter)
+import * as dateFilters from './filters/date'
+Vue.filter('date', dateFilters.date)
+Vue.filter('dateShort', dateFilters.dateShort)
 
 // register the generic components
 import sharedComponents from './sharedComponents'
