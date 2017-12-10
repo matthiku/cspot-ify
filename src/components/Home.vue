@@ -33,7 +33,7 @@
             <v-container>
               <v-layout row wrap>
 
-                <v-flex xs12 mb-2 v-if="!upcomingPlans && !loading">
+                <v-flex xs12 mb-2 v-if="!upcomingPlans.length && !loading">
                   There are currently no upcoming Plans.<br>
                   <v-btn :to="{name: 'createplan'}">Create one!</v-btn>
                 </v-flex>

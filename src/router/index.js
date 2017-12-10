@@ -28,18 +28,21 @@ export default new Router({
       path: '/admin',
       name: 'admin',
       component: Admin,
+      meta: {title: 'Administration'},
       beforeEnter: AuthGuard
     },
     {
       path: '/admin/users',
       name: 'users',
       component: Users,
+      meta: {title: 'Users'},
       beforeEnter: AuthGuard
     },
     {
       path: '/admin/users/:userId',
       name: 'user',
       component: User,
+      meta: {title: 'User Profile'},
       beforeEnter: AuthGuard,
       props: true
     },
@@ -47,6 +50,7 @@ export default new Router({
       path: '/items',
       name: 'items',
       component: Items,
+      meta: {title: 'Items List'},
       beforeEnter: AuthGuard
     },
     {
@@ -60,11 +64,13 @@ export default new Router({
       path: '/createitem',
       name: 'createitem',
       component: CreateItem,
+      meta: {title: 'Create new Item'},
       beforeEnter: AuthGuard
     },
     {
       path: '/createplan',
       name: 'createplan',
+      meta: {title: 'Create new Plan'},
       component: CreatePlan,
       beforeEnter: AuthGuard
     },
@@ -72,6 +78,7 @@ export default new Router({
       path: '/plans',
       name: 'plans',
       component: Plans,
+      meta: {title: 'Plans List'},
       beforeEnter: AuthGuard
     },
     {
@@ -79,33 +86,39 @@ export default new Router({
       name: 'plan',
       props: true,
       component: Plan,
+      meta: {title: 'Plan Details'},
       beforeEnter: AuthGuard
     },
     {
       path: '/nextsunday',
       name: 'nextsunday',
       component: Plan,
+      meta: {title: 'Next Sunday'},
       beforeEnter: AuthGuard
     },
     {
       path: '/profile',
       name: 'profile',
       component: Profile,
+      meta: {title: 'User Profile'},
       beforeEnter: AuthGuard
     },
     {
       path: '/signin',
       name: 'signin',
+      meta: {title: 'Sign In'},
       component: Signin
     },
     {
       path: '/signup',
       name: 'signup',
+      meta: {title: 'Sign Up'},
       component: Signup
     },
     {
       path: '/',
       name: 'home',
+      meta: {title: 'Home'},
       component: Home
     }
   ],
