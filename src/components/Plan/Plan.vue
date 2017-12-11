@@ -132,35 +132,7 @@
                                     <span class="body-2">Info</span> 
                                     <span v-if="!showDetails.info" class="caption">({{ plan.info.substr(0,55) }}...)</span>
                                   </div>
-                                  <v-card>
-                                    <!-- non-editable -->
-                                    <v-card-text v-if="editing !== 'info'"
-                                      @click="checkEditing('info')"
-                                      title="click to edit"
-                                      class="grey lighten-3">
-                                      <pre>{{ plan.info }}</pre>
-                                    </v-card-text>
-                                    <!-- editable -->
-                                    <v-card-text v-if="editing === 'info'"
-                                      class="pt-0 mr-2 mb-0">
-                                      <v-btn                                       
-                                          class="mr-5 mb-4"
-                                          color="green"
-                                          bottom right
-                                          small absolute fab
-                                        ><v-icon>check_circle</v-icon>
-                                      </v-btn>
-                                      <v-text-field v-model="plan.info"
-                                        class="mt-0 mb-0 mr-4 pb-0 grey textbox-recessed lighten-3 elevation-8"
-                                        multi-line rows="2"
-                                        @blur="onFieldEdited('info')"
-                                        @keyup.ctrl.enter="onFieldEdited('info')"
-                                        autofocus full-width
-                                        ref="input-info"
-                                        label="Enter/Edit plan details:">
-                                      </v-text-field>
-                                    </v-card-text>
-                                  </v-card>
+                                  <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
 
