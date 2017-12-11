@@ -7,3 +7,7 @@ export const date = (value) => {
 export const dateShort = (value) => {
   return moment(value).format('ddd DD-MMM., HH:mm')
 }
+
+export const time = (value) => {
+  return moment(value).format('HH:mm')
+}

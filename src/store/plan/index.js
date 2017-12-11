@@ -17,6 +17,9 @@ export default {
     createPlan (state, payload) {
       // state.plans.push(payload) // not needed, as we get an update through firebase!
       state.newPlanId = payload.id
+    },
+    clearNewPlanId (state) {
+      state.newPlanId = null
     }
   },
 
@@ -24,6 +27,7 @@ export default {
   actions: {
 
     refreshPlans ({ commit, dispatch }) {
+      // console.log('updating local plan list with full one-off snapshot from Server')
       plansRef.once('value')
       .then((data) => {
         dispatch('loadPlans', data)
@@ -36,6 +40,7 @@ export default {
     },
     // load existing plans from the DB
     loadPlans ({ commit }, payload) {
+      // console.log('updating local plan list with updated values from Server')
       let plans = []
       // payload is a firebase data snapshot
       payload.forEach(plan => {
@@ -142,6 +147,9 @@ export default {
           commit('setError', error)
           commit('setLoading', false)
         })
+    },
+    clearNewPlanId ({commit}) {
+      commit('clearNewPlanId')
     }
   },
 

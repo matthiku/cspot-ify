@@ -277,6 +277,10 @@ export default {
     }
   },
 
+  created () {
+    this.$store.dispatch('clearNewPlanId')
+  },
+
   watch: {
     // wait until the new plan was added to the array of plans
     // then open the new plan

@@ -36,7 +36,8 @@
               <!-- toolbar title showing Plan title and type -->
               <v-toolbar-title class="white--text">
                 {{ pageTitle }}: 
-                <v-chip large outline color="black" class="mr-0">
+                <v-chip large color="success" class="mr-0" elevation-4
+                  @click="openTypeEditing">
                   {{ plan ? types.length ? types[plan.typeId].name : plan.typeId : 'Plan gone' }}</v-chip>
                 <app-edit-plan-type-dialog 
                   v-if="userIsAdmin" 
@@ -118,12 +119,10 @@
                             <div>                  
                               <h6 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openDateEditing"
                               >{{
-                                plan.date | date 
-                                }}<template v-if="userOwnsThisPlan">
-                                  <app-edit-plan-date-dialog
+                                plan.date | date
+                                }}<span v-if="plan.end">-{{ plan.end | time }}</span><app-edit-plan-date-time-dialog v-if="userOwnsThisPlan"
                                     :dateEditingDialog="openDateEditingDlg"
-                                    :plan="plan"></app-edit-plan-date-dialog>
-                                </template>
+                                    :plan="plan"></app-edit-plan-date-time-dialog>                                
                               </h6>
 
                               <!-- show and edit plan INFO -->
@@ -154,7 +153,8 @@
                                       <v-text-field v-model="plan.info"
                                         class="mt-0 mb-0 mr-4 pb-0 grey textbox-recessed lighten-3 elevation-8"
                                         multi-line rows="2"
-                                        @blur="onFieldEdited('info')"                                   
+                                        @blur="onFieldEdited('info')"
+                                        @keyup.ctrl.enter="onFieldEdited('info')"
                                         autofocus full-width
                                         ref="input-info"
                                         label="Enter/Edit plan details:">
@@ -300,6 +300,10 @@ export default {
       if (!this.userOwnsThisPlan) return
       this.openDateEditingDlg = !this.openDateEditingDlg
     },
+    openTypeEditing () {
+      if (!this.userOwnsThisPlan) return
+      this.openTypeEditingDlg = !this.openTypeEditingDlg
+    },
     checkEditing (what) {
       if (!this.userOwnsThisPlan) return
       this.editing = what
@@ -322,12 +326,9 @@ export default {
   watch: {
     plan () {
       if (this.plan) return
+      // return to list of plans if this plan becomes void
       this.$router.push({name: 'plans'})
     }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>

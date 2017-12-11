@@ -10,10 +10,10 @@
               <v-card-title primary-title class="my-0 py-0">
                 <div>                  
                   <h5 class="white--text mb-0">
-                    {{ plan.date | dateShort }} - 
+                    {{ plan.date | dateShort }}<span v-if="plan.end">-{{ plan.end | time }}</span> - 
                     <span style="font-style: italic;">{{ types.length ? types[plan.typeId].name : plan.typeId }}</span>
                   </h5>
-                  <div><strong>Note: </strong>{{ plan.info }}</div>
+                  <div v-if="plan.info"><strong>Note: </strong>{{ plan.info }}</div>
                 </div>
               </v-card-title>
 

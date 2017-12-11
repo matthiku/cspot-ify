@@ -1,12 +1,12 @@
 <template>
-  <v-dialog v-model="dateEditingDlg" max-width="500px">
+  <v-dialog v-model="typeEditingDlg" max-width="500px">
 
     <v-btn flat icon color="gray"
       class="ma-0 pl-0"
       title="edit plan type"
-      @click.stop="dateEditingDlg = true" 
+      @click.stop="typeEditingDlg = true" 
       slot="activator"
-    ><v-icon>edit</v-icon></v-btn>
+    ><v-icon class="grey--text lighten-1">edit</v-icon></v-btn>
 
     <v-card>
       <v-card-title>
@@ -19,7 +19,7 @@
 
             <v-flex xs12>
               Select:
-              <v-select auto
+              <v-select
                 v-bind:items="types"
                 v-model="type"
                 return-object
@@ -36,7 +36,7 @@
         </template>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="secondary" flat @click.stop="dateEditingDlg=false">Close</v-btn>
+        <v-btn color="secondary" flat @click.stop="typeEditingDlg=false">Close</v-btn>
         <v-btn color="primary" flat @click.stop="saveType">Submit</v-btn>
         <v-spacer></v-spacer>
       </v-card-actions>
@@ -55,7 +55,7 @@ export default {
 
   data () {
     return {
-      dateEditingDlg: false,
+      typeEditingDlg: false,
       type: {}
     }
   },

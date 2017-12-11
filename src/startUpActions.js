@@ -23,6 +23,7 @@ export default function startUpActions (store, router) {
 
   // sync with existing PLANS from firebase
   plansRef.on('value', snap => {
+    // console.log('plans DB was modified!')
     store.dispatch('loadPlans', snap)
   })
 
