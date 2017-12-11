@@ -1,4 +1,10 @@
 export default {
+  computed: {
+    types () {
+      return this.$store.getters.types
+    }
+  },
+
   methods: {
     userOwnsPlan (plan) {
       if (!plan) return false

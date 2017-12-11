@@ -16,8 +16,8 @@ export default {
     loading () {
       return this.$store.getters.loading
     },
-    types () {
-      return this.$store.getters.types
+    roles () {
+      return this.$store.getters.roles
     },
     userIsAdmin () {
       return this.$store.getters.userIsAdmin

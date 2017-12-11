@@ -47,11 +47,12 @@
 
 <script>
 import genericMixins from '../../../mixins'
+import planMixins from '../mixins'
 
 export default {
   name: 'editPlanTypeDialog',
   props: ['plan', 'typeEditingDialog'],
-  mixins: [genericMixins],
+  mixins: [genericMixins, planMixins],
 
   data () {
     return {
