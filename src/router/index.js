@@ -7,7 +7,7 @@ import Home from '@/components/Home'
 
 import Admin from '@/components/Admin/Admin'
 import Users from '@/components/Admin/Users'
-import User from '@/components/Admin/User'
+// import User from '@/components/Admin/User'
 
 import Profile from '@/components/User/Profile'
 import Signin from '@/components/User/Signin'
@@ -41,7 +41,7 @@ export default new Router({
     {
       path: '/admin/users/:userId',
       name: 'user',
-      component: User,
+      component: Profile,
       meta: {title: 'User Profile'},
       beforeEnter: AuthGuard,
       props: true

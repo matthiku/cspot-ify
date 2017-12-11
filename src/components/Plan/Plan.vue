@@ -283,6 +283,7 @@ export default {
     }
   },
   computed: {
+    // get plan depending on current route!
     plan () {
       if (this.$route && this.$route.name === 'nextsunday') {
         this.pageTitle = 'This Sunday\'s Plan'

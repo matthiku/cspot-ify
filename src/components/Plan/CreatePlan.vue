@@ -191,6 +191,7 @@
 
 <script>
 import genericMixins from '../../mixins/'
+import planMixins from './mixins'
 import * as moment from 'moment'
 
 export default {
@@ -213,7 +214,7 @@ export default {
     }
   },
 
-  mixins: [genericMixins],
+  mixins: [genericMixins, planMixins],
 
   computed: {
     planId () {

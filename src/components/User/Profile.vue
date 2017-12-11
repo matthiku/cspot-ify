@@ -19,7 +19,7 @@
 
             <v-container fluid px-0>
               <v-layout>
-                <v-flex xs12>
+                <v-flex xs12 v-if="user">
 
                   <v-card-title>
                     <h4>Your User Profile</h4>
@@ -106,6 +106,7 @@
 
                   </v-form>
                 </v-flex>
+                <v-flex v-else>no user data</v-flex>
               </v-layout>
             </v-container>
           </v-card-text>
@@ -141,6 +142,14 @@
         if (this.user.name) v += 25
         if (this.user.verified) v += 25
         return v
+      },
+      // get user depending on current route!
+      user () {
+        if (this.$route && this.$route.name === 'profile') {
+          return this.$store.getters.user
+        }
+        if (!this.users) return {}
+        return this.users[this.$route.params.userId]
       }
     },
 
@@ -150,9 +159,11 @@
         this.rolesList.push(role)
       }
       // create list of roles actually assigned to this user
-      this.user.roles.forEach(element => {
-        this.userRoles.push(element)
-      })
+      if (this.user.roles) {
+        this.user.roles.forEach(element => {
+          this.userRoles.push(element)
+        })
+      }
     },
 
     methods: {
