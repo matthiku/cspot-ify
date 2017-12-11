@@ -9,6 +9,7 @@
 
             <!-- TITLE area -->
             <v-toolbar color="blue">
+              <!-- drop-down menu in Plan title bar -->
               <v-menu open-on-hover bottom right offset-y>
                 <v-btn icon slot="activator" dark>
                   <v-toolbar-side-icon></v-toolbar-side-icon>
@@ -32,11 +33,20 @@
                 </v-card>
               </v-menu>
               
+              <!-- toolbar title showing Plan title and type -->
               <v-toolbar-title class="white--text">
                 {{ pageTitle }}: 
-                <v-chip large outline color="black">{{ plan ? types.length ? types[plan.typeId].name : plan.typeId : 'Plan gone' }}</v-chip>
+                <v-chip large outline color="black" class="mr-0">
+                  {{ plan ? types.length ? types[plan.typeId].name : plan.typeId : 'Plan gone' }}</v-chip>
+                <app-edit-plan-type-dialog 
+                  v-if="userIsAdmin" 
+                  :plan="plan"
+                  :typeEditingDialog="openTypeEditingDlg"
+                  ></app-edit-plan-type-dialog>
               </v-toolbar-title>
               <v-spacer></v-spacer>
+
+              <!-- show floating action button for a presentation menu -->
               <v-tooltip bottom>
                 <v-speed-dial
                   v-model="fab" bottom right hover
@@ -268,6 +278,7 @@ export default {
         items: false
       },
       openDateEditingDlg: false,
+      openTypeEditingDlg: false,
       editing: ''
     }
   },

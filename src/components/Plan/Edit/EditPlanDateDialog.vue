@@ -1,7 +1,8 @@
 <template>
   <v-dialog v-model="dateEditingDlg" max-width="500px">
 
-    <v-btn flat icon color="gray" 
+    <v-btn flat icon color="gray"
+      title="edit plan date"
       @click.stop="dateEditingDlg = true" 
       slot="activator"
     ><v-icon>edit</v-icon></v-btn>

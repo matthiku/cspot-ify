@@ -261,14 +261,12 @@ export default {
       return state.users
     },
     userIsAdmin (state) {
-      if (
-        !state.user ||
-        !state.users ||
-        !state.users[state.user.id] ||
-        !state.users[state.user.id].roles
-      ) {
-        return false
+      if (!state.user) { return false }
+      if (state.user.roles) {
+        return state.user.roles.indexOf('admin') > -1
       }
+      if (!state.users) { return false }
+      if (!state.users[state.user.id]) { return false }
       return state.users[state.user.id].roles.indexOf('admin') > -1
     }
   }

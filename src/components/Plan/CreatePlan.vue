@@ -21,7 +21,7 @@
             </v-layout>
           </v-container>
 
-          <!-- TITLE and DATE picker-->
+          <!-- TYPE and DATE picker-->
           <v-layout row>
             <v-flex xs12 md6 offset-md3>
               <v-layout row wrap>
