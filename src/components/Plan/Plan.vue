@@ -130,7 +130,7 @@
                                 <v-expansion-panel-content v-model="showDetails.info">
                                   <div slot="header">
                                     <span class="body-2">Info</span> 
-                                    <span v-if="!showDetails.info" class="caption">({{ plan.info.substr(0,55) }}...)</span>
+                                    <span v-if="!showDetails.info" class="caption">({{ plan.info ? plan.info.substr(0,55) : '' }}...)</span>
                                   </div>
                                   <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
                                 </v-expansion-panel-content>
@@ -144,12 +144,8 @@
                                   <div slot="header">
                                     <span class="body-2">Staff</span>                                     
                                     <span v-if="!showDetails.staff" class="caption">(Leader: Andy, Teacher: Bob, Lead Musician: Tom)</span>
-                                    </div>
-                                  <v-card>
-                                    <v-card-text class="grey lighten-3">
-                                      {{ plan.staff }}
-                                    </v-card-text>
-                                  </v-card>
+                                  </div>
+                                  <app-edit-plan-staff-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-field>
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
 

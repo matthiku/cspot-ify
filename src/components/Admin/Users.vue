@@ -51,6 +51,9 @@
       for (let key in this.users) {
         this.userList.push(this.users[key])
       }
+      if (this.userIsAdmin) {
+        this.headers[0].text = 'id (click to edit)'
+      }
     }
   }
 </script>

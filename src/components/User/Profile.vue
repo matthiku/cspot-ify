@@ -153,20 +153,34 @@
       }
     },
 
-    created () {
-      // create list of possible roles
-      for (let role in this.roles) {
-        this.rolesList.push(role)
-      }
-      // create list of roles actually assigned to this user
-      if (this.user.roles) {
-        this.user.roles.forEach(element => {
-          this.userRoles.push(element)
-        })
+    watch: {
+      $route (value) {
+        // when moving from any user's profile to your own, we neet to do:
+        // (as mounted won't trigger!)
+        this.createRolesArrays()
       }
     },
 
+    created () {
+      this.createRolesArrays()
+    },
+
     methods: {
+      createRolesArrays () {
+        // create list of possible roles
+        this.rolesList = []
+        for (let role in this.roles) {
+          this.rolesList.push(role)
+        }
+        // create list of roles actually assigned to this user
+        if (this.user.roles) {
+          this.userRoles = []
+          this.user.roles.forEach(element => {
+            this.userRoles.push(element)
+          })
+        }
+      },
+
       submit () {
         if (this.$refs.form.validate()) {
           this.user.roles = this.userRoles

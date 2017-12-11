@@ -1,5 +1,6 @@
 <template>
   <v-card>
+
     <!-- non-editable -->
     <v-card-text v-if="!editing"
       @click="checkEditing()"
@@ -7,6 +8,7 @@
       class="grey lighten-3">
       <pre>{{ plan.info }}</pre>
     </v-card-text>
+
     <!-- editable -->
     <v-card-text v-if="editing"
       class="pt-0 mr-2 mb-0">
@@ -27,6 +29,7 @@
         label="Enter/Edit plan details:">
       </v-text-field>
     </v-card-text>
+
   </v-card>
 </template>
 
@@ -51,11 +54,10 @@ export default {
     },
     saveInfo () {
       this.editing = false
-      this.plan.info = this.info
       this.$store.dispatch('updatePlan', {
         id: this.plan.id,
         field: 'info',
-        value: this.info
+        value: this.plan.info
       })
     }
   }

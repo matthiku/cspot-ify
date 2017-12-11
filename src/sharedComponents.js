@@ -4,12 +4,14 @@ import SuccessCmp from './components/shared/Success.vue'
 import EditPlanDateTimeDialog from './components/Plan/Edit/EditPlanDateTimeDialog'
 import EditPlanTypeDialog from './components/Plan/Edit/EditPlanTypeDialog'
 import EditPlanInfoField from './components/Plan/Edit/EditPlanInfoField'
+import EditPlanStaffField from './components/Plan/Edit/EditPlanStaffField'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 import ShowListOfPlans from './components/Plan/View/Plan.vue'
 
 export default function sharedComponents () {
   Vue.component('app-alert', AlertCmp)
   Vue.component('app-success', SuccessCmp)
+  Vue.component('app-edit-plan-staff-field', EditPlanStaffField)
   Vue.component('app-edit-plan-info-field', EditPlanInfoField)
   Vue.component('app-edit-plan-type-dialog', EditPlanTypeDialog)
   Vue.component('app-edit-plan-date-time-dialog', EditPlanDateTimeDialog)
