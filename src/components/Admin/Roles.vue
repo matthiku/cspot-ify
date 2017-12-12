@@ -27,10 +27,16 @@
               <span v-for="(user, key) in props.item.users" :key="key">
                 {{ users[user].name }}<span v-if="key + 1 < props.item.users.length">, </span>
               </span>
+
+              <v-btn @click="removeRole(props.item)"
+                v-if="!props.item.users" color="error" fab small dark>
+                <v-icon>delete</v-icon>
+              </v-btn>
             </td>
 
           </template>
         </v-data-table>
+        <v-btn color="primary" @click="addRole">add role</v-btn>
       </v-layout>
 
     </v-slide-y-transition>
@@ -84,6 +90,16 @@
         if (!this.userIsAdmin) return
         this.$store.dispatch('setDialog', {field, item: what})
         this.$store.dispatch('showDialog')
+      },
+      addRole () {
+        if (!this.userIsAdmin) return
+        this.$store.dispatch('addDummyRole', {id: 'new', name: ''})
+        this.$store.dispatch('setDialog', {field: 'name', item: this.roles.new})
+        this.$store.dispatch('showDialog')
+      },
+      removeRole (role) {
+        if (!this.userIsAdmin) return
+        this.$store.dispatch('removeRole', role)
       }
     }
   }

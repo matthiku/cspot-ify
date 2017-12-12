@@ -128,7 +128,8 @@
     <v-footer fixed app>
       <small>the <a target="new" href="https://github.com/matthiku/cspot">c-SPOT</a> Frontend Project</small>
       <v-spacer></v-spacer>
-      <span><a target="new" href="https://github.com/matthiku/cspot-ify" class="mr-3">c-SPOT-ify</a></span>
+      GitHub:
+      <span><a target="new" href="https://github.com/matthiku/cspot-ify" class="mx-3">c-SPOT-ify</a></span>
       <span><a target="new" href="https://github.com/matthiku/cspot-ify/issues">Issues</a></span>
       <v-spacer></v-spacer>
       <span>&copy; 2017 Matthias Kuhs</span>

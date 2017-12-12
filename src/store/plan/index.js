@@ -1,4 +1,4 @@
-import { plansRef, firebaseApp } from '../../firebaseApp'
+import { plansRef, firebaseApp, binRef } from '../../firebaseApp'
 import * as moment from 'moment'
 
 export default {
@@ -119,7 +119,7 @@ export default {
     // - - payload must be the full plan, as we send it to the bin and then delete it
     binPlan ({ commit, state }, payload) {
       commit('setLoading', true)
-      firebaseApp.database().ref().child('bin').push(payload)
+      binRef.child('users').push(payload)
       .then(() => {
         plansRef.child(payload.id).remove()
         .then(() => {
