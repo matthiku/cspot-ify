@@ -24,19 +24,20 @@ export default {
 
     updateRole ({commit, state}, payload) {
       commit('setLoading', true)
+      const updateObj = {}
       // for a name change, we also need to change the id
       // which means creating a copy and deleting the old node
-      const updateObj = {}
       if (payload.field === 'name') {
-        updateObj.id = payload.value
         Object.assign(updateObj, state.roles[payload.id])
-        rolesRef.push(updateObj)
+        updateObj.id = payload.value
+        rolesRef.child(payload.value).set(updateObj)
         return
       }
       updateObj[payload.field] = payload.value
       rolesRef.child(payload.id).update(updateObj)
         .then(() => {
           commit('setMessage', 'Role updated!')
+          commit('setLoading', false)
         })
         .catch((error) => {
           console.log(error)
@@ -52,12 +53,13 @@ export default {
     removeRole ({commit}, payload) {
       commit('setLoading', true)
       // first, move the old role to the bin
-      binRef.child('roles').push(payload)
+      binRef.child('roles/' + payload.name).set(payload)
         .then(() => {
           commit('setMessage', 'role moved into the bin...')
           rolesRef.child(payload.id).remove()
           .then(() => {
             commit('setMessage', 'role removed and placed in the bin!')
+            commit('setLoading', false)
           })
           .catch((error) => {
             console.log(error)
