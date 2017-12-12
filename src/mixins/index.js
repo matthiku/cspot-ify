@@ -13,6 +13,12 @@ export default {
     message () {
       return this.$store.getters.message
     },
+    dialog () {
+      return this.$store.getters.dialog
+    },
+    dialogShow () {
+      return this.$store.getters.dialogShow
+    },
     loading () {
       return this.$store.getters.loading
     },

@@ -1,0 +1,94 @@
+<template>
+  <v-container fluid>
+    <v-slide-y-transition mode="out-in">
+
+      <v-layout column align-center>
+
+        <app-admin-edit-field-dialog></app-admin-edit-field-dialog>
+
+        <v-data-table
+            v-bind:headers="headers"
+            :items="rolesList"
+            hide-actions
+            class="elevation-1"
+          >
+          <template slot="items" slot-scope="props">
+
+            <td class="text-xs-right">{{ props.item.id }}</td>
+
+            <td class="text-xs-right" @click="editField('name', props.item)">{{ props.item.name }}</td>
+
+            <td class="text-xs-right" @click="editField('icon', props.item)">
+              {{ props.item.icon }}
+              <v-icon v-if="props.item.icon">{{ props.item.icon }}</v-icon>
+            </td>
+
+            <td class="text-xs-right" v-if="users">
+              <span v-for="(user, key) in props.item.users" :key="key">
+                {{ users[user].name }}<span v-if="key + 1 < props.item.users.length">, </span>
+              </span>
+            </td>
+
+          </template>
+        </v-data-table>
+      </v-layout>
+
+    </v-slide-y-transition>
+  </v-container>
+</template>
+
+<script>
+  import genericMixins from '../../mixins/'
+
+  export default {
+    mixins: [genericMixins],
+    data () {
+      return {
+        headers: [
+          { text: 'Id', value: 'id' },
+          { text: 'Name', value: 'name' },
+          { text: 'Icon', value: 'icon' },
+          { text: 'User(s)', value: 'users' }
+        ],
+        rolesList: []
+      }
+    },
+    created () {
+      this.updateRolesList()
+      this.$store.dispatch('hideDialog')
+    },
+    watch: {
+      roles () {
+        this.updateRolesList()
+      },
+      dialogShow (val) {
+        if (!this.dialog.updated) return
+        this.$store.dispatch('updateRole', {
+          id: this.dialog.item.id,
+          field: this.dialog.field,
+          value: this.dialog.item[this.dialog.field]
+        })
+      }
+    },
+    methods: {
+      updateRolesList () {
+        this.rolesList = []
+        // morph the roles object into an array of roles
+        for (let key in this.roles) {
+          let data = {id: key}
+          Object.assign(data, this.roles[key])
+          this.rolesList.push(data)
+        }
+      },
+      editField (field, what) {
+        if (!this.userIsAdmin) return
+        this.$store.dispatch('setDialog', {field, item: what})
+        this.$store.dispatch('showDialog')
+      }
+    }
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+</style>

@@ -3,7 +3,8 @@
     <v-slide-y-transition mode="out-in">
 
       <v-layout column align-center>
-        <h5>User List</h5>
+        <h5 v-if="standAlone">User List</h5>
+
         <v-data-table
             v-bind:headers="headers"
             :items="userList"
@@ -20,7 +21,11 @@
             <td class="text-xs-right">{{ props.item.name }}</td>
             <td class="text-xs-right">{{ props.item.email }}</td>
             <td class="text-xs-right">{{ props.item.verified }}</td>
-            <td class="text-xs-right">{{ props.item.roles }}</td>
+            <td class="text-xs-right">
+              <span v-for="(role, key) in props.item.roles" :key="key">
+                {{ role }}<span v-if="key + 1 < props.item.roles.length">, </span>
+              </span>
+            </td>
           </template>
         </v-data-table>
       </v-layout>
@@ -43,16 +48,30 @@
           { text: 'Verified', value: 'verfied' },
           { text: 'Role(s)', value: 'roles' }
         ],
+        standAlone: true,
         userList: []
       }
     },
     created () {
-      // morph the users object into an array of users
-      for (let key in this.users) {
-        this.userList.push(this.users[key])
-      }
+      // only show title when this is no a component of the Admin page
+      this.standAlone = this.$router.name === 'admin'
+
       if (this.userIsAdmin) {
-        this.headers[0].text = 'id (click to edit)'
+        this.headers[0].text = 'id (click id to edit item)'
+      }
+      this.updateUsersList()
+    },
+    watch: {
+      users () {
+        this.updateUsersList()
+      }
+    },
+    methods: {
+      updateUsersList () {
+        // morph the users object into an array of users
+        for (let key in this.users) {
+          this.userList.push(this.users[key])
+        }
       }
     }
   }

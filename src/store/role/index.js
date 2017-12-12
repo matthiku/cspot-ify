@@ -1,3 +1,5 @@
+import { rolesRef } from '../../firebaseApp'
+
 export default {
   state: {
     roles: []
@@ -13,6 +15,12 @@ export default {
     loadRoles ({ commit }, payload) {
       commit('setRoles', payload.val())
       commit('setLoading', false)
+    },
+    updateRole ({ commit, state }, payload) {
+      commit('setLoading', true)
+      const updateObj = {}
+      updateObj[payload.field] = payload.value
+      rolesRef.child(payload.id).update(updateObj)
     }
 
   },

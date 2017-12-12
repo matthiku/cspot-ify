@@ -4,7 +4,9 @@ export default {
     appName: 'c-SPOT-ify',
     loading: false,
     message: null,
-    error: null
+    error: null,
+    dialogShow: false,
+    dialog: {field: '', item: null, updated: false}
   },
 
   mutations: {
@@ -16,6 +18,15 @@ export default {
     },
     setMessage (state, payload) {
       state.message = payload
+    },
+    setDialog (state, payload) {
+      state.dialog = payload
+    },
+    hideDialog (state) {
+      state.dialogShow = false
+    },
+    showDialog (state) {
+      state.dialogShow = true
     },
     clearError (state) {
       state.error = null
@@ -37,6 +48,15 @@ export default {
     },
     setMessage ({commit}, payload) {
       commit('setMessage', payload)
+    },
+    setDialog ({commit}, payload) {
+      commit('setDialog', payload)
+    },
+    hideDialog ({commit}) {
+      commit('hideDialog')
+    },
+    showDialog ({commit}) {
+      commit('showDialog')
     }
   },
 
@@ -52,6 +72,12 @@ export default {
     },
     appName (state) {
       return state.appName
+    },
+    dialog (state) {
+      return state.dialog
+    },
+    dialogShow (state) {
+      return state.dialogShow
     }
   }
 }
