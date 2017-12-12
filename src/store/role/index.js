@@ -16,7 +16,7 @@ export default {
 
   actions: {
 
-    // load existing roles from the DB
+    // load existing roles from the DB (called from startUpActions)
     loadRoles ({commit}, payload) {
       commit('setRoles', payload.val())
       commit('setLoading', false)
@@ -47,6 +47,7 @@ export default {
     },
 
     addDummyRole ({commit}, payload) {
+      // adding a local-only dummy role before it get's its proper name
       commit('addDummyRole', payload)
     },
 

@@ -3,7 +3,7 @@
     <v-slide-y-transition mode="out-in">
 
       <v-layout>
-        <v-tabs dark grow>
+        <v-tabs dark grow v-model="admin.selectedTab">
           <v-toolbar color="cyan" dark>
 
             <v-toolbar-side-icon></v-toolbar-side-icon>
@@ -91,6 +91,11 @@
           'Plan Types', 'videos', 'images'
         ],
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+      }
+    },
+    computed: {
+      admin () {
+        return this.$store.getters.admin
       }
     }
   }

@@ -6,7 +6,10 @@ export default {
     message: null,
     error: null,
     dialogShow: false,
-    dialog: {field: '', item: null, updated: false}
+    dialog: {field: '', item: null, updated: false},
+    admin: {
+      selectedTab: 'tab-1'
+    }
   },
 
   mutations: {
@@ -78,6 +81,9 @@ export default {
     },
     dialogShow (state) {
       return state.dialogShow
+    },
+    admin (state) {
+      return state.admin
     }
   }
 }

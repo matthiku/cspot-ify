@@ -27,7 +27,7 @@ export default {
   },
 
   actions: {
-    // called from startUpActions only!
+    // called from -> startUpActions <- only!
     // Triggered by a change in the Auth state of firebase
     // contains data from the Firebase Auth DB, not our own!
     setUser ({ commit, dispatch }, payload) {
@@ -42,7 +42,7 @@ export default {
       dispatch('updateUser', userData)
     },
 
-    // update our own user table with the firebase user data
+    // update firebase user table
     updateUser ({ commit }, payload) {
       usersRef
         .child(payload.id)

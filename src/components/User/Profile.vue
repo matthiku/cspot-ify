@@ -22,7 +22,7 @@
                 <v-flex xs12 v-if="user">
 
                   <v-card-title>
-                    <h4>Your User Profile</h4>
+                    <h4><span v-if="ownProfile">Your</span><span v-else>A</span> User Profile</h4>
                     <v-spacer></v-spacer>
                     <v-avatar
                         size="60"
@@ -132,7 +132,8 @@
           (v) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
         ],
         rolesList: [],
-        userRoles: []
+        userRoles: [],
+        initRoles: []
       }
     },
 
@@ -143,9 +144,12 @@
         if (this.user.verified) v += 25
         return v
       },
+      ownProfile () {
+        return this.$route && this.$route.name === 'profile'
+      },
       // get user depending on current route!
       user () {
-        if (this.$route && this.$route.name === 'profile') {
+        if (this.ownProfile) {
           return this.$store.getters.user
         }
         if (!this.users) return {}
@@ -154,6 +158,19 @@
     },
 
     watch: {
+      userRoles (newRoles) {
+        console.log('old list of roles', this.initRoles)
+        console.log('new list of roles', newRoles)
+        for (let r in newRoles) {
+          if (this.initRoles.indexOf(newRoles[r]) > -1) console.log('ignore:', newRoles[r])
+          if (this.initRoles.indexOf(newRoles[r]) < 0) {
+            console.log('to be added:', newRoles[r])
+            this.initRoles.push(newRoles[r])
+          }
+          // if (newRoles.indexOf(newRoles[r]) < 0) console.log('removed:', newRoles[r])
+        }
+      },
+
       $route (value) {
         // when moving from any user's profile to your own, we neet to do:
         // (as mounted won't trigger!)
@@ -163,9 +180,17 @@
 
     created () {
       this.createRolesArrays()
+      for (let r in this.userRoles) {
+        this.initRoles.push(this.userRoles[r])
+      }
     },
 
     methods: {
+
+      setRole (which) {
+        console.log(which)
+      },
+
       createRolesArrays () {
         // create list of possible roles
         this.rolesList = []
