@@ -25,7 +25,7 @@
 
             <td class="text-xs-right" v-if="users">
               <span v-for="(user, key) in props.item.users" :key="key">
-                {{ users[user].name }}<span v-if="key + 1 < props.item.users.length">, </span>
+                {{ users[key].name }}<span vrTODOif="key + 1 < props.item.users.length">, </span>
               </span>
 
               <v-btn @click="removeRole(props.item)"

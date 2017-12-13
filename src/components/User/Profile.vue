@@ -19,7 +19,7 @@
 
             <v-container fluid px-0>
               <v-layout>
-                <v-flex xs12 v-if="user">
+                <v-flex xs12 v-if="userData">
 
                   <v-card-title>
                     <h4><span v-if="ownProfile">Your</span><span v-else>A</span> User Profile</h4>
@@ -28,9 +28,9 @@
                         size="60"
                         class="grey lighten-4">
                       <img 
-                        v-if="user.providerData && user.providerData.length && user.providerData[0].photoURL"
+                        v-if="userData.providerData && userData.providerData.length && userData.providerData[0].photoURL"
                         style="max-height:60px!important"
-                        :src="user.providerData[0].photoURL" :alt="user.displayName">
+                        :src="userData.providerData[0].photoURL" :alt="userData.displayName">
                       <img v-else style="max-height:60px!important" src="\static\cspoticon72.png" alt="this could be your photo!">
                     </v-avatar>
                   </v-card-title>
@@ -38,7 +38,7 @@
                   <v-form ref="form" lazy-validation v-model="valid">
 
                     <v-text-field label="Name"
-                        v-model="user.name"
+                        v-model="userData.name"
                         @keyup.enter="submit"
                       >
                     </v-text-field>
@@ -46,19 +46,19 @@
                     <v-layout row wrap>
                       <v-flex xs12 sm10 md8>
                         <v-text-field label="E-mail" class="mb-0 pb-0"
-                            v-model="user.email"
+                            v-model="userData.email"
                             @keyup.enter="submit"
                             :rules="emailRules"
                             required
                           ></v-text-field>
                       </v-flex>
                       <v-flex xs12 sm2 md4>
-                        <div class="ml-3 mb-0" :class="[user.verified ? '' : 'red--text']">
+                        <div class="ml-3 mb-0" :class="[userData.verified ? '' : 'red--text']">
                           <v-icon class="primary--text">
-                            {{ user.verified ? 'done' : 'warning' }}
+                            {{ userData.verified ? 'done' : 'warning' }}
                           </v-icon>
-                          Email {{ user.verified ? 'verified' : 'unverified!' }}
-                          <span v-if="!user.verified" class="small">You have only limited access.</span>
+                          Email {{ userData.verified ? 'verified' : 'unverified!' }}
+                          <span v-if="!userData.verified" class="small">You have only limited access.</span>
                         </div>
                       </v-flex>
                     </v-layout>
@@ -93,8 +93,8 @@
                     </v-card-actions>
 
                     <v-divider></v-divider>
-                    <v-card class="mt-2 pa-0" v-if="user.providerData && user.providerData.length">
-                      <div v-for="(prov, id) in user.providerData" :key="id">
+                    <v-card class="mt-2 pa-0" v-if="userData.providerData && userData.providerData.length">
+                      <div v-for="(prov, id) in userData.providerData" :key="id">
                         <v-card-text>
                           <span class="blue--text">Authentication Provider:</span> {{ prov.providerId }}
                           <v-spacer></v-spacer>
@@ -102,10 +102,6 @@
                         </v-card-text>
                         <v-divider></v-divider>
                       </div>
-                      Init:<strong class="mr-3">{{ initRoles }}</strong>
-                      Current:<strong class="mr-3">{{ userRoles }}</strong> 
-                      Add:<strong class="mr-3">{{ addRoles }}</strong> 
-                      Remove:<strong class="mr-3">{{ removeRoles }}</strong>
                     </v-card>
 
                   </v-form>
@@ -146,15 +142,15 @@
     computed: {
       profileComplete () {
         let v = 50
-        if (this.user.name) v += 25
-        if (this.user.verified) v += 25
+        if (this.userData.name) v += 25
+        if (this.userData.verified) v += 25
         return v
       },
       ownProfile () {
         return this.$route && this.$route.name === 'profile'
       },
       // get user depending on current route!
-      user () {
+      userData () {
         if (this.ownProfile) {
           return this.$store.getters.user
         }
@@ -166,7 +162,6 @@
     watch: {
       userRoles (newRoles) {
         if (!this.rolesList) return
-        console.log('\n')
         // loop through all existing roles
         for (let idx in this.rolesList) {
           let role = this.rolesList[idx]
@@ -222,6 +217,8 @@
 
       refreshInitRoles () {
         this.initRoles = []
+        this.addRoles = []
+        this.removeRoles = []
         for (let r in this.userRoles) {
           this.initRoles.push(this.userRoles[r])
         }
@@ -234,9 +231,9 @@
           this.rolesList.push(role)
         }
         // create list of roles actually assigned to this user
-        if (this.user.roles) {
+        if (this.userData.roles) {
           this.userRoles = []
-          this.user.roles.forEach(element => {
+          this.userData.roles.forEach(element => {
             this.userRoles.push(element)
           })
         }
@@ -244,21 +241,22 @@
 
       submit () {
         if (this.$refs.form.validate()) {
-          this.user.roles = this.userRoles
-          const userData = {
-            id: this.user.id,
-            email: this.user.email,
-            name: this.user.name,
+          this.userData.roles = this.userRoles
+          const profileData = {
+            id: this.userData.id,
+            email: this.userData.email,
+            name: this.userData.name,
             roles: this.userRoles
           }
           // update the user profile
-          this.$store.dispatch('updateUserProfile', userData)
+          this.$store.dispatch('updateUserProfile', profileData)
           // update the list of roles and their users
           this.$store.dispatch('updateRolesUserList', {
-            user: this.user,
+            user: this.userData,
             add: this.addRoles,
             remove: this.removeRoles
           })
+          this.refreshInitRoles()
         }
       },
       resendEmailVerification () {

@@ -76,7 +76,23 @@ export default {
     },
     // update the users for a list of roles
     updateRolesUserList ({commit}, payload) {
-      // get
+      // payload contains a user, add-roles and remove-roles objects
+      commit('setLoading', true)
+      // first, go through the list of roles to be added
+      for (const key in payload.add) {
+        if (payload.add.hasOwnProperty(key)) {
+          const element = payload.add[key]
+          // console.log(payload.user.name, 'adding to role', element)
+          rolesRef.child(element).child('users').child(payload.user.id).set(true)
+        }
+      }
+      for (const key in payload.removing) {
+        if (payload.removing.hasOwnProperty(key)) {
+          const element = payload.removing[key]
+          // console.log(payload.user.name, 'removinging from role', element)
+          rolesRef.child(element).child('users').child(payload.user.id).remove()
+        }
+      }
     }
   },
 

@@ -47,29 +47,34 @@ export default {
       usersRef
         .child(payload.id)
         .update(payload)
+        .then(() => commit('setLoading', false))
         .catch(error => {
           console.log(error)
           commit('setError', error)
+          commit('setLoading', false)
         })
     },
 
-    updateUserProfile ({ commit, dispatch }, payload) {
+    updateUserProfile ({ state, commit, dispatch }, payload) {
       commit('setLoading', true)
-      firebaseApp
-        .auth()
-        .currentUser.updateProfile({
+      if (payload.id === state.user.id) {
+        // if current user: update firebase user profile
+        firebaseApp.auth().currentUser.updateProfile({
           displayName: payload.name
         })
         .then(
           () => {
-            dispatch('updateUser', payload)
             commit('setMessage', 'User data updated')
-            commit('setLoading', false)
           },
           error => {
             console.log(error)
+            commit('setError', error)
+            commit('setLoading', false)
           }
         )
+      }
+      // update project-specific user table
+      dispatch('updateUser', payload)
     },
 
     loadUsers ({ commit }) {

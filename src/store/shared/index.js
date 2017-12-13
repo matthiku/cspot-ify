@@ -8,7 +8,7 @@ export default {
     dialogShow: false,
     dialog: {field: '', item: null, updated: false},
     admin: {
-      selectedTab: 'tab-1'
+      selectedTab: 'tab-0'
     }
   },
 
