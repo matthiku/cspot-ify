@@ -73,6 +73,10 @@ export default {
           commit('setError', error)
           commit('setLoading', false)
         })
+    },
+    // update the users for a list of roles
+    updateRolesUserList ({commit}, payload) {
+      // get
     }
   },
 

@@ -102,6 +102,10 @@
                         </v-card-text>
                         <v-divider></v-divider>
                       </div>
+                      Init:<strong class="mr-3">{{ initRoles }}</strong>
+                      Current:<strong class="mr-3">{{ userRoles }}</strong> 
+                      Add:<strong class="mr-3">{{ addRoles }}</strong> 
+                      Remove:<strong class="mr-3">{{ removeRoles }}</strong>
                     </v-card>
 
                   </v-form>
@@ -131,9 +135,11 @@
           (v) => !!v || 'E-mail is required',
           (v) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
         ],
-        rolesList: [],
-        userRoles: [],
-        initRoles: []
+        rolesList: [], // list of available roles
+        userRoles: [], // roles currently assigned to this user
+        initRoles: [], // keep record of the initial state
+        addRoles: [],  // which roles are to be added for this user?
+        removeRoles: [] // which roles are to be removed from this user?
       }
     },
 
@@ -159,36 +165,66 @@
 
     watch: {
       userRoles (newRoles) {
-        console.log('old list of roles', this.initRoles)
-        console.log('new list of roles', newRoles)
-        for (let r in newRoles) {
-          if (this.initRoles.indexOf(newRoles[r]) > -1) console.log('ignore:', newRoles[r])
-          if (this.initRoles.indexOf(newRoles[r]) < 0) {
-            console.log('to be added:', newRoles[r])
-            this.initRoles.push(newRoles[r])
+        if (!this.rolesList) return
+        console.log('\n')
+        // loop through all existing roles
+        for (let idx in this.rolesList) {
+          let role = this.rolesList[idx]
+          let posInInit = this.initRoles.indexOf(role)
+          let posInNew = newRoles.indexOf(role)
+          let posInRemove = this.removeRoles.indexOf(role)
+          let posInAdd = this.addRoles.indexOf(role)
+          // Do we have a role to be added?
+          if (posInInit < 0 && posInNew > -1) {
+            // put it into the ADD list if not there yet
+            if (posInAdd < 0) this.addRoles.push(role)
+            // make sure the role is not in the REMOVE list
+            if (posInRemove > -1) this.removeRoles.splice(posInRemove, 1)
           }
-          // if (newRoles.indexOf(newRoles[r]) < 0) console.log('removed:', newRoles[r])
+          // Do we have a role to be removed that was there initially?
+          if (posInInit > -1 && posInNew < 0) {
+            // put it into the REMOVE list if not there yet
+            if (posInRemove < 0) this.removeRoles.push(role)
+            // remove it from the ADD list if necessary
+            if (posInAdd > -1) this.addRoles.splice(posInAdd, 1)
+          }
+          // Do we have a role to be removed that was NOT there initially?
+          // (the user had added it earlier in this session)
+          if (posInInit < 0 && posInAdd > -1 && posInNew < 0) {
+            // get it OUT OF the REMOVE list if necessary
+            if (posInRemove > -1) this.removeRoles.splice(posInRemove, 1)
+            // remove it from the ADD list if necessary
+            if (posInAdd > -1) this.addRoles.splice(posInAdd, 1)
+          }
+          // a role was clicked again (the user can't make up this mind...)
+          if ((posInInit > -1) && posInNew > -1) {
+            // remove it from the ADD list if necessary
+            if (posInAdd > -1) this.addRoles.splice(posInAdd, 1)
+            // remove it from the REMOVE list if necessary
+            if (posInRemove > -1) this.removeRoles.splice(posInRemove, 1)
+          }
         }
       },
 
       $route (value) {
         // when moving from any user's profile to your own, we neet to do:
-        // (as mounted won't trigger!)
         this.createRolesArrays()
+        // (as 'mounted()' won't trigger!)
       }
     },
 
     created () {
       this.createRolesArrays()
-      for (let r in this.userRoles) {
-        this.initRoles.push(this.userRoles[r])
-      }
+      this.refreshInitRoles()
     },
 
     methods: {
 
-      setRole (which) {
-        console.log(which)
+      refreshInitRoles () {
+        this.initRoles = []
+        for (let r in this.userRoles) {
+          this.initRoles.push(this.userRoles[r])
+        }
       },
 
       createRolesArrays () {
@@ -215,7 +251,14 @@
             name: this.user.name,
             roles: this.userRoles
           }
+          // update the user profile
           this.$store.dispatch('updateUserProfile', userData)
+          // update the list of roles and their users
+          this.$store.dispatch('updateRolesUserList', {
+            user: this.user,
+            add: this.addRoles,
+            remove: this.removeRoles
+          })
         }
       },
       resendEmailVerification () {
