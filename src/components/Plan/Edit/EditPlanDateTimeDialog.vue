@@ -117,11 +117,13 @@
 </template>
 
 <script>
+import genericMixins from '../../../mixins'
 import * as moment from 'moment'
 
 export default {
   name: 'editPlanDateTimeDialog',
-  props: ['plan', 'dateEditingDialog'],
+  mixins: [genericMixins],
+  props: ['plan'],
 
   data () {
     return {
@@ -167,13 +169,19 @@ export default {
     plan () {
       this.updateDates()
     },
-    dateEditingDialog () {
-      this.dateEditingDlg = this.dateEditingDialog
+    dialogShow () {
+      // checking if parents wants this component to appear!
+      if (this.dialog.type !== 'date') return
+      this.dateEditingDlg = this.dialogShow
+    },
+    dateEditingDlg (val) {
+      if (!val) this.$store.dispatch('hideDialog')
     }
   },
 
   created () {
     this.updateDates()
+    this.$store.dispatch('hideDialog')
   }
 }
 </script>

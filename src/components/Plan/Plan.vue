@@ -37,12 +37,11 @@
               <v-toolbar-title class="white--text">
                 {{ pageTitle }}: 
                 <v-chip large color="success" class="mr-0" elevation-4
-                  @click="openTypeEditing">
+                  @click="openEditDialog('type')">
                   {{ plan ? types.length ? types[plan.typeId].name : plan.typeId : 'Plan gone' }}</v-chip>
                 <app-edit-plan-type-dialog 
                   v-if="userIsAdmin" 
                   :plan="plan"
-                  :typeEditingDialog="openTypeEditingDlg"
                   ></app-edit-plan-type-dialog>
               </v-toolbar-title>
               <v-spacer></v-spacer>
@@ -107,11 +106,10 @@
                         <v-flex v-else xs12 class="grey lighten-2">
                           <v-card-text class="mb-0 pt-1 pb-2">
                             <div>                  
-                              <h6 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openDateEditing"
+                              <h6 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
                               >{{
                                 plan.date | date
                                 }}<span v-if="plan.end">-{{ plan.end | time }}</span><app-edit-plan-date-time-dialog v-if="userOwnsThisPlan"
-                                    :dateEditingDialog="openDateEditingDlg"
                                     :plan="plan"></app-edit-plan-date-time-dialog>                                
                               </h6>
 
@@ -236,7 +234,6 @@ export default {
         items: false
       },
       openDateEditingDlg: false,
-      openTypeEditingDlg: false,
       editing: ''
     }
   },
@@ -259,9 +256,10 @@ export default {
       if (!this.userOwnsThisPlan) return
       this.openDateEditingDlg = !this.openDateEditingDlg
     },
-    openTypeEditing () {
+    openEditDialog (what) {
       if (!this.userOwnsThisPlan) return
-      this.openTypeEditingDlg = !this.openTypeEditingDlg
+      this.dialog.type = what
+      this.$store.dispatch('showDialog')
     },
     checkEditing (what) {
       if (!this.userOwnsThisPlan) return

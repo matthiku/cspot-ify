@@ -10,7 +10,7 @@
 
     <v-card>
       <v-card-title>
-        <h5>Change Plan Type <small> (current: {{ type.name }})</small></h5>
+        <h5>Edit Plan Type</h5>
         
       </v-card-title>
 
@@ -25,7 +25,7 @@
                 return-object
                 item-text="name"
                 item-value="id"
-                label="Select type"
+                label="Select new type:"
                 hint="(this will not change any existing plan items)"
                 single-line 
                 persistent-hint
@@ -51,7 +51,7 @@ import planMixins from '../mixins'
 
 export default {
   name: 'editPlanTypeDialog',
-  props: ['plan', 'typeEditingDialog'],
+  props: ['plan'],
   mixins: [genericMixins, planMixins],
 
   data () {
@@ -65,11 +65,11 @@ export default {
   methods: {
     saveType () {
       this.typeEditingDlg = false
-      if (this.type.id === this.oldType) return
+      if (this.plan.typeId === this.oldType) return
       this.plan.typeId = this.type.id
       this.$store.dispatch('updatePlan', {
         id: this.plan.id,
-        field: 'type',
+        field: 'typeId',
         value: this.type.id
       })
     }
@@ -77,12 +77,18 @@ export default {
 
   created () {
     if (!this.plan) return
+    this.$store.dispatch('hideDialog')
     this.type = { id: this.plan.typeId, name: this.types[this.plan.typeId].name }
   },
 
   watch: {
-    typeEditingDialog () {
-      this.typeEditingDlg = this.typeEditingDialog
+    // checking if parents wants this component to appear!
+    dialogShow () {
+      if (this.dialog.type !== 'type') return
+      this.typeEditingDlg = this.dialogShow
+    },
+    typeEditingDlg (val) {
+      if (!val) this.$store.dispatch('hideDialog')
     }
   }
 }
