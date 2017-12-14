@@ -70,7 +70,7 @@
                         </span>
                       </v-btn>
                       <v-spacer></v-spacer>
-                      Already signed up?
+                      Already have an account?
                       <router-link :to="{ name: 'signin'}">Sign in</router-link>
                     </v-card-actions>
                   </v-flex>

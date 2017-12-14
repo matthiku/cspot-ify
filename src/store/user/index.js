@@ -44,10 +44,11 @@ export default {
 
     // update firebase user table
     updateUser ({ commit }, payload) {
-      usersRef
-        .child(payload.id)
-        .update(payload)
-        .then(() => commit('setLoading', false))
+      usersRef.child(payload.id).update(payload)
+        .then(() => {
+          commit('setLoading', false)
+          commit('setMessage', 'This user\'s profile was updated')
+        })
         .catch(error => {
           console.log(error)
           commit('setError', error)
@@ -57,8 +58,8 @@ export default {
 
     updateUserProfile ({ state, commit, dispatch }, payload) {
       commit('setLoading', true)
+      // if this is the current user: update firebase user profile
       if (payload.id === state.user.id) {
-        // if current user: update firebase user profile
         firebaseApp.auth().currentUser.updateProfile({
           displayName: payload.name
         })
@@ -200,7 +201,7 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(payload.email, payload.password)
         .then(user => {
-          const newUser = { id: user.uid }
+          const newUser = { id: user.uid, email: payload.email }
           usersRef
             .once('value')
             .then(data => {
@@ -211,16 +212,16 @@ export default {
                 newUser.roles = ['admin']
               } else {
                 newUser.roles = ['user']
-                console.log('new user signed up!', newUser)
               }
               // add new user to our own users table
               usersRef
                 .child(newUser.id)
                 .set(newUser)
                 .then(() => {
+                  // update the roles table with this user
                   rolesRef
                     .child(newUser.roles[0])
-                    .push(newUser.id)
+                    .child(newUser.id).set(true)
                     .then(() => {
                       dispatch('loadUsers')
                       commit('setLoading', false)

@@ -19,13 +19,13 @@
             <td class="text-xs-right" @click="editField('name', props.item)">{{ props.item.name }}</td>
 
             <td class="text-xs-right" @click="editField('icon', props.item)">
-              {{ props.item.icon }}
+              <small>({{ props.item.icon }})</small>
               <v-icon v-if="props.item.icon">{{ props.item.icon }}</v-icon>
             </td>
 
             <td class="text-xs-right" v-if="users">
-              <span v-for="(user, key) in props.item.users" :key="key">
-                {{ users[key].name }}<span vrTODOif="key + 1 < props.item.users.length">, </span>
+              <span v-for="(ok, id, index) in props.item.users" :key="index">
+                {{ users[id].name }}<span v-if="index + 1 < Object.keys(props.item.users).length">, </span>
               </span>
 
               <v-btn @click="removeRole(props.item)"

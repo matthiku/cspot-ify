@@ -55,7 +55,7 @@
                         </span>
                       </v-btn>
                       <v-spacer></v-spacer>
-                      Not signed up yet? 
+                      Have no account? 
                       <router-link :to="{ name: 'signup'}">Sign Up</router-link>
                     </v-card-actions>
                   </v-flex>
