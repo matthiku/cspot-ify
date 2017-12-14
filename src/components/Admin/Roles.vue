@@ -69,7 +69,7 @@
         this.updateRolesList()
       },
       dialogShow (val) {
-        if (!this.dialog.updated) return
+        if (!this.dialog.updated || this.dialog.type !== 'role') return
         this.$store.dispatch('updateRole', {
           id: this.dialog.item.id,
           field: this.dialog.field,
@@ -89,7 +89,7 @@
       },
       editField (field, what) {
         if (!this.userIsAdmin) return
-        this.$store.dispatch('setDialog', {field, item: what})
+        this.$store.dispatch('setDialog', {field, item: what, type: 'role'})
         this.$store.dispatch('showDialog')
       },
       addRole () {

@@ -14,19 +14,32 @@
           >
           <template slot="items" slot-scope="props">
 
-            <td class="text-xs-right">{{ props.item.id }}</td>
+            <td class="text-xs-right">
+              {{ props.item.id }}</td>
 
-            <td class="text-xs-right" @click="editField('name', props.item)">{{ props.item.name }}</td>
+            <td class="text-xs-right cursor-pointer" title="click to edit" 
+              @click="editField('name', props.item)">
+              {{ props.item.name }}</td>
 
-            <td class="text-xs-right">{{ props.item.subtitle }}</td>
+            <td class="text-xs-right cursor-pointer" title="click to edit" 
+              @click="editField('subtitle', props.item)">
+              {{ props.item.subtitle }}</td>
 
-            <td class="text-xs-right">{{ props.item.weekday }}</td>
+            <td class="text-xs-right cursor-pointer" title="click to edit" 
+              @click="editField('weekday', props.item, 'weekdays')">
+              {{ props.item.weekday }}</td>
 
-            <td class="text-xs-right">{{ props.item.repeat }}</td>
+            <td class="text-xs-right cursor-pointer" title="click to edit" 
+              @click="editField('repeat', props.item, 'repeats')">
+              {{ props.item.repeat }}</td>
 
-            <td class="text-xs-right">{{ props.item.start | time }}</td>
+            <td class="text-xs-right cursor-pointer" title="click to edit"
+              @click="editField('start', props.item)">
+              {{ props.item.start | time }}</td>
 
-            <td class="text-xs-right">{{ props.item.end | time }}</td>
+            <td class="text-xs-right cursor-pointer" title="click to edit"
+              @click="editField('end', props.item)">
+              {{ props.item.end | time }}</td>
 
             <td class="text-xs-right">
               <v-btn @click="removeType(props.item)"
@@ -61,21 +74,20 @@
           { text: 'Start', value: 'start' },
           { text: 'End', value: 'end' },
           { text: 'Repeat', value: 'repeat' }
-        ],
-        typesList: []
+        ]
       }
     },
     computed: {
-      types () {
-        return this.$store.getters.types
-      }
+      types () { return this.$store.getters.types }
     },
     created () {
       this.$store.dispatch('hideDialog')
     },
     watch: {
-      dialogShow (val) {
-        if (!this.dialog.updated) return
+      dialogShow () {
+        if (!this.dialog.updated ||
+          this.dialog.type !== 'type') return
+
         this.$store.dispatch('updateType', {
           id: this.dialog.item.id,
           field: this.dialog.field,
@@ -84,9 +96,35 @@
       }
     },
     methods: {
-      editField (field, what) {
+      editField (field, what, items) {
         if (!this.userIsAdmin) return
-        this.$store.dispatch('setDialog', {field, item: what})
+
+        if (items === '') {
+          this.$store.dispatch('setDialog', {field, item: what, type: 'type'})
+        } else {
+          if (items === 'weekdays') {
+            items = [
+              {text: 'None', value: ''},
+              {text: 'Sunday', value: 0},
+              {text: 'Monday', value: 1},
+              {text: 'Tuesday', value: 2},
+              {text: 'Wednesday', value: 3},
+              {text: 'Thursday', value: 4},
+              {text: 'Fridday', value: 5},
+              {text: 'Saturday', value: 6}
+            ]
+          }
+          if (items === 'repeats') {
+            items = [
+              {text: 'None', value: ''},
+              {text: 'weekly', value: 'weekly'},
+              {text: 'biweekly', value: 'biweekly'},
+              {text: 'monthly', value: 'monthly'},
+              {text: 'yearly', value: 'yearly'}
+            ]
+          }
+          this.$store.dispatch('setDialog', {field, item: what, type: 'type', select: items})
+        }
         this.$store.dispatch('showDialog')
       },
       addType () {

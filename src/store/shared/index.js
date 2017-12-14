@@ -1,15 +1,12 @@
 export default {
-
   state: {
     appName: 'c-SPOT-ify',
     loading: false,
     message: '',
     error: '',
     dialogShow: false,
-    dialog: {field: '', item: null, updated: false},
-    admin: {
-      selectedTab: 'tab-0'
-    }
+    dialog: { field: '', item: null, updated: false },
+    admin: { selectedTab: '' }
   },
 
   mutations: {
@@ -20,9 +17,15 @@ export default {
       state.error = payload
     },
     setMessage (state, payload) {
+      setTimeout(() => {
+        state.message = ''
+      }, 9000)
       state.message = payload
     },
     appendMessage (state, payload) {
+      setTimeout(() => {
+        state.message = ''
+      }, 9000)
       state.message = (state.message ? state.message + ' - ' : '') + payload
     },
     setDialog (state, payload) {
@@ -43,31 +46,31 @@ export default {
   },
 
   actions: {
-    clearError ({commit}) {
+    clearError ({ commit }) {
       commit('clearError')
     },
-    clearMessage ({commit}) {
+    clearMessage ({ commit }) {
       commit('clearMessage')
     },
-    setLoading ({commit}, payload) {
+    setLoading ({ commit }, payload) {
       commit('setLoading', payload)
     },
-    setMessage ({commit}, payload) {
+    setMessage ({ commit }, payload) {
       commit('setMessage', payload)
     },
-    appendMessage ({commit}, payload) {
+    appendMessage ({ commit }, payload) {
       commit('appendMessage', payload)
     },
-    setDialog ({commit}, payload) {
+    setDialog ({ commit }, payload) {
       commit('setDialog', payload)
     },
-    hideDialog ({commit}) {
+    hideDialog ({ commit }) {
       commit('hideDialog')
     },
-    showDialog ({commit}) {
+    showDialog ({ commit }) {
       commit('showDialog')
     },
-    errorHandling ({commit}, payload) {
+    errorHandling ({ commit }, payload) {
       commit('setError', payload)
       console.log(payload)
       commit('setLoading', false)
