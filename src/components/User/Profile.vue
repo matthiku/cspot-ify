@@ -67,8 +67,9 @@
                       <label>Assign<span v-if="!userIsAdmin">ed</span> Roles:</label>
                     </v-layout>
                     <v-layout row wrap class="mt-0">
+                      <span v-if="!rolesList">No roles available!</span>
                       <v-flex sm3 lg2 xl1 class="my-0"
-                        v-for="(role, index) in rolesList" 
+                        v-for="(role, index) in rolesList"
                         :key="index">
                         <v-checkbox 
                             v-bind:label="role"

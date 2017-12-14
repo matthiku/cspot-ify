@@ -63,7 +63,8 @@ export default {
         .catch((error) => dispatch('errorHandling', error))
     },
     // update the users for a list of roles
-    updateRolesUserList ({commit}, payload) {
+    updateRolesUserList ({commit, dispatch}, payload) {
+      // console.log('updateRolesUserList', payload)
       // payload contains a user, add-roles and remove-roles objects
       commit('setLoading', true)
       // first, go through the list of roles to be added
@@ -72,13 +73,15 @@ export default {
           const element = payload.add[key]
           // console.log(payload.user.name, 'adding to role', element)
           rolesRef.child(element).child('users').child(payload.user.id).set(true)
+            .catch((error) => dispatch('errorHandling', error))
         }
       }
-      for (const key in payload.removing) {
-        if (payload.removing.hasOwnProperty(key)) {
-          const element = payload.removing[key]
-          // console.log(payload.user.name, 'removinging from role', element)
+      for (const key in payload.remove) {
+        if (payload.remove.hasOwnProperty(key)) {
+          const element = payload.remove[key]
+          // console.log(payload.user.name, 'removing from role', element)
           rolesRef.child(element).child('users').child(payload.user.id).remove()
+            .catch((error) => dispatch('errorHandling', error))
         }
       }
     }
