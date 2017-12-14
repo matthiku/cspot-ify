@@ -3,8 +3,8 @@ export default {
   state: {
     appName: 'c-SPOT-ify',
     loading: false,
-    message: null,
-    error: null,
+    message: '',
+    error: '',
     dialogShow: false,
     dialog: {field: '', item: null, updated: false},
     admin: {
@@ -35,10 +35,10 @@ export default {
       state.dialogShow = true
     },
     clearError (state) {
-      state.error = null
+      state.error = ''
     },
     clearMessage (state) {
-      state.message = null
+      state.message = ''
     }
   },
 

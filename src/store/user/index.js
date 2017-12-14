@@ -47,7 +47,6 @@ export default {
       usersRef.child(payload.id).update(payload)
         .then(() => {
           commit('setLoading', false)
-          commit('appendMessage', 'This user\'s profile was updated')
         })
         .catch(error => dispatch('errorHandling', error))
     },
@@ -67,6 +66,7 @@ export default {
       }
       // update project-specific user table
       dispatch('updateUser', payload)
+      commit('appendMessage', 'This user\'s profile was updated')
     },
 
     loadUsers ({commit, dispatch}) {
@@ -119,6 +119,7 @@ export default {
         .signInWithEmailAndPassword(payload.email, payload.password)
         .then(user => {
           commit('setLoading', false)
+          commit('setMessage', '')
         })
         .catch(error => dispatch('errorHandling', error))
     },

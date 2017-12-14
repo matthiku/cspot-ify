@@ -28,6 +28,10 @@
                 User Roles
               </v-tabs-item>
 
+              <v-tabs-item href="#tab-2">
+                Plan Types
+              </v-tabs-item>
+
               <v-tabs-item
                   v-for="(item, i) in items"
                   :key="i"
@@ -64,9 +68,13 @@
             <v-tabs-content id="tab-1">
               <app-admin-role-list></app-admin-role-list>
             </v-tabs-content>
+            
+            <v-tabs-content id="tab-2">
+              <app-admin-type-list></app-admin-type-list>
+            </v-tabs-content>
 
             <v-tabs-content
-              v-for="i in 3"
+              v-for="i in 2"
               :key="i"
               :id="'tabo-' + i"
             >
@@ -88,7 +96,7 @@
     data () {
       return {
         items: [
-          'Plan Types', 'videos', 'images'
+          'videos', 'images'
         ],
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
       }

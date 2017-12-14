@@ -11,6 +11,7 @@ import ShowListOfPlans from './components/Plan/View/Plan.vue'
 
 import AdminUserList from './components/Admin/Users'
 import AdminRoleList from './components/Admin/Roles'
+import AdminTypeList from './components/Admin/Types'
 import AdminEditFieldDialog from './components/Admin/Edit/EditFieldDialog'
 
 export default function sharedComponents () {
@@ -25,6 +26,7 @@ export default function sharedComponents () {
   Vue.component('app-show-list-of-plans', ShowListOfPlans)
 
   Vue.component('app-admin-user-list', AdminUserList)
+  Vue.component('app-admin-type-list', AdminTypeList)
   Vue.component('app-admin-role-list', AdminRoleList)
   Vue.component('app-admin-edit-field-dialog', AdminEditFieldDialog)
 }

@@ -8,7 +8,7 @@
 
         <v-data-table
             v-bind:headers="headers"
-            :items="typesList"
+            :items="types"
             hide-actions
             class="elevation-1"
           >
@@ -16,19 +16,20 @@
 
             <td class="text-xs-right">{{ props.item.id }}</td>
 
-            <td class="text-xs-right" @click="editField('icon', props.item)">
-              <small>({{ props.item.icon }})</small>
-              <v-icon v-if="props.item.icon">{{ props.item.icon }}</v-icon>
-            </td>
-
             <td class="text-xs-right" @click="editField('name', props.item)">{{ props.item.name }}</td>
 
-            <td class="text-xs-right" v-if="users">
-              <span v-for="(ok, id, index) in props.item.users" :key="index">
-                {{ users[id].name }}<span v-if="index + 1 < Object.keys(props.item.users).length">, </span>
-              </span>
+            <td class="text-xs-right">{{ props.item.subtitle }}</td>
 
-              <v-btn @click="removeRole(props.item)"
+            <td class="text-xs-right">{{ props.item.weekday }}</td>
+
+            <td class="text-xs-right">{{ props.item.repeat }}</td>
+
+            <td class="text-xs-right">{{ props.item.start }}</td>
+
+            <td class="text-xs-right">{{ props.item.end }}</td>
+
+            <td class="text-xs-right">
+              <v-btn @click="removeType(props.item)"
                 v-if="!props.item.users" color="error" fab small dark>
                 <v-icon>delete</v-icon>
               </v-btn>
@@ -36,7 +37,7 @@
 
           </template>
         </v-data-table>
-        <v-btn color="primary" @click="addRole">add role</v-btn>
+        <v-btn color="primary" @click="addType">add type</v-btn>
       </v-layout>
 
     </v-slide-y-transition>
@@ -47,29 +48,34 @@
   import genericMixins from '../../mixins/'
 
   export default {
+    name: 'EventTypesList',
     mixins: [genericMixins],
     data () {
       return {
         headers: [
           { text: 'Id', value: 'id' },
-          { text: 'Icon', value: 'icon' },
           { text: 'Name', value: 'name' },
-          { text: 'User(s)', value: 'users' }
+          { text: 'Subtitle', value: 'subtitle' },
+          { text: 'Weekday', value: 'weekday' },
+          { text: 'Start', value: 'start' },
+          { text: 'End', value: 'end' },
+          { text: 'Repeat', value: 'repeat' }
         ],
         typesList: []
       }
     },
+    computed: {
+      types () {
+        return this.$store.getters.types
+      }
+    },
     created () {
-      this.updateRolesList()
       this.$store.dispatch('hideDialog')
     },
     watch: {
-      roles () {
-        this.updateRolesList()
-      },
       dialogShow (val) {
         if (!this.dialog.updated) return
-        this.$store.dispatch('updateRole', {
+        this.$store.dispatch('updateType', {
           id: this.dialog.item.id,
           field: this.dialog.field,
           value: this.dialog.item[this.dialog.field]
@@ -77,29 +83,20 @@
       }
     },
     methods: {
-      updateRolesList () {
-        this.typesList = []
-        // morph the roles object into an array of roles
-        for (let key in this.roles) {
-          let data = {id: key}
-          Object.assign(data, this.roles[key])
-          this.typesList.push(data)
-        }
-      },
       editField (field, what) {
         if (!this.userIsAdmin) return
         this.$store.dispatch('setDialog', {field, item: what})
         this.$store.dispatch('showDialog')
       },
-      addRole () {
+      addType () {
         if (!this.userIsAdmin) return
-        this.$store.dispatch('addDummyRole', {id: 'new', name: ''})
-        this.$store.dispatch('setDialog', {field: 'name', item: this.roles.new})
+        this.$store.dispatch('addDummyType', {id: 'new', name: ''})
+        this.$store.dispatch('setDialog', {field: 'name', item: this.types.new})
         this.$store.dispatch('showDialog')
       },
-      removeRole (role) {
+      removeType (type) {
         if (!this.userIsAdmin) return
-        this.$store.dispatch('removeRole', role)
+        this.$store.dispatch('removeType', type)
       }
     }
   }
