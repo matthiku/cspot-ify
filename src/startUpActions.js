@@ -21,6 +21,17 @@ export default function startUpActions (store, router) {
     }
   })
 
+  function refreshAllItems () {
+    if (!store.users) store.dispatch('refreshUsers')
+    if (!store.roles) store.dispatch('refreshRoles')
+    if (!store.types) store.dispatch('refreshTypes')
+    if (!store.plans) store.dispatch('refreshPlans')
+  }
+  setTimeout(() => {
+    // check if the initial loading (see below) had been successful
+    refreshAllItems
+  }, 2000)
+
   // sync with existing PLANS from firebase
   plansRef.on('value', snap => {
     // console.log('plans DB was modified!')

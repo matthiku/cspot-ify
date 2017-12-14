@@ -27,6 +27,15 @@ export default {
   },
 
   actions: {
+    refreshUsers ({commit, dispatch}) {
+      console.log('updating local USERS list with full one-off snapshot from Server')
+      usersRef.once('value')
+      .then((data) => {
+        dispatch('setUser', data)
+      })
+      .catch((error) => dispatch('errorHandling', error))
+    },
+
     // called from -> startUpActions <- only!
     // Triggered by a change in the Auth state of firebase
     // contains data from the Firebase Auth DB, not our own!

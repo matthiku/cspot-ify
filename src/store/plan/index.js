@@ -27,7 +27,7 @@ export default {
   actions: {
 
     refreshPlans ({commit, dispatch}) {
-      // console.log('updating local plan list with full one-off snapshot from Server')
+      console.log('updating local plan list with full one-off snapshot from Server')
       plansRef.once('value')
       .then((data) => {
         dispatch('loadPlans', data)

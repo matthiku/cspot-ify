@@ -1,3 +1,5 @@
+import { typesRef } from '../../firebaseApp'
+
 // import { typesRef } from '../../firebaseApp'
 
 export default {
@@ -10,6 +12,17 @@ export default {
     }
   },
   actions: {
+    refreshTypes ({ commit, dispatch }) {
+      console.log(
+        'updating local list of TYPES with full one-off snapshot from Server'
+      )
+      typesRef
+        .once('value')
+        .then(data => {
+          commit('setTypes', data)
+        })
+        .catch(error => dispatch('errorHandling', error))
+    },
 
     // load existing types from the DB
     loadTypes ({ commit }, payload) {
@@ -23,7 +36,6 @@ export default {
       commit('setLoading', false)
       commit('setTypes', types)
     }
-
   },
   getters: {
     types (state) {

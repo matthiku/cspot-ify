@@ -15,6 +15,14 @@ export default {
   },
 
   actions: {
+    refreshRoles ({commit, dispatch}) {
+      console.log('updating local list of ROLES with full one-off snapshot from Server')
+      rolesRef.once('value')
+      .then((data) => {
+        dispatch('loadRoles', data)
+      })
+      .catch((error) => dispatch('errorHandling', error))
+    },
 
     // load existing roles from the DB (called from startUpActions)
     loadRoles ({commit}, payload) {
