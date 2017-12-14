@@ -60,6 +60,11 @@ export default {
     },
     showDialog ({commit}) {
       commit('showDialog')
+    },
+    errorHandling ({commit}, payload) {
+      commit('setError', payload)
+      console.log(payload)
+      commit('setLoading', false)
     }
   },
 

@@ -126,13 +126,15 @@
     </v-navigation-drawer>
 
     <v-footer fixed app>
-      <small>the <a target="new" href="https://github.com/matthiku/cspot">c-SPOT</a> Frontend Project</small>
+      c-SPOT-ify
+      <span class="hidden-sm-and-down"><a target="new" href="https://github.com/matthiku/cspot-ify" class="mx-2">GitHub</a>
+        <a target="new" href="https://github.com/matthiku/cspot-ify/issues">Issues</a>
+        <a target="new" class="ml-3" href="https://console.firebase.google.com/project/cspot-ify/database/cspot-ify/data">Firebase</a>
+      </span>
       <v-spacer></v-spacer>
-      GitHub:
-      <span><a target="new" href="https://github.com/matthiku/cspot-ify" class="mx-3">c-SPOT-ify</a></span>
-      <span><a target="new" href="https://github.com/matthiku/cspot-ify/issues">Issues</a></span>
+      <small class="hidden-xs-only">the <a target="new" href="https://github.com/matthiku/cspot">c-SPOT</a> Frontend Project</small>
       <v-spacer></v-spacer>
-      <span>&copy; 2017 Matthias Kuhs</span>
+      <span>&copy; 2017 <a href="https://github.com/matthiku" target="new">Matthias Kuhs</a></span>
     </v-footer>
 
   </v-app>

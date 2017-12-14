@@ -43,20 +43,16 @@ export default {
     },
 
     // update firebase user table
-    updateUser ({ commit }, payload) {
+    updateUser ({commit, dispatch}, payload) {
       usersRef.child(payload.id).update(payload)
         .then(() => {
           commit('setLoading', false)
           commit('setMessage', 'This user\'s profile was updated')
         })
-        .catch(error => {
-          console.log(error)
-          commit('setError', error)
-          commit('setLoading', false)
-        })
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    updateUserProfile ({ state, commit, dispatch }, payload) {
+    updateUserProfile ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
       // if this is the current user: update firebase user profile
       if (payload.id === state.user.id) {
@@ -67,18 +63,13 @@ export default {
           () => {
             commit('setMessage', 'User data updated')
           },
-          error => {
-            console.log(error)
-            commit('setError', error)
-            commit('setLoading', false)
-          }
-        )
+          error => dispatch('errorHandling', error))
       }
       // update project-specific user table
       dispatch('updateUser', payload)
     },
 
-    loadUsers ({ commit }) {
+    loadUsers ({commit, dispatch}) {
       commit('setLoading', true)
       usersRef
         .once('value')
@@ -86,14 +77,10 @@ export default {
           const values = data.val()
           commit('setUsers', values)
         })
-        .catch(error => {
-          commit('setError', error)
-          console.log(error)
-          commit('setLoading', false)
-        })
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    fetchUserData ({ commit }, payload) {
+    fetchUserData ({commit, dispatch}, payload) {
       if (!payload) {
         return
       }
@@ -107,14 +94,10 @@ export default {
           }
           commit('setLoading', false)
         })
-        .catch(error => {
-          console.log(error)
-          commit('setError', error)
-          commit('setLoading', false)
-        })
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    signUserOut ({ commit }) {
+    signUserOut ({commit, dispatch}) {
       commit('setLoading', true)
       commit('clearError')
       firebaseApp
@@ -125,15 +108,10 @@ export default {
           commit('setLoading', false)
           commit('setUser', null)
         })
-        .catch(error => {
-          commit('setError', error)
-          commit('setLoading', false)
-          // An error happened.
-          console.log(error)
-        })
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    signUserIn ({ commit, state }, payload) {
+    signUserIn ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
       commit('clearError')
       firebaseApp
@@ -142,14 +120,10 @@ export default {
         .then(user => {
           commit('setLoading', false)
         })
-        .catch(error => {
-          commit('setLoading', false)
-          commit('setError', error)
-          console.log(error)
-        })
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    sendEmailVerification ({ commit }) {
+    sendEmailVerification ({commit, dispatch}) {
       let user = firebaseApp.auth().currentUser
       if (!user) return
       user
@@ -158,14 +132,10 @@ export default {
           commit('setMessage', 'Email verification email has been sent.')
           commit('setLoading', false)
         })
-        .catch(error => {
-          commit('setLoading', false)
-          commit('setError', error)
-          console.log(error)
-        })
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    singinViaProvider ({ commit }, provider) {
+    singinViaProvider ({commit, dispatch}, provider) {
       if (provider === 'google') {
         provider = new firebase.auth.GoogleAuthProvider()
         firebaseApp
@@ -179,18 +149,7 @@ export default {
             console.log(user)
             // ...
           })
-          .catch((error) => {
-            console.log(error)
-            // Handle Errors here.
-            // var errorCode = error.code
-            var errorMessage = error.message
-            commit('setError', errorMessage)
-            // The email of the user's account used.
-            // var email = error.email
-            // The firebase.auth.AuthCredential type that was used.
-            // var credential = error.credential
-            // ...
-          })
+          .catch((error) => dispatch('errorHandling', error))
       }
     },
 
@@ -214,6 +173,7 @@ export default {
                 newUser.roles = ['user']
               }
               // add new user to our own users table
+              // console.log('saving new user profile to fb:', newUser)
               usersRef
                 .child(newUser.id)
                 .set(newUser)
@@ -221,34 +181,19 @@ export default {
                   // update the roles table with this user
                   rolesRef
                     .child(newUser.roles[0])
+                    .child('users')
                     .child(newUser.id).set(true)
                     .then(() => {
                       dispatch('loadUsers')
                       commit('setLoading', false)
                     })
-                    .catch(error => {
-                      commit('setError', error)
-                      console.log(error)
-                      commit('setLoading', false)
-                    })
+                    .catch(error => dispatch('errorHandling', error))
                 })
-                .catch(error => {
-                  commit('setError', error)
-                  console.log(error)
-                  commit('setLoading', false)
-                })
+                .catch(error => dispatch('errorHandling', error))
             })
-            .catch(error => {
-              commit('setError', error)
-              console.log(error)
-              commit('setLoading', false)
-            })
+            .catch(error => dispatch('errorHandling', error))
         })
-        .catch(error => {
-          commit('setError', error)
-          console.log(error)
-          commit('setLoading', false)
-        })
+        .catch(error => dispatch('errorHandling', error))
     },
 
     setOldRoute ({ commit }, payload) {

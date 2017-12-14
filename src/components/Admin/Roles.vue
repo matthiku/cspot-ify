@@ -16,12 +16,12 @@
 
             <td class="text-xs-right">{{ props.item.id }}</td>
 
-            <td class="text-xs-right" @click="editField('name', props.item)">{{ props.item.name }}</td>
-
             <td class="text-xs-right" @click="editField('icon', props.item)">
               <small>({{ props.item.icon }})</small>
               <v-icon v-if="props.item.icon">{{ props.item.icon }}</v-icon>
             </td>
+
+            <td class="text-xs-right" @click="editField('name', props.item)">{{ props.item.name }}</td>
 
             <td class="text-xs-right" v-if="users">
               <span v-for="(ok, id, index) in props.item.users" :key="index">
@@ -52,8 +52,8 @@
       return {
         headers: [
           { text: 'Id', value: 'id' },
-          { text: 'Name', value: 'name' },
           { text: 'Icon', value: 'icon' },
+          { text: 'Name', value: 'name' },
           { text: 'User(s)', value: 'users' }
         ],
         rolesList: []

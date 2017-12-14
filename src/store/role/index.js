@@ -22,7 +22,7 @@ export default {
       commit('setLoading', false)
     },
 
-    updateRole ({commit, state}, payload) {
+    updateRole ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
       const updateObj = {}
       // for a name change, we also need to change the id
@@ -39,11 +39,7 @@ export default {
           commit('setMessage', 'Role updated!')
           commit('setLoading', false)
         })
-        .catch((error) => {
-          console.log(error)
-          commit('setError', error)
-          commit('setLoading', false)
-        })
+        .catch((error) => dispatch('errorHandling', error))
     },
 
     addDummyRole ({commit}, payload) {
@@ -51,7 +47,7 @@ export default {
       commit('addDummyRole', payload)
     },
 
-    removeRole ({commit}, payload) {
+    removeRole ({commit, dispatch}, payload) {
       commit('setLoading', true)
       // first, move the old role to the bin
       binRef.child('roles/' + payload.name).set(payload)
@@ -62,17 +58,9 @@ export default {
             commit('setMessage', 'role removed and placed in the bin!')
             commit('setLoading', false)
           })
-          .catch((error) => {
-            console.log(error)
-            commit('setError', error)
-            commit('setLoading', false)
-          })
+          .catch((error) => dispatch('errorHandling', error))
         })
-        .catch((error) => {
-          console.log(error)
-          commit('setError', error)
-          commit('setLoading', false)
-        })
+        .catch((error) => dispatch('errorHandling', error))
     },
     // update the users for a list of roles
     updateRolesUserList ({commit}, payload) {

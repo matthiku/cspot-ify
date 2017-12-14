@@ -26,17 +26,13 @@ export default {
   // A C T I O N S
   actions: {
 
-    refreshPlans ({ commit, dispatch }) {
+    refreshPlans ({commit, dispatch}) {
       // console.log('updating local plan list with full one-off snapshot from Server')
       plansRef.once('value')
       .then((data) => {
         dispatch('loadPlans', data)
       })
-      .catch((error) => {
-        commit('setError', error.toString())
-        console.log(error)
-        commit('setLoading', false)
-      })
+      .catch((error) => dispatch('errorHandling', error))
     },
     // load existing plans from the DB
     loadPlans ({ commit }, payload) {
@@ -53,7 +49,7 @@ export default {
     },
 
     // create a new Plan item and possibly upload an image file
-    createPlan ({ commit }, payload) {
+    createPlan ({commit, dispatch}, payload) {
       // reach out to our DB and store it
       let imageUrl
       let key
@@ -90,16 +86,12 @@ export default {
           commit('setLoading', false)
         })
 
-        .catch(error => {
-          commit('setError', error.toString())
-          console.log(error)
-          commit('setLoading', false)
-        })
+        .catch(error => dispatch('errorHandling', error))
     },
 
     // update an existing plan
     // - - payload contains planID and field name
-    updatePlan ({ commit, state }, payload) {
+    updatePlan ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
       const updateObj = {}
       updateObj[payload.field] = payload.value
@@ -108,16 +100,12 @@ export default {
           commit('setLoading', false)
           commit('setMessage', 'Plan successfully updated.')
         })
-        .catch((error) => {
-          console.log(error)
-          commit('setError', error)
-          commit('setLoading', false)
-        })
+        .catch((error) => dispatch('errorHandling', error))
     },
 
     // move a plan to the bin
     // - - payload must be the full plan, as we send it to the bin and then delete it
-    binPlan ({ commit, state }, payload) {
+    binPlan ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
       binRef.child('users').push(payload)
       .then(() => {
@@ -126,27 +114,19 @@ export default {
           commit('setLoading', false)
           commit('setMessage', 'Plan removed into the bin.')
         })
-        .catch((error) => {
-          console.log(error)
-          commit('setError', error)
-          commit('setLoading', false)
-        })
+        .catch((error) => dispatch('errorHandling', error))
       })
     },
 
     // delete a plan finally
-    deletePlan ({ commit, state }, payload) {
+    deletePlan ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
       plansRef.child(payload.id).remove()
         .then(() => {
           commit('setLoading', false)
           commit('setMessage', 'Plan was erased.')
         })
-        .catch((error) => {
-          console.log(error)
-          commit('setError', error)
-          commit('setLoading', false)
-        })
+        .catch((error) => dispatch('errorHandling', error))
     },
     clearNewPlanId ({commit}) {
       commit('clearNewPlanId')
