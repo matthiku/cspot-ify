@@ -11,16 +11,6 @@
       <v-flex xs12>
         <form @submit.prevent="onCreatePlan">
 
-          <!-- Alert Panel -->
-          <v-container v-if="error || message">
-            <v-layout row>
-              <v-flex xs12>
-                <app-alert @dismissed="onDismissed('clearError')" :text="error"></app-alert>
-                <app-success @dismissed="onDismissed('clearMessage')" :text="message"></app-success>
-              </v-flex>
-            </v-layout>
-          </v-container>
-
           <!-- TYPE and DATE picker-->
           <v-layout row>
             <v-flex xs12 md6 offset-md3>

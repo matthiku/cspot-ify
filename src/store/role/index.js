@@ -68,6 +68,7 @@ export default {
       // payload contains a user, add-roles and remove-roles objects
       commit('setLoading', true)
       // first, go through the list of roles to be added
+      if (Object.keys(payload.add).length) { commit('appendMessage', 'User was added to a role') }
       for (const key in payload.add) {
         if (payload.add.hasOwnProperty(key)) {
           const element = payload.add[key]
@@ -76,12 +77,13 @@ export default {
             .catch((error) => dispatch('errorHandling', error))
         }
       }
+      if (Object.keys(payload.remove).length) { commit('appendMessage', 'User was removed from a role') }
       for (const key in payload.remove) {
         if (payload.remove.hasOwnProperty(key)) {
           const element = payload.remove[key]
           // console.log(payload.user.name, 'removing from role', element)
           rolesRef.child(element).child('users').child(payload.user.id).remove()
-            .catch((error) => dispatch('errorHandling', error))
+          .catch((error) => dispatch('errorHandling', error))
         }
       }
     }

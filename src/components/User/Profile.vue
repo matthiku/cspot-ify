@@ -7,16 +7,6 @@
         <v-card>
           <v-card-text class="pa-2">
 
-            <!-- Alert Panel -->
-            <v-container v-if="error || message">
-              <v-layout row>
-                <v-flex xs12>
-                  <app-alert v-if="error" @dismissed="onDismissed('clearError')" :text="error"></app-alert>
-                  <app-success v-if="message" @dismissed="onDismissed('clearMessage')" :text="message"></app-success>
-                </v-flex>
-              </v-layout>
-            </v-container>
-
             <v-container fluid px-0>
               <v-layout>
                 <v-flex xs12 v-if="userData">

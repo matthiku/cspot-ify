@@ -22,6 +22,9 @@ export default {
     setMessage (state, payload) {
       state.message = payload
     },
+    appendMessage (state, payload) {
+      state.message = (state.message ? state.message + ' - ' : '') + payload
+    },
     setDialog (state, payload) {
       state.dialog = payload
     },
@@ -51,6 +54,9 @@ export default {
     },
     setMessage ({commit}, payload) {
       commit('setMessage', payload)
+    },
+    appendMessage ({commit}, payload) {
+      commit('appendMessage', payload)
     },
     setDialog ({commit}, payload) {
       commit('setDialog', payload)

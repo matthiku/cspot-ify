@@ -21,15 +21,6 @@
               </v-btn>
             </v-toolbar>
 
-            <!-- Alert Panel -->
-            <v-container v-if="error">
-              <v-layout row>
-                <v-flex xs12>
-                  <app-alert @dismissed="onDismissed" :text="error"></app-alert>
-                </v-flex>
-              </v-layout>
-            </v-container>
-
             <v-container>
               <v-layout row wrap>
 

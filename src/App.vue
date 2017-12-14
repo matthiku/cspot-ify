@@ -89,6 +89,16 @@
           <v-progress-linear class="ma-0 pa-0" v-bind:indeterminate="true"></v-progress-linear>
         </v-flex>
 
+        <!-- Alert Panel -->
+        <v-container class="pa-0" v-if="error || message">
+          <v-layout row>
+            <v-flex xs12>
+              <app-alert v-if="error" @dismissed="onDismissed('clearError')" :text="error"></app-alert>
+              <app-success v-if="message" @dismissed="onDismissed('clearMessage')" :text="message"></app-success>
+            </v-flex>
+          </v-layout>
+        </v-container>
+
         <router-view></router-view>
 
       </v-content>
@@ -141,8 +151,12 @@
 </template>
 
 <script>
+  import genericMixins from './mixins/'
+
   export default {
     name: 'mainApp',
+    mixins: [genericMixins],
+
     data () {
       return {
         appTitle: 'c-SPOT',
@@ -228,6 +242,12 @@
       loading () {
         return this.$store.getters.loading
       },
+      message () {
+        return this.$store.getters.message
+      },
+      error () {
+        return this.$store.getters.error
+      },
       userIsAdmin  () {
         return this.$store.getters.userIsAdmin
       }
@@ -236,6 +256,9 @@
       onLogout () {
         this.rightDrawer = false
         this.$store.dispatch('signUserOut')
+      },
+      onDismissed (what) {
+        this.$store.dispatch(what)
       }
     }
   }

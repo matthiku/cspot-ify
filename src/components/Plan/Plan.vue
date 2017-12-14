@@ -92,16 +92,6 @@
               </v-tooltip>
             </v-toolbar>
 
-            <!-- Alert Panel -->
-            <v-container v-if="error || message">
-              <v-layout row>
-                <v-flex xs12>
-                  <app-alert v-if="error" @dismissed="onDismissed('clearError')" :text="error"></app-alert>
-                  <app-success v-if="message" @dismissed="onDismissed('clearMessage')" :text="message"></app-success>
-                </v-flex>
-              </v-layout>
-            </v-container>
-
             <!-- PLAN DETAILS -->
             <v-container>
               <v-layout row wrap>

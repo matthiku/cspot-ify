@@ -47,7 +47,7 @@ export default {
       usersRef.child(payload.id).update(payload)
         .then(() => {
           commit('setLoading', false)
-          commit('setMessage', 'This user\'s profile was updated')
+          commit('appendMessage', 'This user\'s profile was updated')
         })
         .catch(error => dispatch('errorHandling', error))
     },
@@ -61,7 +61,7 @@ export default {
         })
         .then(
           () => {
-            commit('setMessage', 'User data updated')
+            commit('appendMessage', 'User\'s Firebase data was updated!')
           },
           error => dispatch('errorHandling', error))
       }
