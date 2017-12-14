@@ -10,13 +10,13 @@
 
     <v-card>
       <v-card-title>
-        <h5>Change Plan Type</h5>
+        <h5>Change Plan Type <small> (current: {{ type.name }})</small></h5>
+        
       </v-card-title>
 
       <v-card-text>
         <template>
           <v-layout row wrap>
-
             <v-flex xs12>
               Select:
               <v-select
@@ -57,13 +57,15 @@ export default {
   data () {
     return {
       typeEditingDlg: false,
-      type: {}
+      type: {},
+      oldType: this.plan.typeId
     }
   },
 
   methods: {
     saveType () {
-      this.dateEditingDlg = false
+      this.typeEditingDlg = false
+      if (this.type.id === this.oldType) return
       this.plan.typeId = this.type.id
       this.$store.dispatch('updatePlan', {
         id: this.plan.id,
