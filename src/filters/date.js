@@ -9,5 +9,9 @@ export const dateShort = (value) => {
 }
 
 export const time = (value) => {
-  return moment(value).format('HH:mm')
+  let tm = moment(value)
+  if (!tm.isValid()) {
+    tm = moment(value, 'HH:mm:ss')
+  }
+  return tm.format('HH:mm')
 }

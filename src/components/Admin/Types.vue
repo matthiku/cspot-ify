@@ -24,12 +24,13 @@
 
             <td class="text-xs-right">{{ props.item.repeat }}</td>
 
-            <td class="text-xs-right">{{ props.item.start }}</td>
+            <td class="text-xs-right">{{ props.item.start | time }}</td>
 
-            <td class="text-xs-right">{{ props.item.end }}</td>
+            <td class="text-xs-right">{{ props.item.end | time }}</td>
 
             <td class="text-xs-right">
               <v-btn @click="removeType(props.item)"
+                class="ma-0"
                 v-if="!props.item.users" color="error" fab small dark>
                 <v-icon>delete</v-icon>
               </v-btn>

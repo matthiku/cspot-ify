@@ -29,6 +29,7 @@
               </span>
 
               <v-btn @click="removeRole(props.item)"
+                class="ma-0"
                 v-if="!props.item.users" color="error" fab small dark>
                 <v-icon>delete</v-icon>
               </v-btn>
