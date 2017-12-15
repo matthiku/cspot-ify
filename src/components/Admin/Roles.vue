@@ -25,12 +25,19 @@
 
             <td class="text-xs-right" v-if="users">
               <span v-for="(ok, id, index) in props.item.users" :key="index">
-                {{ users[id].name }}<span v-if="index + 1 < Object.keys(props.item.users).length">, </span>
+                <v-chip small :title="users[id].name">
+                  <v-avatar v-if="users[id].providerData && users[id].providerData[0].photoURL">
+                    <img :src="users[id].providerData[0].photoURL" alt="avatar">
+                  </v-avatar>
+                  {{ users[id].name | firstWord }}
+                </v-chip>
               </span>
 
-              <v-btn @click="removeRole(props.item)"
-                class="ma-0"
-                v-if="!props.item.users" color="error" fab small dark>
+              <v-btn 
+                v-if="!props.item.users" 
+                color="error" fab small dark
+                @click="removeRole(props.item)"
+                class="ma-0">
                 <v-icon>delete</v-icon>
               </v-btn>
             </td>

@@ -18,9 +18,17 @@
                 title="click to edit this profile"
                 style="cursor: pointer"
               >{{ props.item.id }}</router-link>
-            <td class="text-xs-right">{{ props.item.name }}</td>
+
+            <td class="text-xs-right">{{ props.item.name }}
+              <v-avatar size="30px" v-if="props.item.providerData && props.item.providerData[0].photoURL">
+                <img :src="props.item.providerData[0].photoURL" alt="avatar">
+              </v-avatar>
+            </td>
+
             <td class="text-xs-right">{{ props.item.email }}</td>
+
             <td class="text-xs-right">{{ props.item.verified }}</td>
+
             <td class="text-xs-right">
               <span v-for="(role, key) in props.item.roles" :key="key">
                 {{ role }}<span v-if="key + 1 < props.item.roles.length">, </span>
