@@ -7,7 +7,7 @@
       :title="userOwnsThisPlan ? 'click to edit' : ''"
       class="grey lighten-3">
       <pre>{{ plan.info }}</pre>
-      <p v-if="!plan.info && userOwnsThisPlan" class="ma-0 text-xs-center">click here to edit</p>
+      <p v-if="!plan.info && userOwnsThisPlan" class="ma-0 text-xs-center">click here</p>
     </v-card-text>
 
     <!-- editable -->

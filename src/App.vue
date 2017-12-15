@@ -90,16 +90,24 @@
         </v-flex>
 
         <!-- Alert Panel -->
-        <v-container class="pa-0" v-if="error || message">
+        <v-container class="pa-0" v-if="error">
           <v-layout row>
             <v-flex xs12>
               <app-alert v-if="error" @dismissed="onDismissed('clearError')" :text="error"></app-alert>
-              <app-success v-if="message" @dismissed="onDismissed('clearMessage')" :text="message"></app-success>
             </v-flex>
           </v-layout>
         </v-container>
 
         <router-view></router-view>
+
+        <v-snackbar
+          :timeout="timeout"
+          color="info" multi-line vertical
+          v-model="showMessage"
+        >
+          {{ message }}
+          <v-btn dark flat @click.native="onDismissed('clearMessage')">Close</v-btn>
+        </v-snackbar>
 
       </v-content>
 
@@ -163,7 +171,9 @@
         rightDrawer: false,
         clipped: true,
         drawer: true,
-        right: true
+        right: true,
+        timeout: 8500,
+        showMessage: false
       }
     },
     computed: {
@@ -250,6 +260,11 @@
       },
       userIsAdmin  () {
         return this.$store.getters.userIsAdmin
+      }
+    },
+    watch: {
+      message () {
+        this.showMessage = this.message
       }
     },
     methods: {

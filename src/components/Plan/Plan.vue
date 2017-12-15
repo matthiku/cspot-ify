@@ -131,13 +131,13 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.staff">
                                   <div slot="header">
-                                    <span class="body-2">Staff:</span>                                     
+                                    <span class="body-2">Staff:</span>
                                     <span v-if="!showDetails.staff" class="caption">
-                                      <span v-if="plan.staffList" v-for="staff in plan.staffList" :key="staff.id">
+                                      <span v-show="plan.staffList" v-for="staff in plan.staffList" :key="staff.id">
                                         {{ staff.role | ucFirst }}: <strong>{{ staff.userName | firstWord }}</strong>
                                       </span>
                                     </span>
-                                    <span v-if="!showDetails.staff && (!plan.staffList || plan.staffList && !plan.staffList.length )">(no staff assigned yet)</span>
+                                    <span v-if="!showDetails.staff && (!plan.staffList || (plan.staffList && !plan.staffList.length) )">(no staff assigned yet)</span>
                                   </div>
                                   <app-edit-plan-staff-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-field>
                                 </v-expansion-panel-content>
@@ -282,7 +282,8 @@ export default {
         field: that,
         value: this.plan[that]
       })
-    }
+    },
+    planAction () {}
   },
 
   watch: {
@@ -290,6 +291,14 @@ export default {
       if (this.plan) return
       // return to list of plans if this plan becomes void
       this.$router.push({name: 'plans'})
+    }
+  },
+  created () {
+    if (this.plan && this.plan.staff && !this.plan.staffList) {
+      this.showDetails.staff = true
+      setTimeout(() => {
+        this.showDetails.staff = false
+      }, 100)
     }
   }
 }

@@ -58,7 +58,7 @@ export default {
     return {
       typeEditingDlg: false,
       type: {},
-      oldType: this.plan.typeId
+      oldType: null
     }
   },
 
@@ -77,6 +77,7 @@ export default {
 
   created () {
     if (!this.plan) return
+    this.oldType = this.plan.typeId
     this.$store.dispatch('hideDialog')
     this.type = { id: this.plan.typeId, name: this.types[this.plan.typeId].name }
   },
