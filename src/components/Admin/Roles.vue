@@ -25,7 +25,10 @@
 
             <td class="text-xs-right" v-if="users">
               <span v-for="(ok, id, index) in props.item.users" :key="index">
-                <v-chip small :title="users[id].name">
+                <v-chip small
+                  @click="gotoUserProfile(users[id].id)"
+                  class="cursor-pointer"
+                  :title="users[id].name">
                   <v-avatar v-if="users[id].providerData && users[id].providerData[0].photoURL">
                     <img :src="users[id].providerData[0].photoURL" alt="avatar">
                   </v-avatar>
@@ -33,8 +36,8 @@
                 </v-chip>
               </span>
 
-              <v-btn 
-                v-if="!props.item.users" 
+              <v-btn
+                v-if="!props.item.users"
                 color="error" fab small dark
                 @click="removeRole(props.item)"
                 class="ma-0">
@@ -110,6 +113,9 @@
       removeRole (role) {
         if (!this.userIsAdmin) return
         this.$store.dispatch('removeRole', role)
+      },
+      gotoUserProfile (id) {
+        this.$router.push({name: 'user', params: {userId: id}})
       }
     }
   }
