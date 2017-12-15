@@ -37,9 +37,10 @@
               <v-toolbar-title class="white--text">
                 {{ pageTitle }}: 
                 <v-chip large color="success" class="mr-0" elevation-4
+                  :class="[ userIsAdmin ? 'cursor-pointer' : '' ]"
                   @click="openEditDialog('type')">
                   {{ plan ? types.length ? types[plan.typeId].name : plan.typeId : 'Plan gone' }}</v-chip>
-                <app-edit-plan-type-dialog 
+                <app-edit-plan-type-dialog
                   v-if="userIsAdmin" 
                   :plan="plan"
                   ></app-edit-plan-type-dialog>

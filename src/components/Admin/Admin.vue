@@ -117,7 +117,6 @@
     },
     watch: {
       searchField (val) {
-        console.log(val)
         if (!val) this.search.filter = ''
       }
     }
