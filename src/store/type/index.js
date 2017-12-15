@@ -1,4 +1,4 @@
-import { typesRef } from '../../firebaseApp'
+import { typesRef, binRef } from '../../firebaseApp'
 
 // import { typesRef } from '../../firebaseApp'
 
@@ -9,6 +9,9 @@ export default {
   mutations: {
     setTypes (state, payload) {
       state.types = payload
+    },
+    addDummyType (state, payload) {
+      state.types[payload.id] = payload
     }
   },
   actions: {
@@ -35,6 +38,27 @@ export default {
       })
       commit('setLoading', false)
       commit('setTypes', types)
+    },
+
+    addDummyType ({commit}, payload) {
+      // adding a local-only dummy plan TYPE before it get's its proper name
+      commit('addDummyType', payload)
+    },
+
+    removeType ({commit, dispatch}, payload) {
+      commit('setLoading', true)
+      // first, move the old type to the bin
+      binRef.child('types/' + payload.name).set(payload)
+        .then(() => {
+          commit('appendMessage', 'type "' + payload.name + '" moved into the bin...')
+          typesRef.child(payload.id).remove()
+          .then(() => {
+            commit('appendMessage', 'type "' + payload.name + '" removed and placed in the bin!')
+            commit('setLoading', false)
+          })
+          .catch((error) => dispatch('errorHandling', error))
+        })
+        .catch((error) => dispatch('errorHandling', error))
     },
 
     updateType ({commit, dispatch}, payload) {

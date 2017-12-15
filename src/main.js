@@ -16,6 +16,7 @@ import * as dateFilters from './filters/date'
 Vue.filter('date', dateFilters.date)
 Vue.filter('dateShort', dateFilters.dateShort)
 Vue.filter('time', dateFilters.time)
+Vue.filter('weekdayName', dateFilters.weekdayName)
 
 // register the generic components
 import sharedComponents from './sharedComponents'

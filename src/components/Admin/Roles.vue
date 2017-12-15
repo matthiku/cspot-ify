@@ -69,7 +69,9 @@
         this.updateRolesList()
       },
       dialogShow (val) {
-        if (!this.dialog.updated || this.dialog.type !== 'role') return
+        if (!this.dialog.updated ||
+          this.dialog.type !== 'role') return
+
         this.$store.dispatch('updateRole', {
           id: this.dialog.item.id,
           field: this.dialog.field,
@@ -95,7 +97,7 @@
       addRole () {
         if (!this.userIsAdmin) return
         this.$store.dispatch('addDummyRole', {id: 'new', name: ''})
-        this.$store.dispatch('setDialog', {field: 'name', item: this.roles.new})
+        this.$store.dispatch('setDialog', {field: 'name', item: this.roles.new, type: 'role'})
         this.$store.dispatch('showDialog')
       },
       removeRole (role) {

@@ -27,18 +27,18 @@
 
             <td class="text-xs-right cursor-pointer" title="click to edit" 
               @click="editField('weekday', props.item, 'weekdays')">
-              {{ props.item.weekday }}</td>
+              {{ props.item.weekday | weekdayName }}</td>
 
             <td class="text-xs-right cursor-pointer" title="click to edit" 
               @click="editField('repeat', props.item, 'repeats')">
               {{ props.item.repeat }}</td>
 
             <td class="text-xs-right cursor-pointer" title="click to edit"
-              @click="editField('start', props.item)">
+              @click="editField('start', props.item, 'time')">
               {{ props.item.start | time }}</td>
 
             <td class="text-xs-right cursor-pointer" title="click to edit"
-              @click="editField('end', props.item)">
+              @click="editField('end', props.item, 'time')">
               {{ props.item.end | time }}</td>
 
             <td class="text-xs-right">
@@ -49,6 +49,11 @@
               </v-btn>
             </td>
 
+          </template>
+          <template slot="no-data">
+            <v-alert :value="true" color="error" icon="warning">
+              Sorry, nothing to display here :(
+            </v-alert>
           </template>
         </v-data-table>
         <v-btn color="primary" @click="addType">add type</v-btn>
@@ -71,9 +76,9 @@
           { text: 'Name', value: 'name' },
           { text: 'Subtitle', value: 'subtitle' },
           { text: 'Weekday', value: 'weekday' },
+          { text: 'Repeat', value: 'repeat' },
           { text: 'Start', value: 'start' },
-          { text: 'End', value: 'end' },
-          { text: 'Repeat', value: 'repeat' }
+          { text: 'End', value: 'end' }
         ]
       }
     },
@@ -129,9 +134,13 @@
       },
       addType () {
         if (!this.userIsAdmin) return
-        this.$store.dispatch('addDummyType', {id: 'new', name: ''})
-        this.$store.dispatch('setDialog', {field: 'name', item: this.types.new})
+        // create a new dummy type
+        this.types.push({name: '', id: this.types.length})
+        // let the user give it a proper name
+        this.$store.dispatch('setDialog', {field: 'name', item: this.types[this.types.length - 1], type: 'type'})
+        // the following command makes the edit dialog visible
         this.$store.dispatch('showDialog')
+        // the watcher of showDialog will then dispatch the creation of the new type in the DB
       },
       removeType (type) {
         if (!this.userIsAdmin) return

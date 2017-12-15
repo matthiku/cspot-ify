@@ -5,7 +5,8 @@
       <v-card v-if="dialog.field">
 
         <v-card-title>
-          <span class="headline">Edit {{ dialog.field }} of '{{ dialog.item.name }}'</span>
+          <span class="headline" v-if="dialog.type">Create new {{ dialog.type }}:</span>
+          <span class="headline" v-else-if="dialog.item && dialog.item.name">Edit {{ dialog.field }} of '{{ dialog.item.name }}'</span>
         </v-card-title>
 
         <v-card-text>
@@ -23,7 +24,7 @@
                 </v-text-field>
               </v-flex>
 
-              <v-flex xs12 v-if="dialog.select">
+              <v-flex xs12 v-if="dialog.select && dialog.select !== 'time'">
                 Or use the selection box:
                 <v-select
                   v-bind:items="dialog.select"
@@ -32,6 +33,13 @@
                   v-model="dialog.item[dialog.field]" 
                   single-line bottom>
                 </v-select>
+              </v-flex>
+
+              <v-flex xs12 v-if="dialog.select && dialog.select === 'time'">
+                <v-time-picker 
+                  no-title format="24hr"
+                  v-model="dialog.item[dialog.field]">
+                </v-time-picker>
               </v-flex>
 
             </v-layout>
