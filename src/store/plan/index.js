@@ -90,7 +90,7 @@ export default {
     },
 
     // update an existing plan
-    // - - payload contains planID and field name
+    // - - payload contains planID, field name and field value
     updatePlan ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
       const updateObj = {}
@@ -99,6 +99,28 @@ export default {
         .then(() => {
           commit('setLoading', false)
           commit('setMessage', 'Plan successfully updated.')
+        })
+        .catch((error) => dispatch('errorHandling', error))
+    },
+    // add a staff member to a plan
+    // - - payload must contain plan id and staff object with userId and role name
+    addStaffToPlan ({commit, dispatch}, payload) {
+      commit('setLoading', true)
+      plansRef.child(payload.planId).child('staff').push(payload.staff)
+        .then(() => {
+          commit('appendMessage', 'One person added to this plan')
+          commit('setLoading', false)
+        })
+        .catch((error) => dispatch('errorHandling', error))
+    },
+    // remove a staff member from a plan
+    // - - payload must contain plan id and staff id
+    removeStaffFromPlan ({commit, dispatch}, payload) {
+      commit('setLoading', true)
+      plansRef.child(payload.planId).child('staff').child(payload.staffId).remove()
+        .then(() => {
+          commit('appendMessage', 'One person removed from this plan')
+          commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))
     },

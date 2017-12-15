@@ -118,8 +118,8 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.info">
                                   <div slot="header">
-                                    <span class="body-2">Info</span> 
-                                    <span v-if="!showDetails.info" class="caption">({{ plan.info ? plan.info.substr(0,55) : '' }}...)</span>
+                                    <span class="body-2">Info: </span> 
+                                    <span v-if="!showDetails.info" class="caption">({{ plan.info ? plan.info.substr(0,55) + '...' : 'none' }})</span>
                                   </div>
                                   <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
                                 </v-expansion-panel-content>
@@ -131,8 +131,13 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.staff">
                                   <div slot="header">
-                                    <span class="body-2">Staff</span>                                     
-                                    <span v-if="!showDetails.staff" class="caption">(Leader: Andy, Teacher: Bob, Lead Musician: Tom)</span>
+                                    <span class="body-2">Staff:</span>                                     
+                                    <span v-if="!showDetails.staff" class="caption">
+                                      <span v-if="plan.staffList" v-for="staff in plan.staffList" :key="staff.id">
+                                        {{ staff.role | ucFirst }}: <strong>{{ staff.userName | firstWord }}</strong>
+                                      </span>
+                                    </span>
+                                    <span v-if="!showDetails.staff && (!plan.staffList || plan.staffList && !plan.staffList.length )">(no staff assigned yet)</span>
                                   </div>
                                   <app-edit-plan-staff-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-field>
                                 </v-expansion-panel-content>

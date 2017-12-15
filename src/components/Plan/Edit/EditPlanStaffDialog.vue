@@ -89,12 +89,12 @@ export default {
   methods: {
     saveStaff () {
       this.staffEditingDlg = false
-      if (!this.plan.staff) this.plan.staff = []
-      this.plan.staff.push({id: this.person.id, role: this.role.text})
-      this.$store.dispatch('updatePlan', {
-        id: this.plan.id,
-        field: 'staff',
-        value: this.plan.staff
+      this.$store.dispatch('addStaffToPlan', {
+        planId: this.plan.id,
+        staff: {
+          userId: this.person.id,
+          role: this.role.text
+        }
       })
     }
   },
