@@ -27,6 +27,9 @@ export default {
     },
     userIsAdmin () {
       return this.$store.getters.userIsAdmin
+    },
+    search () {
+      return this.$store.getters.search
     }
   },
 

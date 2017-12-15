@@ -10,13 +10,19 @@
             <v-toolbar-title>Admin Page</v-toolbar-title>
             <v-spacer></v-spacer>
 
-            <v-btn icon>
+            <v-text-field
+              v-if="searchField"
+              label="Search"
+              single-line hide-details
+              v-model="search.filter"
+            ></v-text-field>
+            <v-btn icon @click="searchField = !searchField">
               <v-icon>search</v-icon>
             </v-btn>
             <v-btn icon>
               <v-icon>more_vert</v-icon>
             </v-btn>
-            
+
             <v-tabs-bar class="cyan" slot="extension">
               <v-tabs-slider color="yellow"></v-tabs-slider>
 
@@ -39,7 +45,7 @@
                 >
                 {{ item }}
               </v-tabs-item>
-              
+
               <v-menu :nudge-width="100" right bottom>
                 <v-tabs-item slot="activator">
                   Menu
@@ -60,15 +66,15 @@
 
           </v-toolbar>
           <v-tabs-items>
-            
+
             <v-tabs-content id="tab-0">
               <app-admin-user-list></app-admin-user-list>
             </v-tabs-content>
-            
+
             <v-tabs-content id="tab-1">
               <app-admin-role-list></app-admin-role-list>
             </v-tabs-content>
-            
+
             <v-tabs-content id="tab-2">
               <app-admin-type-list></app-admin-type-list>
             </v-tabs-content>
@@ -92,9 +98,12 @@
 </template>
 
 <script>
+  import genericMixins from '../../mixins/'
   export default {
+    mixins: [genericMixins],
     data () {
       return {
+        searchField: false,
         items: [
           'videos', 'images'
         ],
@@ -104,6 +113,12 @@
     computed: {
       admin () {
         return this.$store.getters.admin
+      }
+    },
+    watch: {
+      searchField (val) {
+        console.log(val)
+        if (!val) this.search.filter = ''
       }
     }
   }

@@ -8,12 +8,13 @@
         <v-data-table
             v-bind:headers="headers"
             :items="userList"
+            :search="search.filter"
             hide-actions
             class="elevation-1"
           >
           <template slot="items" slot-scope="props">
-            <router-link 
-                tag="td" 
+            <router-link
+                tag="td"
                 :to="{name: 'user', params: {userId: props.item.id}}"
                 title="click to edit this profile"
                 style="cursor: pointer"

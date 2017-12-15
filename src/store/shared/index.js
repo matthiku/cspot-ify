@@ -4,6 +4,7 @@ export default {
     loading: false,
     message: '',
     error: '',
+    search: { filter: '' },
     dialogShow: false,
     dialog: { field: '', item: null, updated: false },
     admin: { selectedTab: '' }
@@ -86,6 +87,9 @@ export default {
     },
     loading (state) {
       return state.loading
+    },
+    search (state) {
+      return state.search
     },
     appName (state) {
       return state.appName

@@ -9,6 +9,7 @@
         <v-data-table
             v-bind:headers="headers"
             :items="types"
+            :search="search.filter"
             hide-actions
             class="elevation-1"
           >
@@ -17,19 +18,19 @@
             <td class="text-xs-right">
               {{ props.item.id }}</td>
 
-            <td class="text-xs-right cursor-pointer" title="click to edit" 
+            <td class="text-xs-right cursor-pointer" title="click to edit"
               @click="editField('name', props.item)">
               {{ props.item.name }}</td>
 
-            <td class="text-xs-right cursor-pointer" title="click to edit" 
+            <td class="text-xs-right cursor-pointer" title="click to edit"
               @click="editField('subtitle', props.item)">
               {{ props.item.subtitle }}</td>
 
-            <td class="text-xs-right cursor-pointer" title="click to edit" 
+            <td class="text-xs-right cursor-pointer" title="click to edit"
               @click="editField('weekday', props.item, 'weekdays')">
               {{ props.item.weekday | weekdayName }}</td>
 
-            <td class="text-xs-right cursor-pointer" title="click to edit" 
+            <td class="text-xs-right cursor-pointer" title="click to edit"
               @click="editField('repeat', props.item, 'repeats')">
               {{ props.item.repeat }}</td>
 
