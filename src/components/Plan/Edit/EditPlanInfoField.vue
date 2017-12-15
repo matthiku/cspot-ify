@@ -59,7 +59,6 @@ export default {
     saveInfo () {
       this.editing = false
       // check if there were any changes
-      console.log(this.$refs['input-info']._data)
       if (this.$refs['input-info']._data.initialValue === this.$refs['input-info']._data.lazyValue) return
       this.$store.dispatch('updatePlan', {
         id: this.plan.id,

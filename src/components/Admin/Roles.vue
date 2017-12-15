@@ -24,6 +24,10 @@
 
             <td class="text-xs-right" @click="editField('name', props.item)">{{ props.item.name }}</td>
 
+            <td class="text-xs-right" @click="updateEvent(props.item)">
+              <v-checkbox v-model="props.item.forEvents" light></v-checkbox>
+            </td>
+
             <td class="text-xs-right" v-if="users">
               <span v-for="(ok, id, index) in props.item.users" :key="index">
                 <v-chip small
@@ -66,6 +70,7 @@
           { text: 'Id', value: 'id' },
           { text: 'Icon', value: 'icon' },
           { text: 'Name', value: 'name' },
+          { text: 'For Events?', value: 'forEvents' },
           { text: 'User(s)', value: 'users' }
         ],
         rolesList: []
@@ -117,6 +122,13 @@
       },
       gotoUserProfile (id) {
         this.$router.push({name: 'user', params: {userId: id}})
+      },
+      updateEvent (event) {
+        this.$store.dispatch('updateRole', {
+          id: event.id,
+          field: 'forEvents',
+          value: event.forEvents
+        })
       }
     }
   }

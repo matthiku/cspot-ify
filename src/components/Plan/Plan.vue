@@ -15,7 +15,7 @@
                   <v-toolbar-side-icon></v-toolbar-side-icon>
                 </v-btn>
                 <v-card>
-                  <v-card-title class="pb-0">Select Show Mode:</v-card-title class="mb-0">
+                  <v-card-title class="pb-0 mb-0">Select Show Mode:</v-card-title>
                   <v-list class="mt-0">
                     <v-list-tile v-for="item in planMenuItems" :key="item.title" @click="planAction(item.action)">
                       <v-icon>{{ item.icon }}</v-icon>&nbsp;
@@ -108,8 +108,8 @@
                           <v-card-text class="mb-0 pt-1 pb-2">
                             <div>                  
                               <h6 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
-                              >{{
-                                plan.date | date
+                                >{{
+                                  plan.date | date
                                 }}<span v-if="plan.end">-{{ plan.end | time }}</span><app-edit-plan-date-time-dialog v-if="userOwnsThisPlan"
                                     :plan="plan"></app-edit-plan-date-time-dialog>                                
                               </h6>
@@ -187,7 +187,6 @@
                                   </v-card>
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
-                            </div>
                             </div>
                           </v-card-text>
                         </v-flex>

@@ -4,6 +4,7 @@ import SuccessCmp from './components/shared/Success.vue'
 
 import EditPlanDateTimeDialog from './components/Plan/Edit/EditPlanDateTimeDialog'
 import EditPlanTypeDialog from './components/Plan/Edit/EditPlanTypeDialog'
+import EditPlanStaffDialog from './components/Plan/Edit/EditPlanStaffDialog'
 import EditPlanInfoField from './components/Plan/Edit/EditPlanInfoField'
 import EditPlanStaffField from './components/Plan/Edit/EditPlanStaffField'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
@@ -20,6 +21,7 @@ export default function sharedComponents () {
 
   Vue.component('app-edit-plan-staff-field', EditPlanStaffField)
   Vue.component('app-edit-plan-info-field', EditPlanInfoField)
+  Vue.component('app-edit-plan-staff-dialog', EditPlanStaffDialog)
   Vue.component('app-edit-plan-type-dialog', EditPlanTypeDialog)
   Vue.component('app-edit-plan-date-time-dialog', EditPlanDateTimeDialog)
   Vue.component('app-delete-plan-dialog', DeletePlanDialog)

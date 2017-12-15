@@ -27,7 +27,7 @@
                 item-value="id"
                 label="Select new type:"
                 hint="(this will not change any existing plan items)"
-                single-line 
+                single-line dense
                 persistent-hint
               ></v-select>              
             </v-flex>
