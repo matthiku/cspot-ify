@@ -101,6 +101,7 @@
         <router-view></router-view>
 
         <v-snackbar
+          transition="fade-transition"
           :timeout="timeout"
           color="info" multi-line vertical
           v-model="showMessage"

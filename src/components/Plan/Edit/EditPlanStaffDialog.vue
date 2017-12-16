@@ -3,10 +3,10 @@
 
     <v-btn small
       class="primary ma-0 pl-0"
-      title="edit plan staff"
+      title="add staff"
       @click.stop="staffEditingDlg = true" 
       slot="activator"
-    >Add Staff &nbsp;<v-icon class="white--text">edit</v-icon></v-btn>
+    >Add Personell &nbsp;<v-icon class="white--text">edit</v-icon></v-btn>
 
     <v-card>
       <v-card-title>
@@ -95,6 +95,9 @@ export default {
           userId: this.person.id,
           role: this.role.text
         }
+      }).then(() => {
+        this.person = null
+        this.role = null
       })
     }
   },
