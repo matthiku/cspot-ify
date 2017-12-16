@@ -18,7 +18,7 @@
                   <v-card-title class="pb-0 mb-0">Select Show Mode:</v-card-title>
                   <v-list class="mt-0">
                     <v-list-tile v-for="item in planMenuItems" :key="item.title" @click="planAction(item.action)">
-                      <v-icon>{{ item.icon }}</v-icon>&nbsp;
+                      <v-icon class="mr-3">{{ item.icon }}</v-icon>
                       <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                     </v-list-tile>
                     <div v-if="userOwnsThisPlan">
@@ -118,7 +118,7 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.info">
                                   <div slot="header">
-                                    <span class="body-2">Info: </span> 
+                                    <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Info</span> 
                                     <span v-if="!showDetails.info" class="caption">({{ plan.info ? plan.info.substr(0,55) + '...' : 'none' }})</span>
                                   </div>
                                   <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
@@ -131,13 +131,15 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.staff">
                                   <div slot="header">
-                                    <span class="body-2">Staff:</span>
-                                    <span v-if="!showDetails.staff" class="caption">
-                                      <span v-show="plan.staffList" v-for="staff in plan.staffList" :key="staff.id">
+                                    <span class="body-2 mr-3"><v-icon class="mr-3">supervisor_account</v-icon> Staff</span>
+                                    <span v-if="!showDetails.staff">
+                                      <span v-show="plan.staffList" v-for="staff in plan.staffList" :key="staff.id" class="caption">
                                         {{ staff.role | ucFirst }}: <strong>{{ staff.userName | firstWord }}</strong>
                                       </span>
                                     </span>
-                                    <span v-if="!showDetails.staff && (!plan.staffList || (plan.staffList && !plan.staffList.length) )">(no staff assigned yet)</span>
+                                    <span class="caption" 
+                                        v-if="!showDetails.staff && (!plan.staffList || (plan.staffList && !plan.staffList.length) )"
+                                      >(no staff assigned yet)</span>
                                   </div>
                                   <app-edit-plan-staff-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-field>
                                 </v-expansion-panel-content>
@@ -149,8 +151,8 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.resources">
                                   <div slot="header"> 
-                                    <span class="body-2">Resources</span>
-                                    <span v-if="!showDetails.resources" class="caption">(Room: 1, Projector)</span></div>
+                                    <span class="body-2 mr-3"><v-icon class="mr-3">event_seat</v-icon> Resources</span>
+                                    <span v-if="!showDetails.resources" class="caption">(Room 1, Projector)</span></div>
                                   <v-card>
                                     <v-card-text class="grey lighten-3">
                                       resources, resources, resources
@@ -165,7 +167,7 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.notes">
                                   <div slot="header">
-                                    <span class="body-2">Notes</span>
+                                    <span class="body-2 mr-3"><v-icon class="mr-3">loyalty</v-icon> Notes</span>
                                     <span v-if="!showDetails.notes" class="caption">(none)</span>
                                   </div>
                                   <v-card>
@@ -182,8 +184,8 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.items">
                                   <div slot="header">
-                                    <span class="body-2">Items</span>
-                                    <v-chip outline color="primary">3</v-chip>
+                                    <span class="body-2 mr-3"><v-icon class="mr-3">list</v-icon> Items</span>
+                                    <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">3</v-chip>
                                   </div>
                                   <v-card>
                                     <v-card-text class="grey lighten-3">item 1 Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae, veritatis?</v-card-text>
@@ -236,7 +238,7 @@ export default {
         resources: false,
         notes: false,
         info: false,
-        items: false
+        items: true
       },
       openDateEditingDlg: false,
       editing: ''
