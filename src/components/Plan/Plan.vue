@@ -120,9 +120,11 @@
                                   <div slot="header">
                                     <span class="body-2 mr-3"><v-icon class="mr-3">supervisor_account</v-icon> Staff</span>
                                     <span v-if="!showDetails.staff">
-                                      <span v-show="plan.staff" v-for="(staff, index, key) in plan.staff" :key="index" class="caption">
+                                      <span v-if="Object.keys(plan.staff).length" v-for="(staff, index, key) in plan.staff" :key="index" class="caption">
                                         {{ staff.role | ucFirst }}:
-                                        <strong>{{ users[staff.userId].name | firstWord }}</strong><span 
+                                        <strong v-if="users[staff.userId]">{{ users[staff.userId].name | firstWord 
+                                          }}</strong><span>(invalid user ID: {{ staff 
+                                          }})</span><span 
                                           v-if="Object.keys(plan.staff).length > key + 1">,</span>
                                       </span>
                                     </span>

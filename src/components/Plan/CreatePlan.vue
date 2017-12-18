@@ -257,7 +257,7 @@ export default {
         date: this.dateTime.format(),
         end: this.endDateTime.format(),
         typeId: this.typeId,
-        staff: [{ id: 0, role: 'dummy' }],
+        staff: {},
         info: this.info
       }
       // send 2 sep. objects as payload to the store
