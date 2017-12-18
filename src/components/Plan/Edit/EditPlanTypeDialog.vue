@@ -65,7 +65,7 @@ export default {
   methods: {
     saveType () {
       this.typeEditingDlg = false
-      if (this.plan.typeId === this.oldType) return
+      if (this.type.id === this.oldType) return
       this.plan.typeId = this.type.id
       this.$store.dispatch('updatePlan', {
         id: this.plan.id,
