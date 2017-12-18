@@ -89,6 +89,11 @@ export default {
   },
   created () {
     this.createStaffList()
+  },
+  watch: {
+    plan () {
+      this.createStaffList()
+    }
   }
 }
 </script>
