@@ -21,7 +21,7 @@
                       <v-icon class="mr-3">{{ item.icon }}</v-icon>
                       <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                     </v-list-tile>
-                    <div v-if="userOwnsThisPlan">
+                    <div v-if="userIsAdmin">
                       <hr>
                       <v-list-tile>
                         <template>
@@ -114,34 +114,36 @@
                                     :plan="plan"></app-edit-plan-date-time-dialog>                                
                               </h6>
 
-                              <!-- show and edit plan INFO -->
-                              <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.info">
-                                  <div slot="header">
-                                    <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Info</span> 
-                                    <span v-if="!showDetails.info" class="caption">({{ plan.info ? plan.info.substr(0,55) + '...' : 'none' }})</span>
-                                  </div>
-                                  <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
-                                </v-expansion-panel-content>
-                              </v-expansion-panel>
-
-                              <v-divider></v-divider>
-
                               <!-- show and edit plan STAFF -->
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.staff">
                                   <div slot="header">
                                     <span class="body-2 mr-3"><v-icon class="mr-3">supervisor_account</v-icon> Staff</span>
                                     <span v-if="!showDetails.staff">
-                                      <span v-show="plan.staffList" v-for="staff in plan.staffList" :key="staff.id" class="caption">
-                                        {{ staff.role | ucFirst }}: <strong>{{ staff.userName | firstWord }}</strong>
+                                      <span v-show="plan.staff" v-for="(staff, index, key) in plan.staff" :key="index" class="caption">
+                                        {{ staff.role | ucFirst }}:
+                                        <strong>{{ users[staff.userId].name | firstWord }}</strong><span 
+                                          v-if="Object.keys(plan.staff).length > key + 1">,</span>
                                       </span>
                                     </span>
                                     <span class="caption" 
-                                        v-if="!showDetails.staff && (!plan.staffList || (plan.staffList && !plan.staffList.length) )"
+                                        v-if="!showDetails.staff && (!plan.staff || (plan.staff && !Object.keys(plan.staff).length) )"
                                       >(no staff assigned yet)</span>
                                   </div>
                                   <app-edit-plan-staff-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-field>
+                                </v-expansion-panel-content>
+                              </v-expansion-panel>
+
+                              <v-divider></v-divider>
+
+                              <!-- show and edit plan INFO -->
+                              <v-expansion-panel>
+                                <v-expansion-panel-content v-model="showDetails.info">
+                                  <div slot="header">
+                                    <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Details</span> 
+                                    <span v-if="!showDetails.info" class="caption">({{ plan.info ? plan.info.substr(0,55) + '...' : 'none' }})</span>
+                                  </div>
+                                  <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
 
@@ -184,8 +186,8 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.items">
                                   <div slot="header">
-                                    <span class="body-2 mr-3"><v-icon class="mr-3">list</v-icon> Items</span>
-                                    <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">3</v-chip>
+                                    <span class="body-2 mr-3"><v-icon class="mr-3">list</v-icon> Action</span>
+                                    <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">3 items</v-chip>
                                   </div>
                                   <v-card>
                                     <v-card-text class="grey lighten-3">item 1 Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae, veritatis?</v-card-text>
@@ -292,15 +294,9 @@ export default {
     plan () {
       if (this.plan) return
       // return to list of plans if this plan becomes void
-      this.$router.push({name: 'plans'})
-    }
-  },
-  created () {
-    if (this.plan && this.plan.staff && !this.plan.staffList) {
-      this.showDetails.staff = true
-      setTimeout(() => {
-        this.showDetails.staff = false
-      }, 100)
+      if (this.$route.name === 'plans') {
+        this.$router.push({name: 'plans'})
+      }
     }
   }
 }
