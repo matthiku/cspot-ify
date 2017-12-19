@@ -25,7 +25,7 @@
                 return-object
                 item-text="name"
                 item-value="id"
-                label="Select new type:"
+                label="Select Event Type:"
                 hint="(this will not change any existing plan items)"
                 single-line dense
                 persistent-hint

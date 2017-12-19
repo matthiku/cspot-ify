@@ -18,21 +18,23 @@
                 <v-flex xs11 sm5>
                   <v-select
                     v-bind:items="types"
-                    v-model="typeId"
+                    v-model="type"
+                    return-object
                     item-text="name"
                     item-value="id"
                     label="Select type"
-                    single-line
-                    bottom required
+                    single-line bottom required
                   ></v-select>
                 </v-flex>
+
                 <v-spacer></v-spacer>
+
                 <v-flex xs11 sm5>
                   <v-dialog
                     persistent
                     v-model="modalDate"
                     lazy
-                  >
+                    >
                     <v-text-field
                       slot="activator"
                       label="Select the date"
@@ -187,9 +189,10 @@ import * as moment from 'moment'
 export default {
   data () {
     return {
+      type: {},
       typeId: null,
       title: '',
-      staff: [{ id: 0, role: 'dummy' }],
+      staff: {},
       info: '',
       imageB64: null,
       image: null,
@@ -222,6 +225,9 @@ export default {
       // end time is not required - just use the start time
       if (!this.endTime) return this.dateTime
       return moment(this.date + 'T' + this.endTime)
+    },
+    plans () {
+      return this.$store.getters.plans
     }
   },
 
@@ -273,11 +279,44 @@ export default {
   },
 
   watch: {
+    // once the user selects a type, we can use some default values from the type object:
+    type () {
+      this.typeId = this.type.id
+      if (this.type.start !== '00:00:00') this.time = this.type.start
+      if (this.type.end !== '00:00:00') this.endTime = this.type.end.substr(0, 5)
+      this.info = this.type.subtitle
+      // possible date of event can be calculated by checking for
+      // the next >>type.weekday<<, with consideration of >>type.repeat<<
+      // and the presence of plans on those possible dates
+      if (this.type.weekday && this.type.weekday * 1 > -1) {
+        let weekday = this.type.weekday * 1
+        let newDate = moment()
+        let diff = weekday - newDate.weekday()
+        if (diff < 0) diff += 7
+        newDate.add(diff, 'day')
+
+        // check if there is already a plan of the same type on that day
+        let ctrl = 9 // test max 9 iterations
+        var check
+        do {
+          ctrl -= 1
+          check = this.plans.find(plan => {
+            return moment(plan.date).isSame(newDate, 'day') && plan.typeId === this.typeId
+          })
+          // add more days to check for a free day
+          if (check && check.date) newDate.add(7, 'd')
+        } while (check && (!check.date || ctrl < 0))
+        // fill the form with the next free day
+        this.date = newDate.format('YYYY-MM-DD')
+      }
+    },
+
     // wait until the new plan was added to the array of plans
     // then open the new plan
     planId () {
       this.$router.push({ name: 'plan', params: { planId: this.planId } })
     },
+
     time () {
       // set the minimal hour for the end time to be the same as the start time hour
       this.minMaxHourValues.min = (this.time).substr(0, 2) * 1
