@@ -314,6 +314,7 @@ export default {
     // wait until the new plan was added to the array of plans
     // then open the new plan
     planId () {
+      if (!this.planId) return
       this.$router.push({ name: 'plan', params: { planId: this.planId } })
     },
 
