@@ -118,6 +118,10 @@ export default {
         ul.push({ id: user, name: this.users[user].name })
       }
       this.usersList = ul
+      // already select the user in the form if there's only one
+      if (ul.length === 1) {
+        this.person = ul[0]
+      }
     },
     // checking if parents wants this component to appear!
     dialogShow () {
