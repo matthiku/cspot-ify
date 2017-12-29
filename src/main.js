@@ -20,6 +20,7 @@ Vue.filter('time', dateFilters.time)
 Vue.filter('weekdayName', dateFilters.weekdayName)
 Vue.filter('firstWord', stringFilters.firstWord)
 Vue.filter('ucFirst', stringFilters.ucFirst)
+Vue.filter('sentenceMax', stringFilters.sentenceMax)
 
 // register the generic components
 import sharedComponents from './sharedComponents'

@@ -133,6 +133,7 @@ export default {
       .then(() => {
         plansRef.child(payload.id).remove()
         .then(() => {
+          dispatch('refreshPlans')
           commit('setLoading', false)
           commit('setMessage', 'Plan removed into the bin.')
         })
@@ -145,6 +146,7 @@ export default {
       commit('setLoading', true)
       plansRef.child(payload.id).remove()
         .then(() => {
+          dispatch('refreshPlans')
           commit('setLoading', false)
           commit('setMessage', 'Plan was erased.')
         })

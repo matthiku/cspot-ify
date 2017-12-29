@@ -143,7 +143,9 @@
                                 <v-expansion-panel-content v-model="showDetails.info">
                                   <div slot="header">
                                     <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Details</span> 
-                                    <span v-if="!showDetails.info" class="caption">({{ plan.info ? plan.info.substr(0,55) + '...' : 'none' }})</span>
+                                    <span v-if="!showDetails.info" class="caption">({{
+                                        plan.info | sentenceMax(55, 'none')
+                                      }})</span>
                                   </div>
                                   <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
                                 </v-expansion-panel-content>
@@ -188,7 +190,7 @@
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.items">
                                   <div slot="header">
-                                    <span class="body-2 mr-3"><v-icon class="mr-3">list</v-icon> Action</span>
+                                    <span class="body-2 mr-3"><v-icon class="mr-3">list</v-icon> Actions</span>
                                     <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">3 items</v-chip>
                                   </div>
                                   <v-card>
@@ -198,6 +200,7 @@
                                   </v-card>
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
+
                             </div>
                           </v-card-text>
                         </v-flex>

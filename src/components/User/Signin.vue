@@ -46,10 +46,7 @@
                         <span slot="loader" class="custom-loader">
                           <v-icon light>cached</v-icon>
                         </span>
-                      </v-btn>
-                      <v-spacer></v-spacer>
-                      Have no account? 
-                      <router-link :to="{ name: 'signup'}">Sign Up</router-link>
+                      </v-btn>                      
                     </v-card-actions>
                   </v-flex>
                 </v-layout>
@@ -57,6 +54,7 @@
 
             </v-container>
           </v-card-text>
+
           <v-card-text>
               <v-divider></v-divider>
               or sign in via 
@@ -64,6 +62,13 @@
                 Google
               </v-btn>
           </v-card-text>
+
+          <v-card-text>
+              <v-divider></v-divider>
+              Don't have an account? 
+              <router-link :to="{ name: 'signup'}">Create your account</router-link>- it takes less than a minute
+          </v-card-text>
+
         </v-card>
       </v-flex>
     </v-layout>
