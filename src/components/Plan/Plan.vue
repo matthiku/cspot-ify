@@ -122,7 +122,7 @@
                                     <span v-if="!showDetails.staff">
                                       <span v-if="Object.keys(plan.staff).length" v-for="(staff, index, key) in plan.staff" :key="index" class="caption">
                                         {{ staff.role | ucFirst }}:
-                                        <strong v-if="users[staff.userId]">{{ users[staff.userId].name | firstWord 
+                                        <strong v-if="users && users[staff.userId]">{{ users[staff.userId].name | firstWord 
                                           }}</strong><span v-else>(invalid user ID: {{ staff 
                                           }})</span><span 
                                           v-if="Object.keys(plan.staff).length > key + 1">,</span>

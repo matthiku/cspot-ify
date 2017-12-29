@@ -75,7 +75,7 @@ export default {
 
       for (let key in staff) {
         let item = staff[key]
-        if (!this.users[item.userId]) continue
+        if (!this.users || !this.users[item.userId]) continue
         this.items.push({
           id: key,
           icon: this.roles[item.role].icon,
@@ -92,6 +92,9 @@ export default {
   },
   watch: {
     plan () {
+      this.createStaffList()
+    },
+    users () {
       this.createStaffList()
     }
   }
