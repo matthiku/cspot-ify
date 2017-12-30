@@ -4,7 +4,7 @@
       <v-btn color="warning" dark slot="activator"><v-icon>delete</v-icon> Delete Plan</v-btn>
       <v-card>
         <v-card-title class="headline">Do you really want to remove this Plan?</v-card-title>
-        <v-card-text>You can remove this plan from the active list of plans. It will be placed into the bin...</v-card-text>
+        <v-card-text>You can remove this plan from the list of active plans. It will be placed into the bin...</v-card-text>
         <v-card-text>Or you can finaly destroy this plan...</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

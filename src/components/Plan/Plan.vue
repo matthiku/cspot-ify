@@ -15,7 +15,7 @@
                   <v-toolbar-side-icon></v-toolbar-side-icon>
                 </v-btn>
                 <v-card>
-                  <v-card-title class="pb-0 mb-0">Select Show Mode:</v-card-title>
+                  <v-card-title class="subheading blue-grey--text text--lighten-1 pb-0 mb-0">Select Show Mode:</v-card-title>
                   <v-list class="mt-0">
                     <v-list-tile v-for="item in planMenuItems" :key="item.title" @click="planAction(item.action)">
                       <v-icon class="mr-3">{{ item.icon }}</v-icon>
@@ -88,7 +88,7 @@
                     <span>Sheetmusic</span>
                   </v-tooltip>
                 </v-speed-dial>
-              <span>Select Show Mode</span>
+                <span>Select Show Mode</span>
               </v-tooltip>
             </v-toolbar>
 
@@ -116,7 +116,7 @@
 
                               <!-- show and edit plan STAFF -->
                               <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.staff">
+                                <v-expansion-panel-content v-model="showDetails.staff" :class="[showDetails.staff ? 'green lighten-3' : '']">
                                   <div slot="header">
                                     <span class="body-2 mr-3"><v-icon class="mr-3">supervisor_account</v-icon> Staff</span>
                                     <span v-if="!showDetails.staff">
@@ -140,7 +140,7 @@
 
                               <!-- show and edit plan INFO -->
                               <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.info">
+                                <v-expansion-panel-content v-model="showDetails.info" :class="[showDetails.info ? 'green lighten-3' : '']">
                                   <div slot="header">
                                     <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Details</span> 
                                     <span v-if="!showDetails.info" class="caption">({{
@@ -155,7 +155,7 @@
 
                               <!-- show and edit plan RESOURCES -->
                               <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.resources">
+                                <v-expansion-panel-content v-model="showDetails.resources" :class="[showDetails.resources ? 'green lighten-3' : '']">
                                   <div slot="header"> 
                                     <span class="body-2 mr-3"><v-icon class="mr-3">event_seat</v-icon> Resources</span>
                                     <span v-if="!showDetails.resources" class="caption">(Room 1, Projector)</span></div>
@@ -171,7 +171,7 @@
 
                               <!-- show and edit plan NOTES -->
                               <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.notes">
+                                <v-expansion-panel-content v-model="showDetails.notes" :class="[showDetails.notes ? 'green lighten-3' : '']">
                                   <div slot="header">
                                     <span class="body-2 mr-3"><v-icon class="mr-3">loyalty</v-icon> Notes</span>
                                     <span v-if="!showDetails.notes" class="caption">(none)</span>
@@ -188,16 +188,14 @@
 
                               <!-- show and edit plan ITEMS -->
                               <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.items">
+                                <v-expansion-panel-content v-model="showDetails.items" :class="[showDetails.items ? 'green lighten-3' : '']">
                                   <div slot="header">
-                                    <span class="body-2 mr-3"><v-icon class="mr-3">list</v-icon> Actions</span>
+                                    <span class="body-2 mr-3">
+                                      <v-icon class="mr-3">list</v-icon> Actions
+                                    </span>
                                     <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">3 items</v-chip>
                                   </div>
-                                  <v-card>
-                                    <v-card-text class="grey lighten-3">item 1 Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae, veritatis?</v-card-text>
-                                    <v-card-text class="grey lighten-3">item 2 Lorem ipsum dolor sit amet. </v-card-text>
-                                    <v-card-text class="grey lighten-3">item 3 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae explicabo repellendus repellat maiores similique quis quo sed? Rem doloremque blanditiis voluptatem molestiae! </v-card-text>
-                                  </v-card>
+                                  <app-edit-plan-items-list :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-items-list>
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
 
