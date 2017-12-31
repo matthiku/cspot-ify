@@ -1,21 +1,52 @@
 <template>
   <v-card>
 
-    <v-card-text class="grey lighten-3 pb-1">item 1 Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae, veritatis?</v-card-text>
+    <v-card-text class="grey lighten-3 pb-1">
+      <v-list two-line>
+
+        <!-- loop through all plan action items -->
+        <v-list-tile avatar v-for="item in items" v-bind:key="item.id">
+
+          <v-list-tile-avatar :title="item.role">
+            <v-icon class="grey lighten-1 white--text">{{ item.icon }}</v-icon>
+          </v-list-tile-avatar>
+
+          <!-- show actual item detail -->
+          <v-list-tile-content v-show="!item.warning">
+            <v-list-tile-title>{{ item.userName }}</v-list-tile-title>
+            <v-list-tile-sub-title>{{ item.role }}</v-list-tile-sub-title>
+          </v-list-tile-content>
+
+          <v-list-tile-content v-show="item.warning">
+            <v-list-tile-sub-title class="red--text mt-0 pt-0">Removing {{ item.role }} ({{ item.userName | firstWord }})?
+              <v-btn flat small @click="removeStaff(item)" color="red">Yes<v-icon>info</v-icon></v-btn>
+              <v-btn flat small @click="item.warning = false">Cancel<v-icon>highlight_off</v-icon></v-btn>
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+
+          <v-list-tile-action v-show="!item.warning" v-if="userOwnsThisPlan">
+            <v-btn icon ripple title="remove this role" @click="item.warning = true">
+              <v-icon color="red lighten-1">delete</v-icon>
+            </v-btn>
+          </v-list-tile-action>
+        </v-list-tile>
+
+        <p class="text-xs-center ma-0"> 
+          <span v-if="!items.length">no items added yet</span>
+        </p>
+      </v-list>
+    </v-card-text>
 
     <v-menu offset-y v-model="showMenu" absolute full-width>
       <v-card-text class="grey lighten-3" slot="activator">
-        item 2 Lorem ipsum dolor sit amet.
+        item 2 Lorem ipsum dolor sit amet. This is an item with a menu
       </v-card-text>
       <v-list>
-        <v-list-tile v-for="item in items" :key="item.title" @click="">
+        <v-list-tile v-for="item in menuItems" :key="item.title" @click="">
           <v-list-tile-title>{{ item.title }}</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
-
-    <v-card-text class="grey lighten-3 py-1">item 3 Lorem ipsum dolor sit amet consectetur adipisicing elit. </v-card-text>
-    <v-card-text class="grey lighten-3 pt-1">item 4 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae explicabo repellendus repellat maiores similique quis quo sed? Rem doloremque blanditiis voluptatem molestiae! </v-card-text>
 
     <v-card-actions v-if="userOwnsThisPlan">
       <v-btn flat>Add Item</v-btn>
@@ -46,9 +77,10 @@
 
     data () {
       return {
+        items: [],
         show: false,
         showMenu: false,
-        items: [
+        menuItems: [
           { title: 'Edit this item' },
           { title: 'Add item above' },
           { title: 'Add item below' },

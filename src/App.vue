@@ -36,7 +36,7 @@
         :class="[ userIsAdmin ? '' : 'hidden-lg-and-up' ]"
       ></v-toolbar-side-icon>
 
-      <v-btn icon :to="{ name: 'home' }">
+      <v-btn icon :to="{ name: 'home' }" class="mr-3">
         <img src="/static/cspoticon36.png" alt="c-SPOT icon" width="30px">
       </v-btn>
 
@@ -216,6 +216,13 @@
               title: 'Create Plan',
               link: 'createplan',
               auth: 'admin',
+              where: 'drawer'
+            },
+            {
+              icon: 'group',
+              title: 'Songs',
+              link: 'songs',
+              auth: 'user',
               where: 'drawer'
             },
             {
