@@ -66,10 +66,13 @@
 
 <script>
   import genericMixins from '../../mixins/'
+  import planMixins from '../Plan/mixins'
 
   export default {
     name: 'EventTypesList',
-    mixins: [genericMixins],
+
+    mixins: [genericMixins, planMixins],
+
     data () {
       return {
         headers: [
@@ -83,12 +86,11 @@
         ]
       }
     },
-    computed: {
-      types () { return this.$store.getters.types }
-    },
+
     created () {
       this.$store.dispatch('hideDialog')
     },
+
     watch: {
       dialogShow () {
         if (!this.dialog.updated ||
@@ -101,6 +103,7 @@
         })
       }
     },
+
     methods: {
       editField (field, what, items) {
         if (!this.userIsAdmin) return

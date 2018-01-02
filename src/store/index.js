@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import shared from './shared'
 import user from './user'
 import plan from './plan'
+import song from './song'
 import type from './type'
 import role from './role'
 import item from './item'
@@ -15,6 +16,7 @@ export const store = new Vuex.Store({
     shared,
     user,
     plan,
+    song,
     type,
     role,
     item

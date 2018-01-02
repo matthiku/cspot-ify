@@ -3,7 +3,7 @@
     <v-slide-y-transition mode="out-in">
 
       <v-layout column align-center>
-        <h5 v-if="standAlone">User List</h5>
+        <h5 v-if="!standAlone">User List</h5>
 
         <v-data-table
             v-bind:headers="headers"

@@ -1,4 +1,4 @@
-import { firebaseApp, plansRef, typesRef, rolesRef, usersRef } from './firebaseApp'
+import { firebaseApp, plansRef, songsRef, typesRef, rolesRef, usersRef } from './firebaseApp'
 
 export default function startUpActions (store, router) {
   // run actions at the start of the App
@@ -25,6 +25,7 @@ export default function startUpActions (store, router) {
     if (!store.users) store.dispatch('refreshUsers')
     if (!store.roles) store.dispatch('refreshRoles')
     if (!store.types) store.dispatch('refreshTypes')
+    if (!store.songs) store.dispatch('refreshSongs')
     if (!store.plans) store.dispatch('refreshPlans')
   }
   setTimeout(() => {
@@ -49,6 +50,11 @@ export default function startUpActions (store, router) {
   // sync with ROLES table
   rolesRef.on('value', snap => {
     store.dispatch('loadRoles', snap)
+  })
+
+  // sync with SONGS table
+  songsRef.on('value', snap => {
+    store.dispatch('loadSongs', snap)
   })
 
   // sync with USERS table

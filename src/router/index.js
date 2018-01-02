@@ -14,6 +14,7 @@ import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
 
 import Songs from '@/components/Song/Songs'
+import Song from '@/components/Song/Song'
 
 import Plan from '@/components/Plan/Plan'
 import Plans from '@/components/Plan/Plans'
@@ -88,6 +89,13 @@ export default new Router({
       name: 'songs',
       component: Songs,
       meta: {title: 'Songs'},
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/song',
+      name: 'song',
+      component: Song,
+      meta: {title: 'Song'},
       beforeEnter: AuthGuard
     },
     {

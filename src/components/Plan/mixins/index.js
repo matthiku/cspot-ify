@@ -2,6 +2,9 @@ export default {
   computed: {
     types () {
       return this.$store.getters.types
+    },
+    songs () {
+      return this.$store.getters.songs
     }
   },
 
