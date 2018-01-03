@@ -3,7 +3,7 @@
     <v-edit-dialog lazy
         :title="'click to edit ' + (fieldName || field)">
       {{ song[field] }}
-      <small class="white no-wrap" v-if="!song[field]">add {{ fieldName || field }}</small>
+      <small class="white no-wrap btn--round px-1" v-if="!song[field]">add {{ fieldName || field }}</small>
 
       <v-text-field
         slot="input"

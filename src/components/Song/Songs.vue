@@ -89,11 +89,11 @@
                   <app-edit-song-field
                       v-if="userIsAdmin && props.expanded"
                       :song="props.item"
-                      field="ccli_no"
-                      field-name="CCLI Number"
+                      field="youtube_id"
+                      field-name="Youtube ID"
                       maxLength="15"
                     ></app-edit-song-field>
-                  <span v-else>{{ props.item.ccli_no }}</span>
+                  <a v-else target="new" :href="'https://www.youtube.com/watch?v=' + props.item.youtube_id"><v-icon>subscriptions</v-icon></a>
                 </td>
 
                 <td class="text-xs-center">{{ props.item.license }}</td>
@@ -131,6 +131,9 @@
                     </v-flex>
 
                     <v-flex xs4 class="text-xs-right">
+                      links .... <input type="text">
+                      CCLI Nr. .... <input type="text">
+                      Hymnal.Net ID .... <input type="text">
                       <v-menu bottom left>
                         <v-btn icon slot="activator">
                           <v-icon>more_vert</v-icon>
@@ -182,7 +185,7 @@
           { text: 'Title', value: 'title', align: 'left' },
           { text: 'Author', value: 'author', align: 'left' },
           { text: 'Book Ref.', value: 'book_ref', align: 'left' },
-          { text: 'CCLI No.', value: 'ccli_no', align: 'left' },
+          { text: 'Clip', value: 'youtube_id', align: 'left' },
           { text: 'License', value: 'license', align: 'center' }
         ],
         standAlone: true,
