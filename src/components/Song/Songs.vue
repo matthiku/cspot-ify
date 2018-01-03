@@ -102,24 +102,52 @@
             </template>
 
             <template slot="expand" slot-scope="props">
-              <v-card>
-                <v-card-title>
+              <v-card class="grid">
+                <v-container fluid grid-list-lg>
+                  <v-layout row wrap>
 
-                  <app-edit-song-lyrics
-                      v-if="userIsAdmin && props.expanded"
-                      :song="props.item"
-                    ></app-edit-song-lyrics>
+                    <v-flex xs4>
+                      <h6 class="mb-1 subheading">Lyrics:</h6>
+                      <app-edit-song-textarea-field
+                          v-if="userIsAdmin && props.expanded"
+                          :song="props.item"
+                          field="lyrics"
+                        ></app-edit-song-textarea-field>
+                      <pre v-else-if="props.item.lyrics" class="grey lighten-3 pa-1 elevation-5 overflow-hidden">{{ 
+                          '\n' + props.item.lyrics | maxLines(5) 
+                        }}</pre>
+                    </v-flex>
 
-                  <pre v-else-if="props.item.lyrics" class="grey lighten-3 pa-1 elevation-5">Lyrics:{{ 
-                      '\n' + props.item.lyrics | maxLines(5) 
-                    }}</pre>
+                    <v-flex xs4>
+                      <h6 class="mb-1 subheading">Chords:</h6>
+                      <app-edit-song-textarea-field
+                          v-if="userIsAdmin && props.expanded"
+                          :song="props.item"
+                          field="chords"
+                        ></app-edit-song-textarea-field>
+                      <pre v-else class="grey lighten-3 pa-1 elevation-5 overflow-hidden">{{ 
+                          props.item.chords | maxLines(5) 
+                        }}</pre>
+                    </v-flex>
 
-                  <v-spacer></v-spacer>
-                  WIP
-                  <v-spacer></v-spacer>
-                  <v-btn fab small color="primary"><v-icon>info</v-icon></v-btn>
-                  <v-btn fab small color="indigo"><v-icon>add</v-icon></v-btn>
-                </v-card-title>
+                    <v-flex xs4 class="text-xs-right">
+                      <v-menu bottom left>
+                        <v-btn icon slot="activator">
+                          <v-icon>more_vert</v-icon>
+                        </v-btn>
+                        <v-list>
+                          <v-list-tile @click="doThis(props.item.id)">
+                            <v-list-tile-title>do This</v-list-tile-title>
+                          </v-list-tile>
+                          <v-list-tile @click="doThis(props.item.id)">
+                            <v-list-tile-title>do That</v-list-tile-title>
+                          </v-list-tile>
+                        </v-list>
+                      </v-menu>
+                    </v-flex>
+
+                  </v-layout>
+                </v-container>
               </v-card>
             </template>
 
@@ -182,6 +210,10 @@
         for (let key in this.songs) {
           this.songList.push(this.songs[key])
         }
+      },
+
+      doThis (id) {
+        console.log('doing something with', this.songs[id].title)
       }
     }
   }

@@ -34,7 +34,12 @@
         clearable: true,
         initialValue: '',
         rules: {
-          maxChars: (v) => this.maxLength < 0 || v.length <= this.maxLength || 'Input too long!',
+          maxChars: (v) => {
+            if (this.maxLength < 0) return true
+            if (!v) return true
+            if (v.length > this.maxLength) return 'Input too long!'
+            return true
+          },
           required: (v) => {
             if (this.required && !v) return 'This field cannot be empty!'
             return true
@@ -44,8 +49,9 @@
     },
 
     methods: {
-      updateSong (id, field, enter) {
+      updateSong (id, field) {
         // check if there even were any changes
+        if (this.song[this.field] === undefined) this.song[this.field] = ''
         if (this.initialValue.trim() === this.song[this.field].trim()) return
 
         // don't submit empty strings for required fields
@@ -65,7 +71,7 @@
 
     created () {
       // save the initial value in order to compare before actually updating
-      this.initialValue = this.song[this.field]
+      this.initialValue = this.song[this.field] || ''
 
       if (this.required) this.clearable = false
     }

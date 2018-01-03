@@ -1,13 +1,11 @@
 <template>
   <div>
 
-    <pre v-if="song.lyrics"
+    <pre title="click to edit"
          @click="dialog = !dialog"    
-         title="click to edit"
-         class="grey lighten-3 pa-1 elevation-5 cursor-pointer">Lyrics:
-{{
-        '\n' + song.lyrics | maxLines(5) 
-      }}</pre>
+         class="grey lighten-3 pa-1 elevation-5 cursor-pointer overflow-hidden"
+      >{{ 
+      song[field] | maxLines(5) || 'click to add ' + field }}</pre>
 
     <v-dialog v-model="dialog" max-width="600px" lazy>
       <v-card>
@@ -15,10 +13,10 @@
 
           <v-text-field
             slot="input"
-            label="Edit Lyrics"
-            v-model="song['lyrics']"
+            :label="'Edit ' + field"
+            v-model="song[field]"
             :rows="rows"
-            @keydown.ctrl.enter="updateSong(song.id)"
+            @keydown.ctrl.enter="updateSong()"
             multi-line
             full-width
             counter autofocus
@@ -39,7 +37,7 @@
 
 <script>
   export default {
-    props: ['song'],
+    props: ['song', 'field'],
 
     data () {
       return {
@@ -50,27 +48,27 @@
     },
 
     methods: {
-      updateSong (id) {
+      updateSong () {
         // check if there even were any changes
-        if (this.initialValue.trim() === this.song.lyrics.trim()) return
+        if (this.initialValue.trim() === this.song[this.field].trim()) return
         this.dialog = false
 
-        let value = this.song.lyrics || ''
-        this.$store.dispatch('updateSong', {id, field: 'lyrics', value})
-        this.initialValue = this.song.lyrics
+        let value = this.song[this.field] || ''
+        this.$store.dispatch('updateSong', {id: this.song.id, field: this.field, value})
+        this.initialValue = this.song[this.field]
       },
 
       resetField () {
         this.dialog = false
-        this.song.lyrics = this.initialValue
+        this.song[this.field] = this.initialValue
       }
     },
 
     created () {
       // save the initial value in order to check if it was actually changed for updating
-      this.initialValue = this.song.lyrics
+      this.initialValue = this.song[this.field]
 
-      this.rows = Math.max(this.song.lyrics.split('\n').length + 1, 5)
+      this.rows = Math.max(this.song[this.field].split('\n').length + 1, 5)
     }
   }
 </script>

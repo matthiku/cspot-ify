@@ -12,7 +12,7 @@ import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 import ShowListOfPlans from './components/Plan/View/Plan.vue'
 
 import EditSongField from './components/Song/Edit/EditSongField'
-import EditSongLyrics from './components/Song/Edit/EditSongLyrics'
+import EditSongTextAreaField from './components/Song/Edit/EditSongTextAreaField'
 
 import AdminUserList from './components/Admin/Users'
 import AdminRoleList from './components/Admin/Roles'
@@ -32,7 +32,7 @@ export default function sharedComponents () {
   Vue.component('app-delete-plan-dialog', DeletePlanDialog)
   Vue.component('app-show-list-of-plans', ShowListOfPlans)
 
-  Vue.component('app-edit-song-lyrics', EditSongLyrics)
+  Vue.component('app-edit-song-textarea-field', EditSongTextAreaField)
   Vue.component('app-edit-song-field', EditSongField)
 
   Vue.component('app-admin-user-list', AdminUserList)

@@ -18,7 +18,9 @@ export const ucFirst = (value) => {
 export const sentenceMax = (value, maxLength, placeholder) => {
   if (!placeholder) placeholder = ''
   if (!value) return placeholder
+
   if (value.length <= maxLength) return value
+
   value = value.toString().substr(0, maxLength)
   let cut = value.lastIndexOf(' ')
   if (cut > 0) value = value.substr(0, cut)
@@ -28,13 +30,14 @@ export const sentenceMax = (value, maxLength, placeholder) => {
 // for text values with multiple lines, return only a maximum value of lines
 export const maxLines = (value, maxLines) => {
   if (!value) return ''
+
   let val = value.split('\n')
-  if (val.length <= maxLines) return value
+  if (val.length <= maxLines + 1) return value
+
   let newVal = ''
   for (let index = 0; index < maxLines; index++) {
-    if (!val[index]) continue
-    if (val[index].trim() === '') maxLines += 1
-    else newVal += val[index] + '\n'
+    if (val[index] && val[index].trim() === '') maxLines += 1
+    else newVal += (index > 0 ? '\n' : '') + val[index]
   }
-  return newVal + ('...')
+  return newVal + (' ...')
 }
