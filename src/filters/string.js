@@ -24,3 +24,15 @@ export const sentenceMax = (value, maxLength, placeholder) => {
   if (cut > 0) value = value.substr(0, cut)
   return value + ' ...'
 }
+
+export const maxLines = (value, maxLines) => {
+  if (!value) return ''
+  let val = value.split('\n')
+  if (val.length <= maxLines) return value
+  let newVal = ''
+  for (let index = 0; index < maxLines; index++) {
+    if (val[index].trim() === '') maxLines += 1
+    else newVal += val[index] + '\n'
+  }
+  return newVal + ('...')
+}

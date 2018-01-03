@@ -11,6 +11,8 @@ import EditPlanItemsList from './components/Plan/Edit/EditPlanItemsList'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 import ShowListOfPlans from './components/Plan/View/Plan.vue'
 
+import EditSongField from './components/Song/EditSongField'
+
 import AdminUserList from './components/Admin/Users'
 import AdminRoleList from './components/Admin/Roles'
 import AdminTypeList from './components/Admin/Types'
@@ -28,6 +30,8 @@ export default function sharedComponents () {
   Vue.component('app-edit-plan-date-time-dialog', EditPlanDateTimeDialog)
   Vue.component('app-delete-plan-dialog', DeletePlanDialog)
   Vue.component('app-show-list-of-plans', ShowListOfPlans)
+
+  Vue.component('app-edit-song-field', EditSongField)
 
   Vue.component('app-admin-user-list', AdminUserList)
   Vue.component('app-admin-type-list', AdminTypeList)

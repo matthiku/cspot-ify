@@ -71,7 +71,7 @@ export default {
         .child(payload.id)
         .update(updateObj)
         .then(() => {
-          commit('setMessage', 'Song updated!')
+          commit('setMessage', 'Field "' + payload.field + '" in this song was updated!')
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
