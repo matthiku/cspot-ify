@@ -31,7 +31,7 @@
                   {{ props.header.text }}
                 </span>
                 <span>
-                  {{ props.header.text }}
+                  click to sort by {{ props.header.text }}
                 </span>
               </v-tooltip>
             </template>
@@ -39,34 +39,28 @@
             <template slot="items" slot-scope="props">
               <tr :class="[props.expanded ? 'grey lighten-2' : '']">
 
-                <td class="cursor-pointer text-xs-right"
+                <td class="cursor-pointer text-xs-right no-wrap"
                     @click="props.expanded = !props.expanded"
                     :title="[props.expanded ? 'click for less details' : 'click for more details']"
-                  ><v-icon>keyboard_arrow_down</v-icon>{{ props.item.id }}</td>
+                  ><v-icon>{{ props.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</v-icon>{{ props.item.id }}
+                </td>
 
                 <td :title="props.item.lyrics">
                   <app-edit-song-field
                       v-if="userIsAdmin && props.expanded"
                       :song="props.item"
                       field="title"
+                      required="true"
                       maxLength="50"
                     ></app-edit-song-field>
                   <span v-else>{{ props.item.title }}</span>
-                  <v-edit-dialog
+                  <app-edit-song-field
                       v-if="userIsAdmin && props.expanded"
-                      title="click to edit sub-title"
-                      lazy
-                    >({{ props.item.title_2 }})
-                    <v-text-field
-                      slot="input"
-                      label="Edit"
-                      v-model="props.item.title_2"
-                      hint="Press Enter or Esc to close. Ctrl+z to undo changes."
-                      single-line counter
-                      :rules="[max50chars]"
-                      @blur="updateSong(props.item.id, 'title_2')"
-                    ></v-text-field>
-                  </v-edit-dialog>
+                      :song="props.item"
+                      field="title_2"
+                      fieldName="Subtitle"
+                      maxLength="50"
+                    ></app-edit-song-field>
                   <span v-else-if="props.item.title_2">({{ props.item.title_2 }})</span>
                 </td>
 
@@ -80,9 +74,27 @@
                   <span v-else>{{ props.item.author }}</span>
                 </td>
 
-                <td>{{ props.item.book_ref }}</td>
+                <td>
+                  <app-edit-song-field
+                      v-if="userIsAdmin && props.expanded"
+                      :song="props.item"
+                      field="book_ref"
+                      field-name="Book Reference Number"
+                      maxLength="20"
+                    ></app-edit-song-field>
+                  <span v-else>{{ props.item.book_ref }}</span>
+                </td>
 
-                <td>{{ props.item.ccli_no }}</td>
+                <td>
+                  <app-edit-song-field
+                      v-if="userIsAdmin && props.expanded"
+                      :song="props.item"
+                      field="ccli_no"
+                      field-name="CCLI Number"
+                      maxLength="15"
+                    ></app-edit-song-field>
+                  <span v-else>{{ props.item.ccli_no }}</span>
+                </td>
 
                 <td class="text-xs-center">{{ props.item.license }}</td>
 
@@ -92,11 +104,18 @@
             <template slot="expand" slot-scope="props">
               <v-card>
                 <v-card-title>
-                  <pre class="grey lighten-3 pa-1 elevation-5">Lyrics:{{ 
+
+                  <app-edit-song-lyrics
+                      v-if="userIsAdmin && props.expanded"
+                      :song="props.item"
+                    ></app-edit-song-lyrics>
+
+                  <pre v-else-if="props.item.lyrics" class="grey lighten-3 pa-1 elevation-5">Lyrics:{{ 
                       '\n' + props.item.lyrics | maxLines(5) 
                     }}</pre>
+
                   <v-spacer></v-spacer>
-                  test
+                  WIP
                   <v-spacer></v-spacer>
                   <v-btn fab small color="primary"><v-icon>info</v-icon></v-btn>
                   <v-btn fab small color="indigo"><v-icon>add</v-icon></v-btn>
@@ -139,7 +158,6 @@
           { text: 'License', value: 'license', align: 'center' }
         ],
         standAlone: true,
-        max50chars: (v) => v.length <= 50 || 'Input too long!',
         searchString: '',
         songList: []
       }
@@ -160,12 +178,10 @@
     methods: {
       updateSongsList () {
         // morph the songs object into an array of songs
+        this.songList = []
         for (let key in this.songs) {
           this.songList.push(this.songs[key])
         }
-      },
-      updateSong (id, field) {
-        this.$store.dispatch('updateSong', {id, field, value: this.songs[id][field]})
       }
     }
   }
