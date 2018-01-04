@@ -6,13 +6,13 @@
          :class="[song[field] ? '' : 'grey--text text-xs-center']"
          class="grey lighten-3 pa-1 elevation-5 cursor-pointer overflow-hidden"
       >{{ 
-      song[field] | maxLines(5) || '(click to add ' + field + ')' }}</pre>
+      song[field] | maxLines(5) || '\n\n(click to add ' + field + ')\n\n\n' }}</pre>
 
     <v-dialog v-model="dialog" max-width="600px" lazy>
       <v-card>
-        <v-card-text>
+        <v-card-text class="pb-0">
 
-          <v-text-field
+          <v-text-field class="pb-0"
             slot="input"
             :label="'Edit ' + field"
             v-model="song[field]"
@@ -24,7 +24,7 @@
           ></v-text-field>
 
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="pt-0">
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" flat @click.native="resetField">Cancel</v-btn>
           <v-btn color="green darken-1" flat @click.native="updateSong(song.id)">Save</v-btn>
@@ -56,10 +56,11 @@
 
         let value = this.song[this.field] || ''
         this.$store.dispatch('updateSong', {id: this.song.id, field: this.field, value})
-        this.initialValue = this.song[this.field]
+        this.initialValue = value
       },
 
       resetField () {
+        // console.log('resetting field')
         this.dialog = false
         this.song[this.field] = this.initialValue
       }

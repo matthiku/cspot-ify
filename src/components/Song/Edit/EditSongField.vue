@@ -1,14 +1,17 @@
 <template>
   <div>
     <v-edit-dialog lazy :large="type === 'select'"
-        :title="'edit ' + (fieldName || field)">
+        :title="'edit `' + (fieldName || field) + '`'">
+      <span v-if="label" class="no-wrap mw-120">{{ fieldName }}:</span>
       <span
         v-if="song[field]"
+        :class="[label ? 'no-wrap' : '']"
         class="blue-grey lighten-3 btn--round px-1">
         {{ song[field] }}</span>
       <span 
         v-else
-        class="no-wrap grey lighten-3 btn--round px-2" 
+        :class="[label ? 'blue-grey' : 'grey']"
+        class="no-wrap lighten-3 btn--round px-2" 
         :title="'add ' + (fieldName || field)"
         >+</span>
 
@@ -27,7 +30,7 @@
         @blur="resetField()"
       ></v-text-field>
 
-      <v-select v-else large
+      <v-select v-else
           slot="input"
           min-width="150px"
           v-bind:items="selectItems"
@@ -45,13 +48,14 @@
 
 <script>
   export default {
-    props: ['field', 'song', 'maxLength', 'fieldName', 'required', 'selectItems'],
+    props: ['field', 'song', 'maxLength', 'fieldName', 'required', 'selectItems', 'showLabel'],
 
     data () {
       return {
         fullWidth: false,
         clearable: true,
         type: 'text-input',
+        label: false,
         initialValue: '',
         rules: {
           maxChars: (v) => {
@@ -94,6 +98,8 @@
       // save the initial value in order to compare before actually updating
       this.initialValue = this.song[this.field] || ''
 
+      if (this.showLabel !== undefined) this.label = true
+
       // change input type to select if select items are provided in the props
       if (this.selectItems) {
         this.type = 'select'
@@ -101,3 +107,6 @@
     }
   }
 </script>
+
+<style scoped>
+</style>

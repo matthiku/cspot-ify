@@ -28,11 +28,17 @@ export const sentenceMax = (value, maxLength, placeholder) => {
 }
 
 // for text values with multiple lines, return only a maximum value of lines
-export const maxLines = (value, maxLines) => {
-  if (!value) return ''
+export const maxLines = (value, maxLines, exact) => {
+  if (!value) {
+    if (exact) return '\n'.repeat(maxLines)
+    return ''
+  }
 
   let val = value.split('\n')
-  if (val.length <= maxLines + 1) return value
+  if (val.length <= maxLines + 1) {
+    if (exact) return value + '\n'.repeat(maxLines - val.length + 1)
+    return value
+  }
 
   let newVal = ''
   for (let index = 0; index < maxLines; index++) {

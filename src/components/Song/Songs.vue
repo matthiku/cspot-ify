@@ -118,7 +118,7 @@
 
             <template slot="expand" slot-scope="props">
               <v-card class="grid blue-grey lighten-4">
-                <v-container fluid grid-list-lg>
+                <v-container fluid grid-list-md>
                   <v-layout row wrap>
 
                     <v-flex md4>
@@ -129,7 +129,7 @@
                           field="lyrics"
                         ></app-edit-song-textarea-field>
                       <pre v-else-if="props.item.lyrics" class="grey lighten-3 pa-1 elevation-5 overflow-hidden">{{ 
-                          '\n' + props.item.lyrics | maxLines(5) 
+                          props.item.lyrics | maxLines(5, 'exact') 
                         }}</pre>
                     </v-flex>
 
@@ -140,31 +140,74 @@
                           :song="props.item"
                           field="chords"
                         ></app-edit-song-textarea-field>
-                      <pre v-else class="grey lighten-3 pa-1 elevation-5 overflow-hidden">{{ 
-                          props.item.chords | maxLines(5) 
+                      <pre v-else-if="props.item.chords" class="grey lighten-3 pa-1 elevation-5 overflow-hidden">{{ 
+                          props.item.chords | maxLines(5, 'exact') 
                         }}</pre>
+                      <pre v-else class="grey lighten-3 pa-1 elevation-5 text-xs-center">{{ '\n\n(missing)\n\n\n' }}</pre>
                     </v-flex>
 
-                    <v-flex md4 class="text-xs-right">
-                      links .... <input type="text">
-                      CCLI Nr. .... <input type="text">
-                      Hymnal.Net ID .... <input type="text">
-                      <v-menu bottom left>
-                        <v-btn icon slot="activator">
-                          <v-icon>more_vert</v-icon>
-                        </v-btn>
-                        <v-list>
-                          <v-list-tile @click="doThis(props.item.id)">
-                            <v-list-tile-title>do This</v-list-tile-title>
-                          </v-list-tile>
-                          <v-list-tile @click="doThis(props.item.id)">
-                            <v-list-tile-title>do That</v-list-tile-title>
-                          </v-list-tile>
-                        </v-list>
-                      </v-menu>
+                    <v-flex md4>
+                      <h6 class="mb-1 subheading">Other Data:</h6>
+                      <v-card style="height: 103px"
+                       class="grey lighten-3 pa-1 elevation-5 overflow-hidden">
+                        <v-card-text class="pa-0">
+                          <app-edit-song-field
+                            v-if="userIsAdmin && props.expanded"
+                            :song="props.item"
+                            field="ccli_no"
+                            field-name="CCLI Number"
+                            show-label
+                            maxLength="15"
+                          ></app-edit-song-field>
+                          <span v-else>
+                            <span class="body-2 no-wrap mw-120">CCLI Number:</span>
+                            {{ props.item.ccli_no || 'n/a' }}</span>
+                        </v-card-text>
+                        <v-card-text class="pa-0">
+                          <app-edit-song-field
+                            v-if="userIsAdmin && props.expanded"
+                            :song="props.item"
+                            field="sequence"
+                            field-name="Song Parts Seq."
+                            show-label
+                            maxLength="50"
+                          ></app-edit-song-field>
+                          <span v-else>
+                            <span class="body-2 no-wrap mw-120">Song Parts Seq.:</span>
+                            {{ props.item.sequence || 'n/a' }}</span>
+                        </v-card-text>
+                        <v-card-text class="pa-0">
+                          <app-edit-song-field
+                            v-if="userIsAdmin && props.expanded"
+                            :song="props.item"
+                            field="hymnaldotnet_id"
+                            field-name="Hymnal.Net ID"
+                            show-label
+                            maxLength="15"
+                          ></app-edit-song-field>
+                          <span v-else>
+                            <span class="body-2 no-wrap mw-120">Hymnal.Net ID:</span>
+                            {{ props.item.hymnaldotnet_id || 'n/a' }}</span>
+                        </v-card-text>
+                        <v-card-text class="pa-0">
+                          <app-edit-song-field
+                            v-if="userIsAdmin && props.expanded"
+                            :song="props.item"
+                            showLabel
+                            field="link"
+                            field-name="Other links"
+                            maxLength="-1"
+                          ></app-edit-song-field>
+                          <span v-else>
+                            <span class="body-2 no-wrap mw-120">Other links:</span>
+                            {{ props.item.link || 'n/a' }}</span>
+                        </v-card-text>
+                      </v-card>
+
                     </v-flex>
 
                   </v-layout>
+                  onsong chords?
                 </v-container>
               </v-card>
             </template>
