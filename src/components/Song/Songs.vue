@@ -10,6 +10,7 @@
             <v-text-field
               append-icon="search"
               label="Search"
+              clearable
               single-line
               hide-details
               v-model="searchString"
@@ -37,7 +38,7 @@
             </template>
 
             <template slot="items" slot-scope="props">
-              <tr :class="[props.expanded ? 'grey lighten-2' : '']">
+              <tr :class="[props.expanded ? 'blue-grey lighten-2' : '']">
 
                 <td class="cursor-pointer text-xs-right no-wrap"
                     @click="props.expanded = !props.expanded"
@@ -85,7 +86,19 @@
                   <span v-else>{{ props.item.book_ref }}</span>
                 </td>
 
-                <td>
+                <td class="text-xs-center">
+                  <app-edit-song-field
+                      v-if="userIsAdmin && props.expanded"
+                      :select-items="selectItems"
+                      :song="props.item"
+                      field="license"
+                      field-name="License Type"
+                      maxLength="10"
+                    ></app-edit-song-field>
+                  <span v-else>{{ props.item.license }}</span>
+                </td>
+
+                <td class="no-wrap">
                   <app-edit-song-field
                       v-if="userIsAdmin && props.expanded"
                       :song="props.item"
@@ -93,20 +106,22 @@
                       field-name="Youtube ID"
                       maxLength="15"
                     ></app-edit-song-field>
-                  <a v-else target="new" :href="'https://www.youtube.com/watch?v=' + props.item.youtube_id"><v-icon>subscriptions</v-icon></a>
+                  <a  v-else-if="props.item.youtube_id" target="new"
+                      class="youtube-link"
+                      title="play song clip in new tab"
+                      :href="'https://www.youtube.com/watch?v=' + props.item.youtube_id"
+                    ><v-icon class="youtube-link">subscriptions</v-icon></a>
                 </td>
-
-                <td class="text-xs-center">{{ props.item.license }}</td>
 
               </tr>
             </template>
 
             <template slot="expand" slot-scope="props">
-              <v-card class="grid">
+              <v-card class="grid blue-grey lighten-4">
                 <v-container fluid grid-list-lg>
                   <v-layout row wrap>
 
-                    <v-flex xs4>
+                    <v-flex md4>
                       <h6 class="mb-1 subheading">Lyrics:</h6>
                       <app-edit-song-textarea-field
                           v-if="userIsAdmin && props.expanded"
@@ -118,7 +133,7 @@
                         }}</pre>
                     </v-flex>
 
-                    <v-flex xs4>
+                    <v-flex md4>
                       <h6 class="mb-1 subheading">Chords:</h6>
                       <app-edit-song-textarea-field
                           v-if="userIsAdmin && props.expanded"
@@ -130,7 +145,7 @@
                         }}</pre>
                     </v-flex>
 
-                    <v-flex xs4 class="text-xs-right">
+                    <v-flex md4 class="text-xs-right">
                       links .... <input type="text">
                       CCLI Nr. .... <input type="text">
                       Hymnal.Net ID .... <input type="text">
@@ -185,8 +200,14 @@
           { text: 'Title', value: 'title', align: 'left' },
           { text: 'Author', value: 'author', align: 'left' },
           { text: 'Book Ref.', value: 'book_ref', align: 'left' },
-          { text: 'Clip', value: 'youtube_id', align: 'left' },
-          { text: 'License', value: 'license', align: 'center' }
+          { text: 'License', value: 'license', align: 'center' },
+          { text: 'Clip', value: 'youtube_id', align: 'left' }
+        ],
+        selectItems: [
+          { text: 'PD' },
+          { text: 'CCLI' },
+          { text: 'Unknown' },
+          { text: 'Other' }
         ],
         standAlone: true,
         searchString: '',

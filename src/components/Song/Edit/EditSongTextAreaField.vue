@@ -4,7 +4,7 @@
     <pre title="click to edit"
          @click="dialog = !dialog"
          :class="[song[field] ? '' : 'grey--text text-xs-center']"
-         class="grey lighten-3 pa-1 elevation-5 btn--round cursor-pointer overflow-hidden"
+         class="grey lighten-3 pa-1 elevation-5 cursor-pointer overflow-hidden"
       >{{ 
       song[field] | maxLines(5) || '(click to add ' + field + ')' }}</pre>
 

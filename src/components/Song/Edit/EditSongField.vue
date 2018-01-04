@@ -1,11 +1,18 @@
 <template>
   <div>
-    <v-edit-dialog lazy
-        :title="'click to edit ' + (fieldName || field)">
-      {{ song[field] }}
-      <small class="white no-wrap btn--round px-1" v-if="!song[field]">add {{ fieldName || field }}</small>
+    <v-edit-dialog lazy :large="type === 'select'"
+        :title="'edit ' + (fieldName || field)">
+      <span
+        v-if="song[field]"
+        class="blue-grey lighten-3 btn--round px-1">
+        {{ song[field] }}</span>
+      <span 
+        v-else
+        class="no-wrap grey lighten-3 btn--round px-2" 
+        :title="'add ' + (fieldName || field)"
+        >+</span>
 
-      <v-text-field
+      <v-text-field v-if="type === 'text-input'"
         slot="input"
         :label="'Edit ' + (fieldName || field)"
         hint="Press Enter or Esc to close. Ctrl+z to undo changes."
@@ -16,9 +23,21 @@
         single-line
         counter autofocus
         @keyup.ctrl.enter="updateSong(song.id, field)"
-        @keyup.enter="updateSong(song.id, field, 'Enter')"
+        @keyup.enter="updateSong(song.id, field)"
         @blur="resetField()"
       ></v-text-field>
+
+      <v-select v-else large
+          slot="input"
+          min-width="150px"
+          v-bind:items="selectItems"
+          v-model="song[field]"
+          :label="'Select ' + (fieldName || field)"
+          class="input-group--focused"
+          item-value="text"
+          @click="updateSong(song.id, field)"
+          @blur="updateSong(song.id, field)"
+        ></v-select>
 
     </v-edit-dialog>
   </div>
@@ -26,12 +45,13 @@
 
 <script>
   export default {
-    props: ['field', 'song', 'maxLength', 'fieldName', 'required'],
+    props: ['field', 'song', 'maxLength', 'fieldName', 'required', 'selectItems'],
 
     data () {
       return {
         fullWidth: false,
         clearable: true,
+        type: 'text-input',
         initialValue: '',
         rules: {
           maxChars: (v) => {
@@ -50,6 +70,7 @@
 
     methods: {
       updateSong (id, field) {
+        // console.log(this.song[this.field])
         // check if there even were any changes
         if (this.song[this.field] === undefined) this.song[this.field] = ''
         if (this.initialValue.trim() === this.song[this.field].trim()) return
@@ -73,7 +94,10 @@
       // save the initial value in order to compare before actually updating
       this.initialValue = this.song[this.field] || ''
 
-      if (this.required) this.clearable = false
+      // change input type to select if select items are provided in the props
+      if (this.selectItems) {
+        this.type = 'select'
+      }
     }
   }
 </script>
