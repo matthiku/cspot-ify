@@ -55,12 +55,11 @@
         this.dialog = false
 
         let value = this.song[this.field] || ''
-        this.$store.dispatch('updateSong', {id: this.song.id, field: this.field, value})
+        this.$store.dispatch('updateSong', {id: this.song.key, field: this.field, value})
         this.initialValue = value
       },
 
       resetField () {
-        // console.log('resetting field')
         this.dialog = false
         this.song[this.field] = this.initialValue
       }

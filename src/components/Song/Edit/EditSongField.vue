@@ -86,7 +86,7 @@
         }
 
         let value = this.song[this.field] || ''
-        this.$store.dispatch('updateSong', {id, field, value})
+        this.$store.dispatch('updateSong', {id: this.song.key, field, value})
         this.initialValue = this.song[this.field]
       },
       resetField () {

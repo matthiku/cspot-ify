@@ -19,7 +19,8 @@
 
           <v-data-table
               :headers="headers"
-              :items="songList"
+              :items="songs"
+              itemKey="key"
               :search="searchString"
               :rows-per-page-items="[10, 15, 25, { text: 'All', value: -1 }]"
               no-data-text="No Songs found"
@@ -253,32 +254,16 @@
           { text: 'Other' }
         ],
         standAlone: true,
-        searchString: '',
-        songList: []
+        searchString: ''
       }
     },
 
     created () {
       // only show title when this is not a component of the Admin page
       this.standAlone = (this.$route.name === 'admin')
-      this.updateSongsList()
-    },
-
-    watch: {
-      songs () {
-        this.updateSongsList()
-      }
     },
 
     methods: {
-      updateSongsList () {
-        // morph the songs object into an array of songs
-        this.songList = []
-        for (let key in this.songs) {
-          this.songList.push(this.songs[key])
-        }
-      },
-
       doThis (id) {
         console.log('doing something with', this.songs[id].title)
       }

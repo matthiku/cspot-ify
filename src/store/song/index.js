@@ -35,7 +35,7 @@ export default {
       // payload is a firebase data snapshot
       payload.forEach(song => {
         let item = song.val()
-        // item.id = song.key
+        item.key = song.key
         songs.push(item)
       })
       commit('setLoading', false)
