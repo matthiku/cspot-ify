@@ -23,7 +23,7 @@
               itemKey="key"
               :search="searchString"
               :rows-per-page-items="[10, 15, 25, { text: 'All', value: -1 }]"
-              no-data-text="No Songs found"
+              no-data-text="Song list not populated yet ..."
               no-results-text="No matching songs found"
               class="elevation-1">
 
@@ -118,6 +118,7 @@
             </template>
 
             <template slot="expand" slot-scope="props">
+              <!-- TODO: add a menu (FAB?) with actions for the whole song -->
               <v-card class="grid blue-grey lighten-4">
                 <v-container fluid grid-list-md>
                   <v-layout row wrap>
@@ -148,22 +149,10 @@
                     </v-flex>
 
                     <v-flex md4>
+                      <!-- TODO: this module should be a component! -->
                       <h6 class="mb-1 subheading">Other Data:</h6>
-                      <v-card style="height: 103px"
+                      <v-card style="height: 103px; line-height: 1.7;"
                        class="grey lighten-3 pa-1 elevation-5 overflow-hidden">
-                        <v-card-text class="pa-0">
-                          <app-edit-song-field
-                            v-if="userIsAdmin && props.expanded"
-                            :song="props.item"
-                            field="ccli_no"
-                            field-name="CCLI Number"
-                            show-label
-                            maxLength="15"
-                          ></app-edit-song-field>
-                          <span v-else>
-                            <span class="body-2 no-wrap mw-120">CCLI Number:</span>
-                            {{ props.item.ccli_no || 'n/a' }}</span>
-                        </v-card-text>
                         <v-card-text class="pa-0">
                           <app-edit-song-field
                             v-if="userIsAdmin && props.expanded"
@@ -174,8 +163,21 @@
                             maxLength="50"
                           ></app-edit-song-field>
                           <span v-else>
-                            <span class="body-2 no-wrap mw-120">Song Parts Seq.:</span>
+                            <span class="body-2 no-wrap">Song Parts Seq.:&nbsp;</span>
                             {{ props.item.sequence || 'n/a' }}</span>
+                        </v-card-text>
+                        <v-card-text class="pa-0">
+                          <app-edit-song-field
+                            v-if="userIsAdmin && props.expanded"
+                            :song="props.item"
+                            field="ccli_no"
+                            field-name="CCLI Number"
+                            show-label
+                            maxLength="15"
+                          ></app-edit-song-field>
+                          <span v-else>
+                            <span class="body-2 no-wrap">CCLI Number:</span>
+                            {{ props.item.ccli_no || 'n/a' }}</span>
                         </v-card-text>
                         <v-card-text class="pa-0">
                           <app-edit-song-field
@@ -187,7 +189,7 @@
                             maxLength="15"
                           ></app-edit-song-field>
                           <span v-else>
-                            <span class="body-2 no-wrap mw-120">Hymnal.Net ID:</span>
+                            <span class="body-2 no-wrap">Hymnal.Net ID:</span>
                             {{ props.item.hymnaldotnet_id || 'n/a' }}</span>
                         </v-card-text>
                         <v-card-text class="pa-0">
@@ -200,7 +202,7 @@
                             maxLength="-1"
                           ></app-edit-song-field>
                           <span v-else>
-                            <span class="body-2 no-wrap mw-120">Other links:</span>
+                            <span class="body-2 no-wrap">Other links:</span>
                             {{ props.item.link || 'n/a' }}</span>
                         </v-card-text>
                       </v-card>

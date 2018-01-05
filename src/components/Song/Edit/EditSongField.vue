@@ -2,7 +2,7 @@
   <div>
     <v-edit-dialog lazy :large="type === 'select'"
         :title="'edit `' + (fieldName || field) + '`'">
-      <span v-if="label" class="no-wrap mw-120">{{ fieldName }}:</span>
+      <span v-if="label" class="no-wrap minw-110 text-xs-right">{{ fieldName }}:&nbsp;</span>
       <span
         v-if="song[field]"
         :class="[label ? 'no-wrap' : '']"
@@ -86,6 +86,7 @@
         }
 
         let value = this.song[this.field] || ''
+        // for firebase, we use the 'key' as identifier (for mySQL, it would be 'id')
         this.$store.dispatch('updateSong', {id: this.song.key, field, value})
         this.initialValue = this.song[this.field]
       },
@@ -109,4 +110,7 @@
 </script>
 
 <style scoped>
+  .minw-110 {
+    min-width: 110px;
+  }
 </style>

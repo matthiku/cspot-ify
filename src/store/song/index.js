@@ -32,7 +32,7 @@ export default {
     // load existing songs from the DB
     loadSongs ({commit}, payload) {
       let songs = []
-      // payload is a firebase data snapshot
+      // payload is a firebase data snapshot, we add the 'key' as identifier to the dataset
       payload.forEach(song => {
         let item = song.val()
         item.key = song.key
@@ -71,7 +71,7 @@ export default {
         .child(payload.id)
         .update(updateObj)
         .then(() => {
-          commit('setMessage', 'Field "' + payload.field + '" in this song was updated!')
+          commit('setMessage', 'Field "' + payload.field + '" in this song was updated! Song key: ' + payload.id)
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
