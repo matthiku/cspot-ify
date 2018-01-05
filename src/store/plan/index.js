@@ -125,6 +125,16 @@ export default {
         .catch((error) => dispatch('errorHandling', error))
     },
 
+    addSongToPlan ({commit, dispatch}, payload) {
+      commit('setLoading', true)
+      plansRef.child(payload.planId).child('items').push({ id: payload.id, type: 'song' })
+        .then(() => {
+          commit('appendMessage', 'Song added to this plan')
+          commit('setLoading', false)
+        })
+        .catch((error) => dispatch('errorHandling', error))
+    },
+
     // move a plan to the bin
     // - - payload must be the full plan, as we send it to the bin and then delete it
     binPlan ({state, commit, dispatch}, payload) {

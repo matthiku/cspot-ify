@@ -1,6 +1,6 @@
 {
   "name": "cspot-ify",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "new frontend for c-SPOT build with vuejs",
   "author": "Matthias Kuhs <matthiku@yahoo.com>",
   "private": true,
@@ -15,7 +15,7 @@
     "moment": "^2.19.3",
     "vue": "^2.4.2",
     "vue-router": "^2.7.0",
-    "vuetify": "^0.16.9",
+    "vuetify": "^0.17.6",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

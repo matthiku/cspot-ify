@@ -48,7 +48,7 @@
                             {{ userData.verified ? 'done' : 'warning' }}
                           </v-icon>
                           Email {{ userData.verified ? 'verified' : 'unverified!' }}
-                          <span v-if="!userData.verified" class="small">You have only limited access.</span>
+                          <span v-if="!userData.verified && user.id === userData.id" class="small">You have only limited access.</span>
                         </div>
                       </v-flex>
                     </v-layout>

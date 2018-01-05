@@ -9,7 +9,11 @@ import App from './App'
 import router from './router'
 import { store } from './store'
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  theme: {
+    primary: 'RGB(64, 174, 72)'
+  }
+})
 Vue.config.productionTip = false
 
 // register the data filters

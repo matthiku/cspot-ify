@@ -4,10 +4,10 @@
     <!-- left-handed navigation -->
     <v-navigation-drawer
       v-if="userIsAuthenticated"
-      persistent
       :clipped="clipped"
       v-model="drawer"
-      enable-resize-watcher
+      floating
+      absolute
       app>
       <v-list>
         <v-list-tile
@@ -81,39 +81,34 @@
       </v-btn>
     </v-toolbar>
 
+    <v-content>
 
-    <main>
+      <v-flex xs12 v-if="loading">
+        <v-progress-linear class="ma-0 pa-0" v-bind:indeterminate="true"></v-progress-linear>
+      </v-flex>
 
-      <v-content>
+      <!-- Alert Panel -->
+      <v-container class="pa-0" v-if="error">
+        <v-layout row>
+          <v-flex xs12>
+            <app-alert v-if="error" @dismissed="onDismissed('clearError')" :text="error"></app-alert>
+          </v-flex>
+        </v-layout>
+      </v-container>
 
-        <v-flex xs12 v-if="loading">
-          <v-progress-linear class="ma-0 pa-0" v-bind:indeterminate="true"></v-progress-linear>
-        </v-flex>
+      <router-view></router-view>
 
-        <!-- Alert Panel -->
-        <v-container class="pa-0" v-if="error">
-          <v-layout row>
-            <v-flex xs12>
-              <app-alert v-if="error" @dismissed="onDismissed('clearError')" :text="error"></app-alert>
-            </v-flex>
-          </v-layout>
-        </v-container>
+      <v-snackbar
+        transition="fade-transition"
+        :timeout="timeout"
+        color="info" multi-line vertical
+        v-model="showMessage"
+      >
+        {{ message }}
+        <v-btn dark flat @click.native="onDismissed('clearMessage')">Close</v-btn>
+      </v-snackbar>
 
-        <router-view></router-view>
-
-        <v-snackbar
-          transition="fade-transition"
-          :timeout="timeout"
-          color="info" multi-line vertical
-          v-model="showMessage"
-        >
-          {{ message }}
-          <v-btn dark flat @click.native="onDismissed('clearMessage')">Close</v-btn>
-        </v-snackbar>
-
-      </v-content>
-
-    </main>
+    </v-content>
 
 
     <v-navigation-drawer

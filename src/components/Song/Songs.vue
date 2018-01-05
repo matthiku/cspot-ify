@@ -118,9 +118,6 @@
             </template>
 
             <template slot="expand" slot-scope="props">
-              <!-- 
-                  TODO: add a menu (FAB?) with actions for the whole song 
-              -->
               <v-card class="grid blue-grey lighten-4">
                 <v-container fluid grid-list-md>
                   <v-layout row wrap>
@@ -132,26 +129,35 @@
                         <v-icon>subject</v-icon> Lyrics:
                       </h6>
                       <app-edit-song-textarea-field
-                          v-if="userIsAdmin && props.expanded"
+                          v-if="userIsAdmin"
                           :song="props.item"
                           field="lyrics"
                         ></app-edit-song-textarea-field>
-                      <pre v-else-if="props.item.lyrics" class="grey lighten-3 pa-1 elevation-5 overflow-hidden">{{ 
+                      <pre v-else-if="props.item.lyrics" 
+                           title="show full lyrics"
+                           @click="showItemDialog('lyrics')"
+                           class="grey lighten-3 cursor-pointer pa-1 elevation-5 overflow-hidden">{{ 
                           props.item.lyrics | maxLines(5, 'exact') 
                         }}</pre>
                     </v-flex>
 
                     <v-flex md4>
-                      <h6 class="mb-1 subheading" :class="[props.item.chords ? 'cursor-pointer' : '']" 
+                      <h6 class="mb-1 subheading" 
+                          :title="[props.item.chords ? 'show full chords' : '']"
+                          :class="[props.item.chords ? 'cursor-pointer' : '']" 
                           @click="showItemDialog('chords')">
                         <v-icon>queue_music</v-icon> Chords:
                       </h6>
                       <app-edit-song-textarea-field
-                          v-if="userIsAdmin && props.expanded"
+                          v-if="userIsAdmin"
                           :song="props.item"
                           field="chords"
                         ></app-edit-song-textarea-field>
-                      <pre v-else-if="props.item.chords" class="grey lighten-3 pa-1 elevation-5 overflow-hidden">{{ 
+                      <pre  v-else-if="props.item.chords" 
+                            title="show full chords"
+                            @click="showItemDialog('chords')"
+                            :class="[props.item.chords ? 'cursor-pointer' : '']" 
+                            class="grey lighten-3 pa-1 elevation-5 overflow-hidden">{{ 
                           props.item.chords | maxLines(5, 'exact') 
                         }}</pre>
                       <pre v-else class="grey lighten-3 pa-1 elevation-5 text-xs-center">{{ '\n\n(missing)\n\n\n' }}</pre>
@@ -166,7 +172,7 @@
                        class="grey lighten-3 pa-1 elevation-5 overflow-hidden">
                         <v-card-text class="pa-0">
                           <app-edit-song-field
-                            v-if="userIsAdmin && props.expanded"
+                            v-if="userIsAdmin"
                             :song="props.item"
                             field="sequence"
                             field-name="Song Parts Seq."
@@ -179,7 +185,7 @@
                         </v-card-text>
                         <v-card-text class="pa-0">
                           <app-edit-song-field
-                            v-if="userIsAdmin && props.expanded"
+                            v-if="userIsAdmin"
                             :song="props.item"
                             field="ccli_no"
                             field-name="CCLI Number"
@@ -192,7 +198,7 @@
                         </v-card-text>
                         <v-card-text class="pa-0">
                           <app-edit-song-field
-                            v-if="userIsAdmin && props.expanded"
+                            v-if="userIsAdmin"
                             :song="props.item"
                             field="hymnaldotnet_id"
                             field-name="Hymnal.Net ID"
@@ -205,7 +211,7 @@
                         </v-card-text>
                         <v-card-text class="pa-0">
                           <app-edit-song-field
-                            v-if="userIsAdmin && props.expanded"
+                            v-if="userIsAdmin"
                             :song="props.item"
                             showLabel
                             field="link"
@@ -220,16 +226,23 @@
 
                     </v-flex>
 
-                    <!-- control further actions for this song -->
+                    <!-- provide further actions for this song -->
                     <v-tooltip lazy bottom>
                       <v-speed-dial v-model="fab" top right absolute direction="left" slot="activator">
                         <v-btn dark fab hover
-                            slot="activator"
                             color="blue darken-2"
+                            slot="activator"
                             v-model="fab">
                           <v-icon>settings</v-icon>
                           <v-icon>close</v-icon>
                         </v-btn>
+                        <v-tooltip bottom>
+                          <v-btn @click.native.stop="planAddDialog = true"
+                              fab dark small color="cyan" slot="activator">
+                            <v-icon>add</v-icon>
+                          </v-btn>
+                          <span>Add to Plan</span>
+                        </v-tooltip>
                         <v-tooltip bottom>
                           <v-btn fab dark small color="green" slot="activator">
                             <v-icon>airplay</v-icon>
@@ -260,7 +273,7 @@
                       <span>show actions</span>
                     </v-tooltip>
 
-                    <v-dialog v-model="itemDialog.show" max-width="500px">
+                    <v-dialog v-model="itemDialog.show" max-width="500px" lazy>
                       <v-card>
                         <v-card-title class="headline py-0">
                           Song {{ itemDialog.what | ucFirst }}
@@ -270,6 +283,27 @@
                         <v-card-text class="pt-0">
                           <pre>{{ props.item[itemDialog.what] }}</pre>
                         </v-card-text>
+                      </v-card>
+                    </v-dialog>
+
+                    <v-dialog v-model="planAddDialog" max-width="600px" lazy>
+                      <v-card>
+                        <v-card-title class="headline pt-0 pb-0">
+                          Select a plan to add song to:
+                          <v-spacer></v-spacer>
+                          <v-btn color="green darken-1" class="ma-0" round fab flat @click.native="planAddDialog = false"><v-icon>close</v-icon></v-btn>
+                        </v-card-title>
+                        <v-card-text class="pt-1">
+
+                          <app-show-simple-plan-list :plans="planList"></app-show-simple-plan-list>
+
+                          <v-checkbox label="Open selected plan after adding the song"
+                            class="mt-1"
+                            v-model="openPlanAfterAddingSong" light></v-checkbox>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-btn color="green darken-1" round small block @click.native="addSelectedSongToPlan(props.item.key)"> <v-icon>add</v-icon> Add</v-btn>
+                        </v-card-actions>
                       </v-card>
                     </v-dialog>
 
@@ -306,6 +340,9 @@
     data () {
       return {
         fab: false,
+        planAddDialog: false,
+        planList: [],
+        openPlanAfterAddingSong: true,
         itemDialog: {
           show: false,
           what: ''
@@ -329,12 +366,49 @@
       }
     },
 
+    computed: {
+      upcomingPlans () {
+        return this.$store.getters.futurePlans
+      }
+    },
+    watch: {
+      upcomingPlans () {
+        this.createPlanList()
+      },
+      types () {
+        this.createPlanList()
+      },
+      users () {
+        this.createPlanList()
+      }
+    },
+
     created () {
       // only show title when this is not a component of the Admin page
       this.standAlone = (this.$route.name === 'admin')
+
+      this.createPlanList()
     },
 
     methods: {
+      createPlanList () {
+        // wait until the types list is populated
+        if (!this.types || !this.users) return
+
+        this.planList = []
+        this.upcomingPlans.forEach(element => {
+          let leader = this.findRoleInStaff('leader', element.staff)
+          let teacher = this.findRoleInStaff('teacher', element.staff)
+          this.planList.push({
+            id: element.id,
+            date: element.date,
+            type: this.types[element.typeId].name,
+            items: element.items ? element.items.count : 0,
+            leader: leader ? leader.name : 'none',
+            teacher: teacher ? teacher.name : 'none'
+          })
+        })
+      },
       showItemDialog (what) {
         this.itemDialog.show = true
         this.itemDialog.what = what
@@ -343,8 +417,12 @@
         props.expanded = !props.expanded
         if (!props.expanded) this.fab = false
       },
-      doThis (id) {
-        console.log('doing something with', this.songs[id].title)
+      addSelectedSongToPlan (id) {
+        this.$store.dispatch('addSongToPlan', { id, planId: this.dialog.selectedPlan })
+
+        if (this.openPlanAfterAddingSong) {
+          this.$router.push({name: 'plan', params: { planId: this.dialog.selectedPlan }})
+        }
       }
     }
   }

@@ -21,6 +21,17 @@ export default {
       }
       // an admin is always owner
       return this.$store.getters.userIsAdmin || check
+    },
+
+    findRoleInStaff (requestedRole, staff) {
+      // loop through the staff list (an object) and find the requested role
+      let user = { name: 'pending', id: null }
+      Object.entries(staff).forEach(
+        ([key, role]) => {
+          if (role.role === requestedRole) user.id = role.userId
+        }
+      )
+      return (this.users && user.id && this.users[user.id]) ? this.users[user.id] : user
     }
   }
 }
