@@ -107,12 +107,12 @@
                         <v-flex v-else xs12 class="grey lighten-2">
                           <v-card-text class="mb-0 pt-1 pb-2">
                             <div>                  
-                              <h6 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
+                              <h2 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
                                 >{{
                                   plan.date | date
                                 }}<span v-if="plan.end">-{{ plan.end | time }}</span><app-edit-plan-date-time-dialog v-if="userOwnsThisPlan"
                                     :plan="plan"></app-edit-plan-date-time-dialog>                                
-                              </h6>
+                              </h2>
 
                               <!-- show and edit plan STAFF -->
                               <v-expansion-panel>
@@ -193,9 +193,11 @@
                                     <span class="body-2 mr-3">
                                       <v-icon class="mr-3">list</v-icon> Actions
                                     </span>
-                                    <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">3 items</v-chip>
+                                    <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">{{ Object.keys(plan.items).length }} items</v-chip>
                                   </div>
+
                                   <app-edit-plan-items-list :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-items-list>
+
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
 

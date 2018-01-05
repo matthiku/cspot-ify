@@ -65,6 +65,10 @@
       }
     },
 
+    created () {
+      this.dialog.selectedPlan = null
+    },
+
     methods: {
       onPlanSelected (props) {
         props.selected = !props.selected

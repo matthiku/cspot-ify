@@ -5,34 +5,34 @@
       <v-list two-line>
 
         <!-- loop through all plan action items -->
-        <v-list-tile avatar v-for="item in items" v-bind:key="item.id">
+        <v-list-tile avatar v-for="item in plan.itemList" v-bind:key="item.id">
 
-          <v-list-tile-avatar :title="item.role">
+          <v-list-tile-avatar :title="item.id">
             <v-icon class="grey lighten-1 white--text">{{ item.icon }}</v-icon>
           </v-list-tile-avatar>
 
           <!-- show actual item detail -->
           <v-list-tile-content v-show="!item.warning">
-            <v-list-tile-title>{{ item.userName }}</v-list-tile-title>
-            <v-list-tile-sub-title>{{ item.role }}</v-list-tile-sub-title>
+            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
           </v-list-tile-content>
 
           <v-list-tile-content v-show="item.warning">
-            <v-list-tile-sub-title class="red--text mt-0 pt-0">Removing {{ item.role }} ({{ item.userName | firstWord }})?
+            <v-list-tile-sub-title class="red--text mt-0 pt-0">Removing {{ item.book_ref }} ({{ item.title }})?
               <v-btn flat small @click="removeStaff(item)" color="red">Yes<v-icon>info</v-icon></v-btn>
               <v-btn flat small @click="item.warning = false">Cancel<v-icon>highlight_off</v-icon></v-btn>
             </v-list-tile-sub-title>
           </v-list-tile-content>
 
           <v-list-tile-action v-show="!item.warning" v-if="userOwnsThisPlan">
-            <v-btn icon ripple title="remove this role" @click="item.warning = true">
+            <v-btn icon ripple title="remove this item" @click="item.warning = true">
               <v-icon color="red lighten-1">delete</v-icon>
             </v-btn>
           </v-list-tile-action>
         </v-list-tile>
 
         <p class="text-xs-center ma-0"> 
-          <span v-if="!items.length">no items added yet</span>
+          <span v-if="!plan.itemList">no items added yet</span>
         </p>
       </v-list>
     </v-card-text>
@@ -77,7 +77,7 @@
 
     data () {
       return {
-        items: [],
+        itemList: [],
         show: false,
         showMenu: false,
         menuItems: [
@@ -86,6 +86,50 @@
           { title: 'Add item below' },
           { title: 'Delete this item' }
         ]
+      }
+    },
+
+    methods: {
+      removeStaff (item) {
+        this.$store.dispatch('removeStaffFromPlan', {
+          planId: this.plan.id,
+          staffId: item.id
+        })
+      },
+
+      createPlanItemsList () {
+        this.plan.itemList = []
+        this.itemList = []
+        let planItems = this.plan.items
+        if (!planItems || !this.songs) return
+
+        for (let key in planItems) {
+          let item = planItems[key]
+          let obj = {
+            type: item.type,
+            id: item.id ? item.id : 0,
+            key,
+            warning: false
+          }
+          if (item.type === 'song' && this.songs[item.id]) {
+            obj.icon = 'record_voice_over'
+            obj.title = this.songs[item.id].title
+            obj.book_ref = this.songs[item.id].book_ref
+          }
+          this.itemList.push(obj)
+        }
+        this.plan.itemList = this.itemList
+      }
+    },
+    created () {
+      this.createPlanItemsList()
+    },
+    watch: {
+      plan () {
+        this.createPlanItemsList()
+      },
+      users () {
+        this.createPlanItemsList()
       }
     }
   }

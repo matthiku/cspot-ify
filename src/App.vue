@@ -215,7 +215,7 @@
               where: 'drawer'
             },
             {
-              icon: 'group',
+              icon: 'record_voice_over',
               title: 'Songs',
               link: 'songs',
               auth: 'user',

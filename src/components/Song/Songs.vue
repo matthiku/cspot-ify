@@ -289,7 +289,7 @@
                     <v-dialog v-model="planAddDialog" max-width="600px" lazy>
                       <v-card>
                         <v-card-title class="headline pt-0 pb-0">
-                          Select a plan to add song to:
+                          Select a plan to add this song to:
                           <v-spacer></v-spacer>
                           <v-btn color="green darken-1" class="ma-0" round fab flat @click.native="planAddDialog = false"><v-icon>close</v-icon></v-btn>
                         </v-card-title>
@@ -403,7 +403,7 @@
             id: element.id,
             date: element.date,
             type: this.types[element.typeId].name,
-            items: element.items ? element.items.count : 0,
+            items: element.items ? Object.keys(element.items).length : 0,
             leader: leader ? leader.name : 'none',
             teacher: teacher ? teacher.name : 'none'
           })
@@ -418,6 +418,7 @@
         if (!props.expanded) this.fab = false
       },
       addSelectedSongToPlan (id) {
+        this.planAddDialog = false
         this.$store.dispatch('addSongToPlan', { id, planId: this.dialog.selectedPlan })
 
         if (this.openPlanAfterAddingSong) {
