@@ -42,7 +42,7 @@
               <tr :class="[props.expanded ? 'blue-grey lighten-2' : '']">
 
                 <td class="cursor-pointer text-xs-right no-wrap"
-                    @click="props.expanded = !props.expanded"
+                    @click="toggleExpanded(props)"
                     :title="[props.expanded ? 'click for less details' : 'click for more details']"
                   ><v-icon>{{ props.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</v-icon>{{ props.item.id }}
                 </td>
@@ -118,13 +118,19 @@
             </template>
 
             <template slot="expand" slot-scope="props">
-              <!-- TODO: add a menu (FAB?) with actions for the whole song -->
+              <!-- 
+                  TODO: add a menu (FAB?) with actions for the whole song 
+              -->
               <v-card class="grid blue-grey lighten-4">
                 <v-container fluid grid-list-md>
                   <v-layout row wrap>
 
                     <v-flex md4>
-                      <h6 class="mb-1 subheading">Lyrics:</h6>
+                      <h6 class="mb-1 subheading cursor-pointer" 
+                          title="show full lyrics"
+                          @click="showItemDialog('lyrics')">
+                        <v-icon>subject</v-icon> Lyrics:
+                      </h6>
                       <app-edit-song-textarea-field
                           v-if="userIsAdmin && props.expanded"
                           :song="props.item"
@@ -136,7 +142,10 @@
                     </v-flex>
 
                     <v-flex md4>
-                      <h6 class="mb-1 subheading">Chords:</h6>
+                      <h6 class="mb-1 subheading" :class="[props.item.chords ? 'cursor-pointer' : '']" 
+                          @click="showItemDialog('chords')">
+                        <v-icon>queue_music</v-icon> Chords:
+                      </h6>
                       <app-edit-song-textarea-field
                           v-if="userIsAdmin && props.expanded"
                           :song="props.item"
@@ -149,8 +158,10 @@
                     </v-flex>
 
                     <v-flex md4>
-                      <!-- TODO: this module should be a component! -->
-                      <h6 class="mb-1 subheading">Other Data:</h6>
+                      <!-- 
+                          TODO: this module should be a component! 
+                      -->
+                      <h6 class="mb-1 subheading"><v-icon>reorder</v-icon> Other Data:</h6>
                       <v-card style="height: 103px; line-height: 1.7;"
                        class="grey lighten-3 pa-1 elevation-5 overflow-hidden">
                         <v-card-text class="pa-0">
@@ -209,6 +220,59 @@
 
                     </v-flex>
 
+                    <!-- control further actions for this song -->
+                    <v-tooltip lazy bottom>
+                      <v-speed-dial v-model="fab" top right absolute direction="left" slot="activator">
+                        <v-btn dark fab hover
+                            slot="activator"
+                            color="blue darken-2"
+                            v-model="fab">
+                          <v-icon>settings</v-icon>
+                          <v-icon>close</v-icon>
+                        </v-btn>
+                        <v-tooltip bottom>
+                          <v-btn fab dark small color="green" slot="activator">
+                            <v-icon>airplay</v-icon>
+                          </v-btn>
+                          <span>Start Lyrics Presentation</span>
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                          <v-btn @click.native.stop="showItemDialog('lyrics')"
+                              fab dark small color="indigo" slot="activator">
+                            <v-icon>subject</v-icon>
+                          </v-btn>
+                          <span>Show Lyrics</span>
+                        </v-tooltip>
+                        <v-tooltip bottom v-if="props.item.chords">
+                          <v-btn @click.native.stop="showItemDialog('chords')"
+                               fab dark small color="indigo" slot="activator">
+                            <v-icon>queue_music</v-icon>
+                          </v-btn>
+                          <span>Show Chords</span>
+                        </v-tooltip>
+                        <v-tooltip bottom v-if="props.item.sheetmusic">
+                          <v-btn fab dark small color="red" slot="activator">
+                            <v-icon>music_video</v-icon>
+                          </v-btn>
+                          <span>Show Sheetmusic (if any)</span>
+                        </v-tooltip>
+                      </v-speed-dial>
+                      <span>show actions</span>
+                    </v-tooltip>
+
+                    <v-dialog v-model="itemDialog.show" max-width="500px">
+                      <v-card>
+                        <v-card-title class="headline py-0">
+                          Song {{ itemDialog.what | ucFirst }}
+                          <v-spacer></v-spacer>
+                          <v-btn color="green darken-1" round small fab flat @click.native="itemDialog.show = false"><v-icon>close</v-icon></v-btn>
+                        </v-card-title>
+                        <v-card-text class="pt-0">
+                          <pre>{{ props.item[itemDialog.what] }}</pre>
+                        </v-card-text>
+                      </v-card>
+                    </v-dialog>
+
                   </v-layout>
                   onsong chords?
                 </v-container>
@@ -241,6 +305,11 @@
 
     data () {
       return {
+        fab: false,
+        itemDialog: {
+          show: false,
+          what: ''
+        },
         headers: [
           { text: 'id', value: 'id', align: 'right' },
           { text: 'Title', value: 'title', align: 'left' },
@@ -266,6 +335,14 @@
     },
 
     methods: {
+      showItemDialog (what) {
+        this.itemDialog.show = true
+        this.itemDialog.what = what
+      },
+      toggleExpanded (props) {
+        props.expanded = !props.expanded
+        if (!props.expanded) this.fab = false
+      },
       doThis (id) {
         console.log('doing something with', this.songs[id].title)
       }

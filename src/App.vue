@@ -33,8 +33,9 @@
       <v-toolbar-side-icon 
         v-if="userIsAuthenticated"
         @click.stop="drawer = !drawer"
-        :class="[ userIsAdmin ? '' : 'hidden-lg-and-up' ]"
       ></v-toolbar-side-icon>
+      <!-- REMOVED:
+        :class="[ userIsAdmin ? '' : 'hidden-lg-and-up' ]" -->
 
       <v-btn icon :to="{ name: 'home' }" class="mr-3">
         <img src="/static/cspoticon36.png" alt="c-SPOT icon" width="30px">
