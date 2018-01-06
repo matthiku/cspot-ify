@@ -80,9 +80,9 @@
 
         // publish the selected plan and make sure only one is selected!
         if (props.selected) {
-          this.dialog.selectedPlan = undefined
+          this.$store.dispatch('setDialog', {selectedPlan: undefined})
         } else {
-          this.dialog.selectedPlan = props.item.id
+          this.$store.dispatch('setDialog', {selectedPlan: props.item.id})
           if (this.selected.length > 1) this.selected = []
         }
       }

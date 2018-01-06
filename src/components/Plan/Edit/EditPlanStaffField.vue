@@ -32,10 +32,12 @@
         </v-list-tile>
 
         <p class="text-xs-center ma-0"> 
+
           <app-edit-plan-staff-dialog
             v-if="userOwnsThisPlan"
             :plan="plan" 
           ></app-edit-plan-staff-dialog>
+
           <span v-else-if="!items.length">no staff assigned yet</span>
         </p>
 

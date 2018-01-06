@@ -37,7 +37,7 @@
       </v-list>
     </v-card-text>
 
-    <v-menu offset-y v-model="showMenu" absolute full-width>
+    <v-menu v-if="'just for' < 'a test'" offset-y v-model="showMenu" absolute full-width>
       <v-card-text class="grey lighten-3" slot="activator">
         Lorem ipsum dolor sit amet. This is an item with a menu
       </v-card-text>
@@ -49,9 +49,10 @@
     </v-menu>
 
     <v-card-actions v-if="userOwnsThisPlan">
-      <v-btn flat @click="addSong">Add Song</v-btn>
-      <v-btn flat>Add Item</v-btn>
-      <v-btn flat color="purple">Explore</v-btn>
+      <v-btn small class="primary" @click="addSong"><v-icon>record_voice_over</v-icon>&nbsp;Add Song</v-btn>
+      <v-btn small class="primary">Add Item</v-btn>
+      <v-spacer></v-spacer>
+      <v-btn small color="purple">Explore</v-btn>
       <v-spacer></v-spacer>
       <v-btn icon @click.native="show = !show">
         <v-icon>{{ show ? 'keyboard_arrow_up' : 'help_outline' }}</v-icon>
@@ -108,12 +109,14 @@
           actionId: item.key
         })
       },
+
+      // populate the local plan by finding it with the given plan ID
       getPlan () {
         return this.plans.find(plan => {
           return plan.id === this.planId
         })
       },
-
+      // create a copy of the list of actions for this plan - this enables better handling in this view
       createPlanActionsList () {
         if (!this.plans) return
         this.plan = this.getPlan()

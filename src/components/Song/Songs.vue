@@ -301,12 +301,16 @@
 
                           <app-show-simple-plan-list :planList="planList"></app-show-simple-plan-list>
 
-                          <v-checkbox label="Open selected plan after adding the song"
-                            class="mt-1"
-                            v-model="openPlanAfterAddingSong" light></v-checkbox>
+                          <v-switch class="mt-1"
+                              label="Open selected plan after adding the song"
+                              v-model="openPlanAfterAddingSong" 
+                            ></v-switch>
                         </v-card-text>
                         <v-card-actions>
-                          <v-btn color="green darken-1" round small block @click.native="addSelectedSongToPlan(props.item.key)"> <v-icon>add</v-icon> Add</v-btn>
+                          <v-btn 
+                              :disabled="!dialog.selectedPlan"
+                              color="green darken-1" round small block 
+                              @click.native="addSelectedSongToPlan(props.item.key)"> <v-icon>add</v-icon> Add</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -394,7 +398,7 @@
       this.standAlone = (this.$route.name === 'admin')
 
       if (this.$route.name === 'addsongtoplan' && this.dialog.selectedPlan) {
-        this.pageTitle = 'Select a Song to add to Plan:'
+        this.pageTitle = 'Select a Song to add to your Plan:'
         this.addToPlan = true
       }
 
