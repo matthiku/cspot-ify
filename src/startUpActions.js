@@ -10,8 +10,8 @@ export default function startUpActions (store, router) {
       store.dispatch('fetchUserData', user)
     } else {
       let from = store.getters.oldRoute
-      if (from && from !== 'signin' && from !== 'home') {
-        from = '?from=' + from
+      if (from && from.name !== 'signin' && from.name !== 'home') {
+        from = '?from=' + from.name
       } else {
         from = false
       }

@@ -110,7 +110,9 @@ export default {
     user (value) {
       if (value !== null && value !== undefined) {
         if (this.$store.getters.oldRoute) {
-          this.$router.push({ name: this.$store.getters.oldRoute })
+          this.$router.push({
+            name: this.$store.getters.oldRoute.name,
+            params: this.$store.getters.oldRoute.params })
           this.$store.dispatch('setOldRoute', false)
         } else {
           this.$router.push('/')

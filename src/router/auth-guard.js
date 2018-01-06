@@ -11,7 +11,7 @@ export default (to, from, next) => {
     next()
   } else {
     console.log('no user found, routing to signin page')
-    store.dispatch('setOldRoute', to.name)
+    store.dispatch('setOldRoute', to)
     next('/signin')
   }
 }

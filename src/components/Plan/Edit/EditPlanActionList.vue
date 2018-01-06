@@ -52,7 +52,7 @@
       <v-btn small class="primary" @click="addSong"><v-icon>record_voice_over</v-icon>&nbsp;Add Song</v-btn>
       <v-btn small class="primary">Add Item</v-btn>
       <v-spacer></v-spacer>
-      <v-btn small color="purple">Explore</v-btn>
+      <v-btn small color="purple">big Plan</v-btn>
       <v-spacer></v-spacer>
       <v-btn icon @click.native="show = !show">
         <v-icon>{{ show ? 'keyboard_arrow_up' : 'help_outline' }}</v-icon>
