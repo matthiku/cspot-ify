@@ -66,11 +66,11 @@
     },
 
     created () {
-      this.dialog.selectedPlan = null
+      this.$store.dispatch('setDialog', {selectedPlan: undefined})
       // if only one plan was provided for this list, we can already select it
       if (this.planList && Object.keys(this.planList).length === 1) {
         this.selected = this.planList
-        this.dialog.selectedPlan = this.planList[0].id
+        this.$store.dispatch('setDialog', {selectedPlan: this.planList[0].id})
       }
     },
 

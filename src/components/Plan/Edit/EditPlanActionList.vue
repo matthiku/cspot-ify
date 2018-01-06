@@ -100,7 +100,7 @@
 
     methods: {
       addSong () {
-        this.dialog.selectedPlan = this.plan.id
+        this.$store.dispatch('setDialog', {selectedPlan: this.plan.id})
         this.$router.push({name: 'addsongtoplan'})
       },
       removeAction (item) {

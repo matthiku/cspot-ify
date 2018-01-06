@@ -196,7 +196,7 @@
                                     <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">{{ Object.keys(plan.actions).length }} items</v-chip>
                                   </div>
 
-                                  <app-edit-plan-items-list :planId="plan.id" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-items-list>
+                                  <app-edit-plan-action-list :planId="plan.id" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-action-list>
 
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
@@ -272,7 +272,7 @@ export default {
     },
     openEditDialog (what) {
       if (!this.userOwnsThisPlan) return
-      this.dialog.type = what
+      this.$store.dispatch('setDialog', {type: what})
       this.$store.dispatch('showDialog')
     },
     checkEditing (what) {
