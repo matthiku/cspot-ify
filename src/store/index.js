@@ -7,7 +7,6 @@ import plan from './plan'
 import song from './song'
 import type from './type'
 import role from './role'
-import item from './item'
 
 Vue.use(Vuex)
 
@@ -18,7 +17,6 @@ export const store = new Vuex.Store({
     plan,
     song,
     type,
-    role,
-    item
+    role
   }
 })

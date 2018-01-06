@@ -127,7 +127,7 @@ export default {
 
     addSongToPlan ({commit, dispatch}, payload) {
       commit('setLoading', true)
-      plansRef.child(payload.planId).child('items').push({ id: payload.id, type: 'song' })
+      plansRef.child(payload.planId).child('actions').push({ id: payload.id, type: 'song' })
         .then(() => {
           commit('appendMessage', 'Song added to this plan')
           commit('setLoading', false)

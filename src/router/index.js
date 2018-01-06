@@ -7,21 +7,16 @@ import Home from '@/components/Home'
 
 import Admin from '@/components/Admin/Admin'
 import Users from '@/components/Admin/Users'
-// import User from '@/components/Admin/User'
 
 import Profile from '@/components/User/Profile'
 import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
 
 import Songs from '@/components/Song/Songs'
-import Song from '@/components/Song/Song'
 
 import Plan from '@/components/Plan/Plan'
 import Plans from '@/components/Plan/Plans'
-import CreateItem from '@/components/Plan/CreateItem'
 import CreatePlan from '@/components/Plan/CreatePlan'
-import Item from '@/components/Plan/Item'
-import Items from '@/components/Plan/Items'
 
 Vue.use(Router)
 
@@ -50,27 +45,6 @@ export default new Router({
       props: true
     },
     {
-      path: '/items',
-      name: 'items',
-      component: Items,
-      meta: {title: 'Items List'},
-      beforeEnter: AuthGuard
-    },
-    {
-      path: '/items/:itemId',
-      name: 'item',
-      component: Item,
-      beforeEnter: AuthGuard,
-      props: true
-    },
-    {
-      path: '/createitem',
-      name: 'createitem',
-      component: CreateItem,
-      meta: {title: 'Create new Item'},
-      beforeEnter: AuthGuard
-    },
-    {
       path: '/createplan',
       name: 'createplan',
       meta: {title: 'Create new Plan'},
@@ -89,13 +63,6 @@ export default new Router({
       name: 'songs',
       component: Songs,
       meta: {title: 'Songs'},
-      beforeEnter: AuthGuard
-    },
-    {
-      path: '/song',
-      name: 'song',
-      component: Song,
-      meta: {title: 'Song'},
       beforeEnter: AuthGuard
     },
     {

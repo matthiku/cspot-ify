@@ -5,7 +5,7 @@
       <v-list two-line>
 
         <!-- loop through all plan action items -->
-        <v-list-tile avatar v-for="item in plan.itemList" v-bind:key="item.id">
+        <v-list-tile avatar v-for="item in plan.actionList" v-bind:key="item.id">
 
           <v-list-tile-avatar :title="item.id">
             <v-icon class="grey lighten-1 white--text">{{ item.icon }}</v-icon>
@@ -31,15 +31,15 @@
           </v-list-tile-action>
         </v-list-tile>
 
-        <p class="text-xs-center ma-0"> 
-          <span v-if="!plan.itemList">no items added yet</span>
+        <p class="text-xs-center ma-0">
+          <span v-if="!plan.actionList.length">(no items added yet)</span>
         </p>
       </v-list>
     </v-card-text>
 
     <v-menu offset-y v-model="showMenu" absolute full-width>
       <v-card-text class="grey lighten-3" slot="activator">
-        item 2 Lorem ipsum dolor sit amet. This is an item with a menu
+        Lorem ipsum dolor sit amet. This is an item with a menu
       </v-card-text>
       <v-list>
         <v-list-tile v-for="item in menuItems" :key="item.title" @click="">
@@ -77,7 +77,6 @@
 
     data () {
       return {
-        itemList: [],
         show: false,
         showMenu: false,
         menuItems: [
@@ -97,39 +96,39 @@
         })
       },
 
-      createPlanItemsList () {
-        this.plan.itemList = []
-        this.itemList = []
-        let planItems = this.plan.items
+      createPlanActionsList () {
+        this.plan.actionList = []
+        let itemList = []
+        let planItems = this.plan.actions
         if (!planItems || !this.songs) return
 
         for (let key in planItems) {
-          let item = planItems[key]
+          let action = planItems[key]
           let obj = {
-            type: item.type,
-            id: item.id ? item.id : 0,
+            type: action.type,
+            id: action.id ? action.id : 0,
             key,
             warning: false
           }
-          if (item.type === 'song' && this.songs[item.id]) {
+          if (action.type === 'song' && this.songs[action.id]) {
             obj.icon = 'record_voice_over'
-            obj.title = this.songs[item.id].title
-            obj.book_ref = this.songs[item.id].book_ref
+            obj.title = this.songs[action.id].title
+            obj.book_ref = this.songs[action.id].book_ref
           }
-          this.itemList.push(obj)
+          itemList.push(obj)
         }
-        this.plan.itemList = this.itemList
+        this.plan.actionList = itemList
       }
     },
     created () {
-      this.createPlanItemsList()
+      this.createPlanActionsList()
     },
     watch: {
       plan () {
-        this.createPlanItemsList()
+        this.createPlanActionsList()
       },
       users () {
-        this.createPlanItemsList()
+        this.createPlanActionsList()
       }
     }
   }
