@@ -134,6 +134,17 @@ export default {
         })
         .catch((error) => dispatch('errorHandling', error))
     },
+    // remove an action from a plan
+    // - - payload must contain plan id and action id
+    removeActionFromPlan ({ commit, dispatch }, payload) {
+      commit('setLoading', true)
+      plansRef.child(payload.planId).child('actions').child(payload.actionId).remove()
+        .then(() => {
+          commit('appendMessage', 'Action removed from this plan')
+          commit('setLoading', false)
+        })
+        .catch((error) => dispatch('errorHandling', error))
+    },
 
     // move a plan to the bin
     // - - payload must be the full plan, as we send it to the bin and then delete it

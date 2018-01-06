@@ -193,10 +193,10 @@
                                     <span class="body-2 mr-3">
                                       <v-icon class="mr-3">list</v-icon> Actions
                                     </span>
-                                    <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">{{ Object.keys(plan.items).length }} items</v-chip>
+                                    <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">{{ Object.keys(plan.actions).length }} items</v-chip>
                                   </div>
 
-                                  <app-edit-plan-items-list :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-items-list>
+                                  <app-edit-plan-items-list :planId="plan.id" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-items-list>
 
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
@@ -291,8 +291,7 @@ export default {
         field: that,
         value: this.plan[that]
       })
-    },
-    planAction () {}
+    }
   },
 
   watch: {

@@ -5,26 +5,26 @@
       <v-list two-line>
 
         <!-- loop through all plan action items -->
-        <v-list-tile avatar v-for="item in plan.actionList" v-bind:key="item.id">
+        <v-list-tile avatar v-for="item in actionList" v-bind:key="item.id">
 
           <v-list-tile-avatar :title="item.id">
             <v-icon class="grey lighten-1 white--text">{{ item.icon }}</v-icon>
           </v-list-tile-avatar>
 
           <!-- show actual item detail -->
-          <v-list-tile-content v-show="!item.warning">
+          <v-list-tile-content v-if="!item.warning ">
             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
             <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
           </v-list-tile-content>
 
-          <v-list-tile-content v-show="item.warning">
+          <v-list-tile-content v-if="item.warning" >
             <v-list-tile-sub-title class="red--text mt-0 pt-0">Removing {{ item.book_ref }} ({{ item.title }})?
-              <v-btn flat small @click="removeStaff(item)" color="red">Yes<v-icon>info</v-icon></v-btn>
+              <v-btn flat small @click="removeAction(item)" color="red">Yes<v-icon>info</v-icon></v-btn>
               <v-btn flat small @click="item.warning = false">Cancel<v-icon>highlight_off</v-icon></v-btn>
             </v-list-tile-sub-title>
           </v-list-tile-content>
 
-          <v-list-tile-action v-show="!item.warning" v-if="userOwnsThisPlan">
+          <v-list-tile-action v-if="!item.warning && userOwnsThisPlan">
             <v-btn icon ripple title="remove this item" @click="item.warning = true">
               <v-icon color="red lighten-1">delete</v-icon>
             </v-btn>
@@ -32,7 +32,7 @@
         </v-list-tile>
 
         <p class="text-xs-center ma-0">
-          <span v-if="!plan.actionList.length">(no items added yet)</span>
+          <span v-if="!actionList.length">(no items added yet)</span>
         </p>
       </v-list>
     </v-card-text>
@@ -74,12 +74,20 @@
   export default {
     mixins: [genericMixins, planMixins],
 
-    props: ['plan', 'userOwnsThisPlan'],
+    props: ['planId', 'userOwnsThisPlan'],
+
+    computed: {
+      plans () {
+        return this.$store.getters.plans
+      }
+    },
 
     data () {
       return {
+        plan: {},
         show: false,
         showMenu: false,
+        actionList: [],
         menuItems: [
           { title: 'Edit this item' },
           { title: 'Add item above' },
@@ -97,13 +105,20 @@
       removeAction (item) {
         this.$store.dispatch('removeActionFromPlan', {
           planId: this.plan.id,
-          actionId: item.id
+          actionId: item.key
+        })
+      },
+      getPlan () {
+        return this.plans.find(plan => {
+          return plan.id === this.planId
         })
       },
 
       createPlanActionsList () {
-        this.plan.actionList = []
-        let itemList = []
+        if (!this.plans) return
+        this.plan = this.getPlan()
+        if (!this.plan.id) return
+        this.actionList = []
         let planItems = this.plan.actions
         if (!planItems || !this.songs) return
 
@@ -120,9 +135,9 @@
             obj.title = this.songs[action.id].title
             obj.book_ref = this.songs[action.id].book_ref
           }
-          itemList.push(obj)
+          this.actionList.push(obj)
         }
-        this.plan.actionList = itemList
+        this.plan.actionList = this.actionList
       }
     },
     created () {
@@ -130,6 +145,9 @@
     },
     watch: {
       plan () {
+        this.createPlanActionsList()
+      },
+      plans () {
         this.createPlanActionsList()
       },
       users () {
