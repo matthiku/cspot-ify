@@ -2,7 +2,7 @@
   <v-data-table
       v-model="selected"
       :headers="headers"
-      :items="plans"
+      :items="planList"
       item-key="date"
       hide-actions
       class="elevation-1"
@@ -49,7 +49,7 @@
 <script>
   import genericMixins from '../../../mixins/'
   export default {
-    props: ['plans'],
+    props: ['planList'],
 
     mixins: [genericMixins],
 
@@ -67,6 +67,11 @@
 
     created () {
       this.dialog.selectedPlan = null
+      // if only one plan was provided for this list, we can already select it
+      if (this.planList && Object.keys(this.planList).length === 1) {
+        this.selected = this.planList
+        this.dialog.selectedPlan = this.planList[0].id
+      }
     },
 
     methods: {

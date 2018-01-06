@@ -41,7 +41,8 @@
         <img src="/static/cspoticon36.png" alt="c-SPOT icon" width="30px">
       </v-btn>
 
-      <router-link 
+      <router-link
+        class="mr-3"
         tag="v-toolbar-title"
         :to="{ name: 'home' }" 
         style="cursor: pointer"

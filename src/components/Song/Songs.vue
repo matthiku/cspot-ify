@@ -5,7 +5,7 @@
       <v-layout column align-center>
         <v-card class="w-100">
           <v-card-title>
-            <h5>Song Repository</h5>
+            <h2>{{ pageTitle }}</h2>
             <v-spacer></v-spacer>
             <v-text-field
               append-icon="search"
@@ -23,7 +23,6 @@
               itemKey="key"
               :search="searchString"
               :rows-per-page-items="[10, 15, 25, { text: 'All', value: -1 }]"
-              no-data-text="Song list not populated yet ..."
               no-results-text="No matching songs found"
               class="elevation-1">
 
@@ -39,7 +38,8 @@
             </template>
 
             <template slot="items" slot-scope="props">
-              <tr :class="[props.expanded ? 'blue-grey lighten-2' : '']">
+              <tr class="show-add-button"
+                  :class="[props.expanded ? 'blue-grey lighten-2' : '']">
 
                 <td class="cursor-pointer text-xs-right no-wrap"
                     @click="toggleExpanded(props)"
@@ -64,6 +64,10 @@
                       maxLength="50"
                     ></app-edit-song-field>
                   <span v-else-if="props.item.title_2">({{ props.item.title_2 }})</span>
+
+                  <v-btn v-if="addToPlan" @click="addSelectedSongToPlan(props.item.key)"
+                      class="on-hover-only" small round fab color="primary"
+                      title="add this song to your plan"><v-icon>add</v-icon></v-btn>
                 </td>
 
                 <td>
@@ -295,7 +299,7 @@
                         </v-card-title>
                         <v-card-text class="pt-1">
 
-                          <app-show-simple-plan-list :plans="planList"></app-show-simple-plan-list>
+                          <app-show-simple-plan-list :planList="planList"></app-show-simple-plan-list>
 
                           <v-checkbox label="Open selected plan after adding the song"
                             class="mt-1"
@@ -333,12 +337,14 @@
   import planMixins from '../Plan/mixins'
 
   export default {
-    name: 'SongsList',
+    name: 'SongList',
 
     mixins: [genericMixins, planMixins],
 
     data () {
       return {
+        pageTitle: 'Song Repository',
+        addToPlan: false,
         fab: false,
         planAddDialog: false,
         planList: [],
@@ -387,6 +393,11 @@
       // only show title when this is not a component of the Admin page
       this.standAlone = (this.$route.name === 'admin')
 
+      if (this.$route.name === 'addsongtoplan' && this.dialog.selectedPlan) {
+        this.pageTitle = 'Select a Song to add to Plan:'
+        this.addToPlan = true
+      }
+
       this.createPlanList()
     },
 
@@ -397,16 +408,18 @@
 
         this.planList = []
         this.upcomingPlans.forEach(element => {
-          let leader = this.findRoleInStaff('leader', element.staff)
-          let teacher = this.findRoleInStaff('teacher', element.staff)
-          this.planList.push({
-            id: element.id,
-            date: element.date,
-            type: this.types[element.typeId].name,
-            items: element.items ? Object.keys(element.items).length : 0,
-            leader: leader ? leader.name : 'none',
-            teacher: teacher ? teacher.name : 'none'
-          })
+          if (this.userOwnsPlan(element)) {
+            let leader = this.findRoleInStaff('leader', element.staff)
+            let teacher = this.findRoleInStaff('teacher', element.staff)
+            this.planList.push({
+              id: element.id,
+              date: element.date,
+              type: this.types[element.typeId].name,
+              items: element.items ? Object.keys(element.items).length : 0,
+              leader: leader ? leader.name : 'none',
+              teacher: teacher ? teacher.name : 'none'
+            })
+          }
         })
       },
       showItemDialog (what) {
@@ -418,6 +431,8 @@
         if (!props.expanded) this.fab = false
       },
       addSelectedSongToPlan (id) {
+        if (!id || !this.dialog.selectedPlan) return
+
         this.planAddDialog = false
         this.$store.dispatch('addSongToPlan', { id, planId: this.dialog.selectedPlan })
 
@@ -431,4 +446,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .on-hover-only {
+    display: none;
+  }
+  .show-add-button:hover .on-hover-only {
+    display: inline;
+  }
 </style>

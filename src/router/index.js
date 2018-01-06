@@ -66,6 +66,13 @@ export default new Router({
       beforeEnter: AuthGuard
     },
     {
+      path: '/addsongtoplan',
+      name: 'addsongtoplan',
+      component: Songs,
+      meta: {title: 'Songs'},
+      beforeEnter: AuthGuard
+    },
+    {
       path: '/plans/:planId',
       name: 'plan',
       props: true,

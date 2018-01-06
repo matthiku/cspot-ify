@@ -49,6 +49,7 @@
     </v-menu>
 
     <v-card-actions v-if="userOwnsThisPlan">
+      <v-btn flat @click="addSong">Add Song</v-btn>
       <v-btn flat>Add Item</v-btn>
       <v-btn flat color="purple">Explore</v-btn>
       <v-spacer></v-spacer>
@@ -89,10 +90,14 @@
     },
 
     methods: {
-      removeStaff (item) {
-        this.$store.dispatch('removeStaffFromPlan', {
+      addSong () {
+        this.dialog.selectedPlan = this.plan.id
+        this.$router.push({name: 'addsongtoplan'})
+      },
+      removeAction (item) {
+        this.$store.dispatch('removeActionFromPlan', {
           planId: this.plan.id,
-          staffId: item.id
+          actionId: item.id
         })
       },
 
