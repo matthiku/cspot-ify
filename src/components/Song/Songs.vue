@@ -70,6 +70,9 @@
                       title="add this song to your plan"><v-icon>add</v-icon></v-btn>
                 </td>
 
+                <td class="pa-0"><span class="invisible">{{ props.item.title_2 }}</span></td>
+                <td class="pa-0"><span class="invisible">{{ props.item.lyrics }}</span></td>
+
                 <td>
                   <app-edit-song-field
                       v-if="userIsAdmin && props.expanded"
@@ -358,12 +361,14 @@
           what: ''
         },
         headers: [
-          { text: 'id', value: 'id', align: 'right' },
-          { text: 'Title', value: 'title', align: 'left' },
-          { text: 'Author', value: 'author', align: 'left' },
-          { text: 'Book Ref.', value: 'book_ref', align: 'left' },
-          { text: 'License', value: 'license', align: 'center' },
-          { text: 'Clip', value: 'youtube_id', align: 'left' }
+          { text: 'id', value: 'id', align: 'center', class: 'px-1' },
+          { text: 'Title', value: 'title', align: 'left', class: 'px-1' },
+          { text: '', value: 'title_2', class: 'pa-0' },
+          { text: '', value: 'lyrics', class: 'pa-0' },
+          { text: 'Author', value: 'author', align: 'left', class: 'pl-4' },
+          { text: 'Book Ref.', value: 'book_ref', align: 'left', class: 'px-1' },
+          { text: 'License', value: 'license', align: 'center', class: 'pl-0' },
+          { text: 'Clip', value: 'youtube_id', align: 'center', class: 'pl-0' }
         ],
         selectItems: [
           { text: 'PD' },
@@ -455,5 +460,8 @@
   }
   .show-add-button:hover .on-hover-only {
     display: inline;
+  }
+  .invisible {
+    display: none;
   }
 </style>
