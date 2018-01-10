@@ -39,7 +39,7 @@
                 <v-chip large color="success" class="mr-0" elevation-4
                   :class="[ userIsAdmin ? 'cursor-pointer' : '' ]"
                   @click="openEditDialog('type')">
-                  {{ plan ? types.length ? types[plan.typeId].name : plan.typeId : 'Plan gone' }}</v-chip>
+                  {{ (plan && plan.typeId) ? types.length ? types[plan.typeId].name : plan.typeId : 'Plan gone' }}</v-chip>
                 <app-edit-plan-type-dialog
                   v-if="userIsAdmin" 
                   :plan="plan"
@@ -120,6 +120,9 @@
                                   <div slot="header">
                                     <span class="body-2 mr-3"><v-icon class="mr-3">supervisor_account</v-icon> Staff</span>
                                     <span v-if="!showDetails.staff">
+                                      <v-chip outline color="primary" class="plan-actions-title ma-0">
+                                        {{ Object.keys(plan.staff).length }} staff
+                                      </v-chip>
                                       <span v-if="Object.keys(plan.staff).length" v-for="(staff, index, key) in plan.staff" :key="index" class="caption">
                                         {{ staff.role | ucFirst }}:
                                         <strong v-if="users && users[staff.userId]">{{ users[staff.userId].name | firstWord 
@@ -193,7 +196,7 @@
                                     <span class="body-2 mr-3">
                                       <v-icon class="mr-3">list</v-icon> Actions
                                     </span>
-                                    <v-chip v-if="!showDetails.items" outline color="primary" class="ma-0">{{ Object.keys(plan.actions).length }} items</v-chip>
+                                    <app-show-action-chips v-if="!showDetails.items" :plan="plan"></app-show-action-chips>
                                   </div>
 
                                   <app-edit-plan-action-list :planId="plan.id" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-action-list>
@@ -220,6 +223,13 @@
 
   </v-container>
 </template>
+
+<style>
+  .plan-actions-title > .chip__content {
+    height: inherit !important;
+  }
+</style>
+
 
 <script>
 import genericMixins from '../../mixins'
@@ -248,24 +258,30 @@ export default {
         items: true
       },
       openDateEditingDlg: false,
-      editing: ''
+      editing: '',
+      plan: {}
     }
   },
   computed: {
-    // get plan depending on current route!
-    plan () {
-      if (this.$route && this.$route.name === 'nextsunday') {
-        this.pageTitle = 'This Sunday\'s Plan'
-        return this.$store.getters.nextSunday
-      }
-      return this.$store.getters.plan(this.$route.params.planId)
-    },
     userOwnsThisPlan () {
       return this.userOwnsPlan(this.plan)
     }
   },
 
+  created () {
+    this.getPlan()
+  },
+
   methods: {
+    getPlan () {
+      // get plan depending on current route!
+      if (this.$route && this.$route.name === 'nextsunday') {
+        this.pageTitle = 'This Sunday\'s Plan'
+        this.plan = this.$store.getters.nextSunday
+        return
+      }
+      this.plan = this.$store.getters.plan(this.$route.params.planId)
+    },
     openDateEditing () {
       if (!this.userOwnsThisPlan) return
       this.openDateEditingDlg = !this.openDateEditingDlg
@@ -295,6 +311,10 @@ export default {
   },
 
   watch: {
+    $route () {
+      console.log('route changed!')
+      this.getPlan()
+    },
     plan () {
       if (this.plan) return
       // return to list of plans if this plan becomes void

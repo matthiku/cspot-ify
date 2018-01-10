@@ -147,6 +147,9 @@
       this.createPlanActionsList()
     },
     watch: {
+      planId () {
+        this.createPlanActionsList()
+      },
       plan () {
         this.createPlanActionsList()
       },

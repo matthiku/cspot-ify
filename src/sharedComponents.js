@@ -10,6 +10,7 @@ import EditPlanStaffField from './components/Plan/Edit/EditPlanStaffField'
 import EditPlanActionList from './components/Plan/Edit/EditPlanActionList'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 import ShowListOfPlans from './components/Plan/View/Plan.vue'
+import ShowActionsChips from './components/Plan/View/ActionsChips.vue'
 import ShowSimplePlanList from './components/Plan/View/PlanList.vue'
 
 import EditSongField from './components/Song/Edit/EditSongField'
@@ -32,6 +33,7 @@ export default function sharedComponents () {
   Vue.component('app-edit-plan-date-time-dialog', EditPlanDateTimeDialog)
   Vue.component('app-delete-plan-dialog', DeletePlanDialog)
   Vue.component('app-show-list-of-plans', ShowListOfPlans)
+  Vue.component('app-show-action-chips', ShowActionsChips)
   Vue.component('app-show-simple-plan-list', ShowSimplePlanList)
 
   Vue.component('app-edit-song-textarea-field', EditSongTextAreaField)
