@@ -85,6 +85,7 @@ export default {
         .then(data => {
           const values = data.val()
           commit('setUsers', values)
+          commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
     },

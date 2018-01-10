@@ -3,7 +3,7 @@
     <v-slide-y-transition mode="out-in">
 
       <v-layout column align-center>
-        <h5 v-if="!standAlone">User List</h5>
+        <h2 v-if="!standAlone">User List</h2>
 
         <v-data-table
             v-bind:headers="headers"
@@ -26,9 +26,10 @@
               </v-avatar>
             </td>
 
-            <td class="text-xs-right">{{ props.item.email }}</td>
-
-            <td class="text-xs-right">{{ props.item.verified }}</td>
+            <td class="text-xs-right mr-0 pr-0">
+              {{ props.item.email }}
+              <v-icon :color="props.item.verified ? 'green' : 'red'">{{ props.item.verified ? 'check' : 'close' }}</v-icon>
+            </td>
 
             <td class="text-xs-right">
               <span v-for="(role, key) in props.item.roles" :key="key">
@@ -53,8 +54,7 @@
         headers: [
           { text: 'id', value: 'id', align: 'left', sortable: false },
           { text: 'Name', value: 'name' },
-          { text: 'Email Address', value: 'email' },
-          { text: 'Verified', value: 'verfied' },
+          { text: 'Email Address - Verified?', value: 'email', class: 'mr-0 pr-0' },
           { text: 'Role(s)', value: 'roles' }
         ],
         standAlone: true,
@@ -63,7 +63,7 @@
     },
     created () {
       // only show title when this is no a component of the Admin page
-      this.standAlone = this.$router.name === 'admin'
+      this.standAlone = this.$route.name === 'admin'
 
       if (this.userIsAdmin) {
         this.headers[0].text = 'id (click id to edit item)'
@@ -77,6 +77,7 @@
     },
     methods: {
       updateUsersList () {
+        this.userList = []
         // morph the users object into an array of users
         for (let key in this.users) {
           this.userList.push(this.users[key])
@@ -85,7 +86,3 @@
     }
   }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
