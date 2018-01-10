@@ -5,9 +5,9 @@
       <v-list two-line>
 
         <!-- loop through all plan action items -->
-        <v-list-tile avatar v-for="item in actionList" v-bind:key="item.id">
+        <v-list-tile avatar v-for="item in actionList" v-bind:key="item.key">
 
-          <v-list-tile-avatar :title="item.id">
+          <v-list-tile-avatar :title="item.value">
             <v-icon class="grey lighten-1 white--text">{{ item.icon }}</v-icon>
           </v-list-tile-avatar>
 
@@ -50,7 +50,7 @@
 
     <v-card-actions v-if="userOwnsThisPlan">
       <v-btn small class="primary" @click="addSong"><v-icon>record_voice_over</v-icon>&nbsp;Add Song</v-btn>
-      <v-btn small class="primary">Add Item</v-btn>
+      <v-btn small class="primary" @click="editGenericItem=true"><v-icon>menu</v-icon>&nbsp; Add Item</v-btn>
       <v-spacer></v-spacer>
       <v-btn small color="purple">big Plan</v-btn>
       <v-spacer></v-spacer>
@@ -61,6 +61,17 @@
     <v-slide-y-transition>
       <v-card-text v-show="show">
         I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
+      </v-card-text>
+    </v-slide-y-transition>
+    <v-slide-y-transition>
+      <v-card-text v-show="editGenericItem">
+        <v-text-field
+            @keyup.enter="addGenItem"
+            label="Item text"
+            v-model="genItemText"
+            autofocus
+            clearable
+          ></v-text-field>
       </v-card-text>
     </v-slide-y-transition>
 
@@ -87,6 +98,8 @@
       return {
         plan: {},
         show: false,
+        editGenericItem: false,
+        genItemText: '',
         showMenu: false,
         actionList: [],
         menuItems: [
@@ -99,6 +112,10 @@
     },
 
     methods: {
+      addGenItem () {
+        this.editGenericItem = false
+        this.$store.dispatch('addActionItemToPlan', { value: this.genItemText, planId: this.dialog.selectedPlan, type: 'text' })
+      },
       addSong () {
         this.$store.dispatch('setDialog', {selectedPlan: this.plan.id})
         this.$router.push({name: 'addsongtoplan'})
@@ -129,14 +146,18 @@
           let action = planItems[key]
           let obj = {
             type: action.type,
-            id: action.id ? action.id : 0,
+            value: action.value ? action.value : 0,
             key,
             warning: false
           }
-          if (action.type === 'song' && this.songs[action.id]) {
+          if (action.type === 'song' && this.songs[action.value]) {
             obj.icon = 'record_voice_over'
-            obj.title = this.songs[action.id].title
-            obj.book_ref = this.songs[action.id].book_ref
+            obj.title = this.songs[action.value].title
+            obj.book_ref = this.songs[action.value].book_ref
+          }
+          if (action.type === 'text') {
+            obj.icon = 'menu'
+            obj.title = action.value
           }
           this.actionList.push(obj)
         }

@@ -125,11 +125,11 @@ export default {
         .catch((error) => dispatch('errorHandling', error))
     },
 
-    addSongToPlan ({commit, dispatch}, payload) {
+    addActionItemToPlan ({commit, dispatch}, payload) {
       commit('setLoading', true)
-      plansRef.child(payload.planId).child('actions').push({ id: payload.id, type: 'song' })
+      plansRef.child(payload.planId).child('actions').push({ value: payload.value, type: payload.type })
         .then(() => {
-          commit('appendMessage', 'Song added to this plan')
+          commit('appendMessage', payload.type + ' added to this plan')
           commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))

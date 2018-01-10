@@ -2,7 +2,9 @@
   <span>
 
     <v-chip v-if="songsCount" outline color="primary" class="plan-actions-title ma-0">
-      {{ songsCount }} songs
+      <v-icon color="primary">record_voice_over</v-icon> &nbsp;
+      {{ songsCount }} 
+      songs
     </v-chip>
 
     <v-chip v-if="othersCounts" outline color="primary" class="plan-actions-title ma-0">

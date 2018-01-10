@@ -443,7 +443,7 @@
         if (!id || !this.dialog.selectedPlan) return
 
         this.planAddDialog = false
-        this.$store.dispatch('addSongToPlan', { id, planId: this.dialog.selectedPlan })
+        this.$store.dispatch('addActionItemToPlan', { value: id, planId: this.dialog.selectedPlan, type: 'song' })
 
         if (this.openPlanAfterAddingSong) {
           this.$router.push({name: 'plan', params: { planId: this.dialog.selectedPlan }})
