@@ -38,6 +38,7 @@ export default {
     },
 
     createStaffList (plan) {
+      if (!plan) return
       plan.staffList = []
       this.items = []
       let staff = plan.staff

@@ -97,6 +97,7 @@ export default {
       plansRef.child(payload.id).update(updateObj)
         .then(() => {
           commit('setLoading', false)
+          dispatch('refreshPlans')
           commit('setMessage', 'Plan successfully updated.')
         })
         .catch((error) => dispatch('errorHandling', error))
