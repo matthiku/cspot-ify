@@ -16,6 +16,12 @@ Vue.use(Vuetify, {
 })
 Vue.config.productionTip = false
 
+// provide the moment library to all components
+import moment from 'moment-timezone'
+moment.tz.setDefault('UTZ')
+// add moment to the Vue prototype, so that we can use it in all components!
+Object.defineProperty(Vue.prototype, '$moment', { get () { return this.$root.moment } })
+
 // register the data filters
 import filters from './filters/'
 filters()
@@ -31,6 +37,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  data: { moment },
   render: h => h(App),
   created () {
     startUpActions(store, router)

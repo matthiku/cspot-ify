@@ -184,7 +184,6 @@
 <script>
 import genericMixins from '../../mixins/'
 import planMixins from './mixins'
-import * as moment from 'moment'
 
 export default {
   data () {
@@ -197,7 +196,7 @@ export default {
       imageB64: null,
       image: null,
       date: null,
-      onlyFutureDays: {min: moment().format('YYYY-MM-DD'), max: '2099-12-31'},
+      onlyFutureDays: {min: this.$moment().format('YYYY-MM-DD'), max: '2099-12-31'},
       time: '',
       endTime: '',
       minMaxHourValues: {min: 0, max: 23},
@@ -214,17 +213,17 @@ export default {
       return this.$store.getters.newPlanId
     },
     formIsValid () {
-      return this.typeId && this.dateTime && moment(this.dateTime).isValid()
+      return this.typeId && this.dateTime && this.$moment(this.dateTime).isValid()
     },
     dateTime () {
       if (!this.date || !this.time) return null
-      return moment(this.date + 'T' + this.time)
+      return this.$moment(this.date + 'T' + this.time)
     },
     endDateTime () {
       if (!this.date) return null
       // end time is not required - just use the start time
       if (!this.endTime) return this.dateTime
-      return moment(this.date + 'T' + this.endTime)
+      return this.$moment(this.date + 'T' + this.endTime)
     },
     plans () {
       return this.$store.getters.plans
@@ -290,7 +289,7 @@ export default {
       // and the presence of plans on those possible dates
       if (this.type.weekday && this.type.weekday * 1 > -1) {
         let weekday = this.type.weekday * 1
-        let newDate = moment()
+        let newDate = this.$moment()
         let diff = weekday - newDate.weekday()
         if (diff < 0) diff += 7
         newDate.add(diff, 'day')
@@ -301,7 +300,7 @@ export default {
         do {
           ctrl -= 1
           check = this.plans.find(plan => {
-            return moment(plan.date).isSame(newDate, 'day') && plan.typeId === this.typeId
+            return this.$moment(plan.date).isSame(newDate, 'day') && plan.typeId === this.typeId
           })
           // add more days to check for a free day
           if (check && check.date) newDate.add(7, 'd')

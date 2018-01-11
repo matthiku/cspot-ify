@@ -118,7 +118,6 @@
 
 <script>
 import genericMixins from '../../../mixins'
-import * as moment from 'moment'
 
 export default {
   name: 'editPlanDateTimeDialog',
@@ -140,8 +139,8 @@ export default {
   methods: {
     saveDate () {
       this.dateEditingDlg = false
-      let date = moment(this.startDate + 'T' + this.startTime).format()
-      let end = moment(this.startDate + 'T' + this.endTime).format()
+      let date = this.$moment(this.startDate + 'T' + this.startTime).format()
+      let end = this.$moment(this.startDate + 'T' + this.endTime).format()
       // do not submit if nothing has changed
       if (date === this.plan.date && end === this.plan.end) return
       if (!(date !== this.plan.date || end !== this.plan.end)) return
@@ -159,9 +158,9 @@ export default {
     },
     updateDates () {
       if (!this.plan) return
-      this.startDate = moment(this.plan.date).format('YYYY-MM-DD')
-      this.startTime = moment(this.plan.date).format('HH:mm')
-      this.endTime = moment(this.plan.end).format('HH:mm')
+      this.startDate = this.$moment(this.plan.date).format('YYYY-MM-DD')
+      this.startTime = this.$moment(this.plan.date).format('HH:mm')
+      this.endTime = this.$moment(this.plan.end).format('HH:mm')
     }
   },
 
