@@ -34,7 +34,7 @@
                 </v-flex>
 
                 <!-- iterate through each registered plan -->
-                <app-show-list-of-plans :plans="upcomingPlans"></app-show-list-of-plans>
+                <app-show-list-of-plans></app-show-list-of-plans>
                 
               </v-layout>
             </v-container>

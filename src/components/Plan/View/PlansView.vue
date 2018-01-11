@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-flex xs12 :key="plan.id" v-for="plan in plans">
+    <v-flex xs12 :key="plan.id" v-for="plan in listedPlans">
       <v-card class="accent mb-2">
         <v-container fluid class="pa-0">
           <v-layout row>
@@ -48,10 +48,30 @@ export default {
 
   mixins: [genericMixins, planMixins],
 
+  data () {
+    return {
+      listedPlans: []
+    }
+  },
+
+  computed: {
+    upcomingPlans () {
+      return this.$store.getters.futurePlans
+    }
+  },
+
   methods: {
     showSinglePlan (id) {
       // navigate to single plan form
       this.$router.push({name: 'plan', params: {planId: id}})
+    }
+  },
+
+  created () {
+    if (this.$route && this.$route.name === 'home') {
+      this.listedPlans = this.upcomingPlans
+    } else {
+      this.listedPlans = this.plans
     }
   }
 }

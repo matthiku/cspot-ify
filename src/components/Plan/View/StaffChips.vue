@@ -36,7 +36,7 @@ export default {
 
   computed: {
     staffList () {
-      if (!this.plan.staffList) this.createStaffList(this.plan)
+      if (!this.plan.staffList || !this.plan.staffList.length) this.createStaffList(this.plan)
       return this.plan.staffList
     }
   }
