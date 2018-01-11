@@ -68,37 +68,17 @@ export default {
         planId: this.plan.id,
         staffId: item.id
       })
-    },
-
-    createStaffList () {
-      this.plan.staffList = []
-      this.items = []
-      let staff = this.plan.staff
-      if (!staff) return
-
-      for (let key in staff) {
-        let item = staff[key]
-        if (!this.users || !this.users[item.userId]) continue
-        this.items.push({
-          id: key,
-          icon: this.roles[item.role].icon,
-          role: item.role,
-          userName: this.users[item.userId].name,
-          warning: false
-        })
-      }
-      this.plan.staffList = this.items
     }
   },
   created () {
-    this.createStaffList()
+    this.createStaffList(this.plan)
   },
   watch: {
     plan () {
-      this.createStaffList()
+      this.createStaffList(this.plan)
     },
     users () {
-      this.createStaffList()
+      this.createStaffList(this.plan)
     }
   }
 }

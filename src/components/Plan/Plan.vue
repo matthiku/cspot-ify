@@ -117,23 +117,9 @@
                               <!-- show and edit plan STAFF -->
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.staff" :class="[showDetails.staff ? 'green lighten-3' : '']">
-                                  <div slot="header">
+                                  <div slot="header">                                    
                                     <span class="body-2 mr-3"><v-icon class="mr-3">supervisor_account</v-icon> Staff</span>
-                                    <span v-if="!showDetails.staff">
-                                      <v-chip outline color="primary" class="plan-actions-title ma-0">
-                                        {{ Object.keys(plan.staff).length }} staff
-                                      </v-chip>
-                                      <span v-if="Object.keys(plan.staff).length" v-for="(staff, index, key) in plan.staff" :key="index" class="caption">
-                                        {{ staff.role | ucFirst }}:
-                                        <strong v-if="users && users[staff.userId]">{{ users[staff.userId].name | firstWord 
-                                          }}</strong><span v-else>(invalid user ID: {{ staff 
-                                          }})</span><span 
-                                          v-if="Object.keys(plan.staff).length > key + 1">,</span>
-                                      </span>
-                                    </span>
-                                    <span class="caption" 
-                                        v-if="!showDetails.staff && (!plan.staff || (plan.staff && !Object.keys(plan.staff).length) )"
-                                      >(no staff assigned yet)</span>
+                                    <app-show-staff-chips v-if="!showDetails.staff" :plan="plan"></app-show-staff-chips>
                                   </div>
                                   <app-edit-plan-staff-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-field>
                                 </v-expansion-panel-content>
@@ -278,9 +264,11 @@ export default {
       if (this.$route && this.$route.name === 'nextsunday') {
         this.pageTitle = 'This Sunday\'s Plan'
         this.plan = this.$store.getters.nextSunday
-        return
+      } else {
+        this.plan = this.$store.getters.plan(this.$route.params.planId)
       }
-      this.plan = this.$store.getters.plan(this.$route.params.planId)
+      // create Staff List property of plan
+      this.createStaffList(this.plan)
     },
     openDateEditing () {
       if (!this.userOwnsThisPlan) return
@@ -315,6 +303,7 @@ export default {
       this.getPlan()
     },
     plans () {
+      // we need to update the plan here if the plan list has changed
       this.getPlan()
     },
     plan () {
