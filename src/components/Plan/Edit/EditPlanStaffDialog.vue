@@ -4,7 +4,7 @@
     <v-btn small
       class="primary ma-0 pl-0"
       title="add staff"
-      @click.stop="staffEditingDlg = true" 
+      @click.stop="startAdding" 
       slot="activator"
     >Add Personell &nbsp;<v-icon class="white--text">edit</v-icon></v-btn>
 
@@ -87,6 +87,11 @@ export default {
   },
 
   methods: {
+    startAdding () {
+      this.staffEditingDlg = true
+      // if staffList is still empty, pre-select role 'leader'
+      if (!this.plan.staffList.length) this.role = {text: 'leader', value: 'leader'}
+    },
     saveStaff () {
       this.staffEditingDlg = false
       this.$store.dispatch('addStaffToPlan', {
@@ -115,7 +120,7 @@ export default {
       if (!role || !this.roles[role]) return
       let ul = []
       for (let user in this.roles[role].users) {
-        ul.push({ id: user, name: this.users[user].name })
+        ul.push({ id: user, name: this.users[user].name || this.users[user].email })
       }
       this.usersList = ul
       // already select the user in the form if there's only one
@@ -123,7 +128,7 @@ export default {
         this.person = ul[0]
       }
     },
-    // checking if parents wants this component to appear!
+    // checking if parent wants this component to appear!
     dialogShow () {
       if (this.dialog.type !== 'staff') return
       this.staffEditingDlg = this.dialogShow

@@ -257,7 +257,10 @@ export default {
   created () {
     this.getPlan()
     // pre-open staff panel if staff list is empty
-    if (!this.plan.staffList.length) this.showDetails.staff = true
+    if (!this.plan.staffList.length) {
+      this.showDetails.staff = true
+      this.showDetails.items = false
+    }
   },
 
   methods: {
