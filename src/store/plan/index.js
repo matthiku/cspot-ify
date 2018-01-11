@@ -7,7 +7,7 @@ export default {
     newPlanId: null
   },
 
-  // M U T A T I O N S
+  // M U T A T I O N S  (commits)
   mutations: {
 
     setPlans (state, payload) {
@@ -23,7 +23,7 @@ export default {
     }
   },
 
-  // A C T I O N S
+  // A C T I O N S  (dispatches)
   actions: {
 
     refreshPlans ({commit, dispatch}) {
@@ -126,10 +126,19 @@ export default {
     },
 
     addActionItemToPlan ({commit, dispatch}, payload) {
+      if (!payload.planId) {
+        dispatch('errorHandling', 'Error when trying to add action item: planId missing!')
+        return
+      }
+      if (!payload.type) {
+        dispatch('errorHandling', 'Error when trying to add action item: action type missing!')
+        return
+      }
       commit('setLoading', true)
       plansRef.child(payload.planId).child('actions').push({ value: payload.value, type: payload.type })
         .then(() => {
-          commit('appendMessage', payload.type + ' added to this plan')
+          commit('appendMessage', '"' + payload.type + '" item added to this plan')
+          dispatch('refreshPlans')
           commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))
@@ -141,6 +150,7 @@ export default {
       plansRef.child(payload.planId).child('actions').child(payload.actionId).remove()
         .then(() => {
           commit('appendMessage', 'Action removed from this plan')
+          dispatch('refreshPlans')
           commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))

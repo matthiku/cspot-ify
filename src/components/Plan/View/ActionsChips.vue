@@ -8,6 +8,7 @@
     </v-chip>
 
     <v-chip v-if="othersCounts" outline color="primary" class="plan-actions-title ma-0">
+      <v-icon color="primary">menu</v-icon> &nbsp;
       {{ othersCounts }} items
     </v-chip>
 
@@ -25,25 +26,33 @@
 export default {
   props: ['plan'],
 
-  data () {
-    return {
-      songsCount: 0,
-      scripturesCount: 0,
-      othersCounts: 0
+  computed: {
+    songsCount () {
+      return this.getCounter(this.plan.actionList, 'song')
+    },
+    scripturesCount () {
+      return this.getCounter(this.plan.actionList, 'scripture')
+    },
+    othersCounts () {
+      return this.getCounter(this.plan.actionList, 'text')
+    }
+  },
+
+  methods: {
+    getCounter (actions, type) {
+      if (!this.plan) return
+      if (!actions) return
+
+      let counter = 0
+      for (let index = 0; index < actions.length; index++) {
+        const item = actions[index]
+        if (item.type === type) counter++
+      }
+      return counter
     }
   },
 
   created () {
-    if (!this.plan) return
-    if (!this.plan.actionList) return
-
-    let actions = this.plan.actionList
-    for (let index = 0; index < actions.length; index++) {
-      const item = actions[index]
-      if (item.type === 'song') this.songsCount++
-      else if (item.type === 'scripture') this.scripturesCount++
-      else this.othersCounts++
-    }
   }
 }
 </script>

@@ -5,6 +5,9 @@ export default {
     },
     songs () {
       return this.$store.getters.songs
+    },
+    plans () {
+      return this.$store.getters.plans
     }
   },
 

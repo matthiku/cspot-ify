@@ -312,7 +312,9 @@ export default {
 
   watch: {
     $route () {
-      console.log('route changed!')
+      this.getPlan()
+    },
+    plans () {
       this.getPlan()
     },
     plan () {

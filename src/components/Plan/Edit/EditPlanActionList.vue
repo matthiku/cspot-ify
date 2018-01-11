@@ -17,6 +17,7 @@
             <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
           </v-list-tile-content>
 
+          <!-- view when deleting an item -->
           <v-list-tile-content v-if="item.warning" >
             <v-list-tile-sub-title class="red--text mt-0 pt-0">Removing {{ item.book_ref }} ({{ item.title }})?
               <v-btn flat small @click="removeAction(item)" color="red">Yes<v-icon>info</v-icon></v-btn>
@@ -24,6 +25,7 @@
             </v-list-tile-sub-title>
           </v-list-tile-content>
 
+          <!-- action buttons -->
           <v-list-tile-action v-if="!item.warning && userOwnsThisPlan">
             <v-btn icon ripple title="remove this item" @click="item.warning = true">
               <v-icon color="red lighten-1">delete</v-icon>
@@ -114,7 +116,7 @@
     methods: {
       addGenItem () {
         this.editGenericItem = false
-        this.$store.dispatch('addActionItemToPlan', { value: this.genItemText, planId: this.dialog.selectedPlan, type: 'text' })
+        this.$store.dispatch('addActionItemToPlan', { value: this.genItemText, planId: this.plan.id, type: 'text' })
       },
       addSong () {
         this.$store.dispatch('setDialog', {selectedPlan: this.plan.id})
