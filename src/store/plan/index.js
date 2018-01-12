@@ -27,6 +27,7 @@ export default {
   actions: {
 
     refreshPlans ({commit, dispatch}) {
+      commit('setLoading', true)
       plansRef.once('value')
       .then((data) => {
         dispatch('loadPlans', data)

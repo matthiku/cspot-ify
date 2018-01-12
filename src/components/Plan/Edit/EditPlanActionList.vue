@@ -39,6 +39,7 @@
       </v-list>
     </v-card-text>
 
+    <!-- sample menu option -->
     <v-menu v-if="'just for' < 'a test'" offset-y v-model="showMenu" absolute full-width>
       <v-card-text class="grey lighten-3" slot="activator">
         Lorem ipsum dolor sit amet. This is an item with a menu
@@ -50,8 +51,10 @@
       </v-list>
     </v-menu>
 
+    <!-- action buttons -->
     <v-card-actions v-if="userOwnsThisPlan">
       <v-btn small class="primary" @click="addSong"><v-icon>record_voice_over</v-icon>&nbsp;Add Song</v-btn>
+      <v-btn small class="primary" @click="addScripture=true"><v-icon>local_library</v-icon>&nbsp; Add Scripture</v-btn>
       <v-btn small class="primary" @click="editGenericItem=true"><v-icon>menu</v-icon>&nbsp; Add Item</v-btn>
       <v-spacer></v-spacer>
       <v-btn small color="purple">big Plan</v-btn>
@@ -60,11 +63,15 @@
         <v-icon>{{ show ? 'keyboard_arrow_up' : 'help_outline' }}</v-icon>
       </v-btn>
     </v-card-actions>
+
+    <!-- show helper text -->
     <v-slide-y-transition>
       <v-card-text v-show="show">
         I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
       </v-card-text>
     </v-slide-y-transition>
+
+    <!-- add generic item (text) -->
     <v-slide-y-transition>
       <v-card-text v-show="editGenericItem">
         <v-text-field
@@ -119,6 +126,10 @@
         this.$store.dispatch('addActionItemToPlan', { value: this.genItemText, planId: this.plan.id, type: 'text' })
       },
       addSong () {
+        this.$store.dispatch('setDialog', {selectedPlan: this.plan.id})
+        this.$router.push({name: 'addsongtoplan'})
+      },
+      addScripture () {
         this.$store.dispatch('setDialog', {selectedPlan: this.plan.id})
         this.$router.push({name: 'addsongtoplan'})
       },

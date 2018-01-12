@@ -175,12 +175,12 @@
 
                               <v-divider></v-divider>
 
-                              <!-- show and edit plan ITEMS -->
+                              <!-- show and edit plan ACTIVITIES -->
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.items" :class="[showDetails.items ? 'green lighten-3' : '']">
                                   <div slot="header">
                                     <span class="body-2 mr-3">
-                                      <v-icon class="mr-3">list</v-icon> Actions
+                                      <v-icon class="mr-3">list</v-icon> Activities
                                     </span>
                                     <app-show-action-chips v-if="!showDetails.items" :plan="plan"></app-show-action-chips>
                                   </div>
@@ -244,40 +244,41 @@ export default {
         items: true
       },
       openDateEditingDlg: false,
-      editing: '',
-      plan: {}
+      editing: ''
     }
   },
+
   computed: {
+    plan () {
+      let plan
+      // get plan depending on current route!
+      if (this.$route && this.$route.name === 'nextsunday') {
+        this.pageTitle = 'This Sunday\'s Plan'
+        plan = this.$store.getters.nextSunday
+      } else {
+        plan = this.$store.getters.plan(this.$route.params.planId)
+      }
+      if (!plan) {
+        // this.$router.push({name: 'plans'})
+      }
+      // create Staff List property of plan
+      this.createStaffList(plan)
+      // open the staff list panel if no staff is assigned yet
+      if (plan && !plan.staffList.length) {
+        this.showDetails.staff = true
+        this.showDetails.items = false
+      } else {
+        this.showDetails.staff = false
+        this.showDetails.items = true
+      }
+      return plan
+    },
     userOwnsThisPlan () {
       return this.userOwnsPlan(this.plan)
     }
   },
 
-  created () {
-    this.getPlan()
-    // pre-open staff panel if staff list is empty
-    if (!this.plan.staffList.length) {
-      this.showDetails.staff = true
-      this.showDetails.items = false
-    }
-  },
-
   methods: {
-    getPlan () {
-      // get plan depending on current route!
-      if (this.$route && this.$route.name === 'nextsunday') {
-        this.pageTitle = 'This Sunday\'s Plan'
-        this.plan = this.$store.getters.nextSunday
-      } else {
-        this.plan = this.$store.getters.plan(this.$route.params.planId)
-      }
-      if (!this.plan) {
-        this.$router.push({name: 'plans'})
-      }
-      // create Staff List property of plan
-      this.createStaffList(this.plan)
-    },
     openDateEditing () {
       if (!this.userOwnsThisPlan) return
       this.openDateEditingDlg = !this.openDateEditingDlg
@@ -307,14 +308,11 @@ export default {
   },
 
   watch: {
-    $route () {
-      this.getPlan()
-    },
-    plans () {
-      // we need to update the plan here if the plan list has changed
-      this.getPlan()
-    },
     plan () {
+      if (this.plan && !this.plan.staffList.length) {
+        this.showDetails.staff = true
+        this.showDetails.items = false
+      }
       if (this.plan) return
       // return to list of plans if this plan becomes void
       this.$router.push({name: 'plans'})
