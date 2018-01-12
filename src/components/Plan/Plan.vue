@@ -272,6 +272,9 @@ export default {
       } else {
         this.plan = this.$store.getters.plan(this.$route.params.planId)
       }
+      if (!this.plan) {
+        this.$router.push({name: 'plans'})
+      }
       // create Staff List property of plan
       this.createStaffList(this.plan)
     },
@@ -314,9 +317,7 @@ export default {
     plan () {
       if (this.plan) return
       // return to list of plans if this plan becomes void
-      if (this.$route.name === 'plans') {
-        this.$router.push({name: 'plans'})
-      }
+      this.$router.push({name: 'plans'})
     }
   }
 }

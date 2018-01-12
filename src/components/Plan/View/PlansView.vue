@@ -48,15 +48,13 @@ export default {
 
   mixins: [genericMixins, planMixins],
 
-  data () {
-    return {
-      listedPlans: []
-    }
-  },
-
   computed: {
-    upcomingPlans () {
-      return this.$store.getters.futurePlans
+    listedPlans () {
+      if (this.$route && this.$route.name === 'home') {
+        return this.$store.getters.futurePlans
+      } else {
+        return this.plans
+      }
     }
   },
 
@@ -64,14 +62,6 @@ export default {
     showSinglePlan (id) {
       // navigate to single plan form
       this.$router.push({name: 'plan', params: {planId: id}})
-    }
-  },
-
-  created () {
-    if (this.$route && this.$route.name === 'home') {
-      this.listedPlans = this.upcomingPlans
-    } else {
-      this.listedPlans = this.plans
     }
   }
 }

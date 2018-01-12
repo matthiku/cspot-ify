@@ -27,6 +27,7 @@ export default {
     },
 
     findRoleInStaff (requestedRole, staff) {
+      if (!staff) return null
       // loop through the staff list (an object) and find the requested role
       let user = { name: 'pending', id: null }
       Object.entries(staff).forEach(

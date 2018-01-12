@@ -198,7 +198,7 @@ export default {
     plans (state) {
       // return all plans ordered by date
       return state.plans.sort((planA, planB) => {
-        return planA.date > planB.date
+        return planA.date < planB.date
       })
     },
 
