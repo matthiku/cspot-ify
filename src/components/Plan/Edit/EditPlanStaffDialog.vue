@@ -12,7 +12,7 @@
       <v-card-title>
         <div>
           <h5 class="headline mb-0">Add/Edit Staff</h5>
-          <div>Select first the task and then the person</div> 
+          <div>First, select the task; then the person</div> 
         </div>
       </v-card-title>
 

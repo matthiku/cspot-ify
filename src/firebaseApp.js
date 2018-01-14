@@ -18,3 +18,5 @@ export const songsRef = firebaseApp.database().ref().child('songs')
 export const typesRef = firebaseApp.database().ref().child('types')
 export const rolesRef = firebaseApp.database().ref().child('roles')
 export const itemsRef = firebaseApp.database().ref().child('items')
+
+export const bibleRef = firebaseApp.database().ref().child('biblebooks')

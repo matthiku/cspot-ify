@@ -8,6 +8,9 @@ export default {
     },
     plans () {
       return this.$store.getters.plans
+    },
+    bibleBooks () {
+      return this.$store.getters.bibleBooks
     }
   },
 
@@ -57,6 +60,13 @@ export default {
         })
       }
       plan.staffList = this.items
+    }
+  },
+
+  created () {
+    // make sure we load this at least once
+    if (this.bibleBooks === '') {
+      this.$store.dispatch('loadBiblebooks')
     }
   }
 }

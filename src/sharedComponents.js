@@ -8,6 +8,7 @@ import EditPlanStaffDialog from './components/Plan/Edit/EditPlanStaffDialog'
 import EditPlanInfoField from './components/Plan/Edit/EditPlanInfoField'
 import EditPlanStaffField from './components/Plan/Edit/EditPlanStaffField'
 import EditPlanActionList from './components/Plan/Edit/EditPlanActionList'
+import EditPlanActionScriptureDialog from './components/Plan/Edit/EditPlanActionScriptureDialog'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 import ShowListOfPlans from './components/Plan/View/PlansView.vue'
 import ShowActionsChips from './components/Plan/View/ActionsChips.vue'
@@ -26,6 +27,7 @@ export default function sharedComponents () {
   Vue.component('app-alert', AlertCmp)
   Vue.component('app-success', SuccessCmp)
 
+  Vue.component('app-edit-plan-action-scripture-dialog', EditPlanActionScriptureDialog)
   Vue.component('app-edit-plan-action-list', EditPlanActionList)
   Vue.component('app-edit-plan-staff-field', EditPlanStaffField)
   Vue.component('app-edit-plan-info-field', EditPlanInfoField)

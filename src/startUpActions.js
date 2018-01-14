@@ -27,6 +27,7 @@ export default function startUpActions (store, router) {
     if (!store.types) store.dispatch('refreshTypes')
     if (!store.songs) store.dispatch('refreshSongs')
     if (!store.plans) store.dispatch('refreshPlans')
+    // if (!store.plans) store.dispatch('loadBiblebooks')
   }
   setTimeout(() => {
     // check if the initial loading (see below) had been successful

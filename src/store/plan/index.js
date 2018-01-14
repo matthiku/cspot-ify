@@ -1,9 +1,10 @@
-import { plansRef, firebaseApp, binRef } from '../../firebaseApp'
+import { plansRef, firebaseApp, binRef, bibleRef } from '../../firebaseApp'
 import * as moment from 'moment'
 
 export default {
   state: {
     plans: [],
+    bibleBooks: '',
     newPlanId: null
   },
 
@@ -12,6 +13,16 @@ export default {
 
     setPlans (state, payload) {
       state.plans = payload
+    },
+
+    setBiblebooks (state, payload) {
+      let bb = []
+      payload.forEach(book => {
+        let b = book.val()
+        b.name = book.key
+        bb.push(b)
+      })
+      state.bibleBooks = bb
     },
 
     createPlan (state, payload) {
@@ -25,14 +36,21 @@ export default {
 
   // A C T I O N S  (dispatches)
   actions: {
+    loadBiblebooks ({commit, dispatch}) {
+      bibleRef.once('value')
+        .then((data) => {
+          commit('setBiblebooks', data)
+        })
+        .catch((error) => dispatch('errorHandling', error))
+    },
 
     refreshPlans ({commit, dispatch}) {
       commit('setLoading', true)
       plansRef.once('value')
-      .then((data) => {
-        dispatch('loadPlans', data)
-      })
-      .catch((error) => dispatch('errorHandling', error))
+        .then((data) => {
+          dispatch('loadPlans', data)
+        })
+        .catch((error) => dispatch('errorHandling', error))
     },
     // load existing plans from the DB
     loadPlans ({ commit }, payload) {
@@ -192,6 +210,14 @@ export default {
   // G E T T E R S
   getters: {
 
+    bibleBooks (state) {
+      if (state.bibleBooks === '') return ''
+      return state.bibleBooks.sort((bookA, bookB) => {
+        // console.log(bookA.id < bookB.id, bookA.name, bookB.name)
+        return bookA.id > bookB.id
+      })
+    },
+
     newPlanId (state) {
       return state.newPlanId
     },
@@ -221,6 +247,7 @@ export default {
       })
     },
 
+    // return a plan when a proper planId was given as an argument
     plan (state) {
       return planId => {
         return state.plans.find(plan => {
