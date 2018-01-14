@@ -41,13 +41,15 @@
         <img src="/static/cspoticon36.png" alt="c-SPOT icon" width="30px">
       </v-btn>
 
-      <router-link
-        class="mr-3"
-        tag="v-toolbar-title"
-        :to="{ name: 'home' }" 
-        style="cursor: pointer"
-        v-text="appTitle">
-      </router-link>      
+      <keep-alive>
+        <router-link
+          class="mr-3"
+          tag="v-toolbar-title"
+          :to="{ name: 'home' }" 
+          style="cursor: pointer"
+          v-text="appTitle">
+        </router-link>
+      </keep-alive>
 
       <v-toolbar-items class="hidden-xs-only">        
         <v-btn flat

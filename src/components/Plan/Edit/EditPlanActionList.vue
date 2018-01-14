@@ -52,17 +52,19 @@
     </v-menu>
 
     <!-- action buttons -->
-    <v-card-actions v-if="userOwnsThisPlan">
-      <v-btn small class="primary" @click="addSong"><v-icon>record_voice_over</v-icon>&nbsp;Add Song</v-btn>
-      <v-btn small class="primary" @click="addScripture=true"><v-icon>local_library</v-icon>&nbsp; Add Scripture</v-btn>
-      <v-btn small class="primary" @click="editGenericItem=true"><v-icon>menu</v-icon>&nbsp; Add Item</v-btn>
-      <v-spacer></v-spacer>
-      <v-btn small color="purple">big Plan</v-btn>
-      <v-spacer></v-spacer>
-      <v-btn icon @click.native="show = !show">
-        <v-icon>{{ show ? 'keyboard_arrow_up' : 'help_outline' }}</v-icon>
-      </v-btn>
-    </v-card-actions>
+    <v-slide-y-transition>
+      <v-card-actions v-if="userOwnsThisPlan" v-show="!editGenericItem">
+        <v-btn small class="primary" @click="addSong"><v-icon>record_voice_over</v-icon>&nbsp;Add Song</v-btn>
+        <v-btn small class="primary" @click="addScripture=true"><v-icon>local_library</v-icon>&nbsp; Add Scripture</v-btn>
+        <v-btn small class="primary" @click="editGenericItem=true"><v-icon>label</v-icon>&nbsp; Add Item</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn small color="purple">big Plan</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn icon @click.native="show = !show">
+          <v-icon>{{ show ? 'keyboard_arrow_up' : 'help_outline' }}</v-icon>
+        </v-btn>
+      </v-card-actions>
+    </v-slide-y-transition>
 
     <!-- show helper text -->
     <v-slide-y-transition>
@@ -73,15 +75,25 @@
 
     <!-- add generic item (text) -->
     <v-slide-y-transition>
-      <v-card-text v-show="editGenericItem">
-        <v-text-field
-            @keyup.enter="addGenItem"
-            label="Item text"
-            v-model="genItemText"
-            autofocus
-            clearable
-          ></v-text-field>
-      </v-card-text>
+      <div v-show="editGenericItem">
+        <v-card-text class="pb-0 mb-0">
+          <v-text-field
+              @keyup.enter="addGenItem"
+              label="Item text"
+              v-model="genItemText"
+              class="mb-0 pb-0"
+              hint="enter text and click submit or hit Enter"
+              autofocus
+              clearable
+            ></v-text-field>
+        </v-card-text>
+        <v-card-actions class="mt-0 pt-0">
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" flat @click.stop="editGenericItem=false">Close</v-btn>
+          <v-btn color="primary" flat @click.stop="addGenItem" :disabled="isEmpty(genItemText)">Submit</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </div>
     </v-slide-y-transition>
 
   </v-card>
@@ -121,9 +133,15 @@
     },
 
     methods: {
+      isEmpty (what) {
+        if (what !== undefined && what !== '' & what !== null) return false
+        return true
+      },
       addGenItem () {
+        if (!this.genItemText) return
         this.editGenericItem = false
         this.$store.dispatch('addActionItemToPlan', { value: this.genItemText, planId: this.plan.id, type: 'text' })
+        this.genItemText = ''
       },
       addSong () {
         this.$store.dispatch('setDialog', {selectedPlan: this.plan.id})
@@ -169,7 +187,7 @@
             obj.book_ref = this.songs[action.value].book_ref
           }
           if (action.type === 'text') {
-            obj.icon = 'menu'
+            obj.icon = 'label'
             obj.title = action.value
           }
           this.actionList.push(obj)
