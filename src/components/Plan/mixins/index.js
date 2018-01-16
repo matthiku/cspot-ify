@@ -10,7 +10,10 @@ export default {
       return this.$store.getters.plans
     },
     bibleBooks () {
-      return this.$store.getters.bibleBooks
+      return this.$store.state.plan.bibleBooks
+    },
+    bibleBooksList () {
+      return this.$store.getters.bibleBooksList
     }
   },
 

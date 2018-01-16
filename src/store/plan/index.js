@@ -1,10 +1,12 @@
-import { plansRef, firebaseApp, binRef, bibleRef } from '../../firebaseApp'
+import { plansRef, firebaseApp, binRef } from '../../firebaseApp'
 import * as moment from 'moment'
+
+import bibleBooks from './bibleBooks.js'
 
 export default {
   state: {
     plans: [],
-    bibleBooks: '',
+    bibleBooks,
     newPlanId: null
   },
 
@@ -13,16 +15,6 @@ export default {
 
     setPlans (state, payload) {
       state.plans = payload
-    },
-
-    setBiblebooks (state, payload) {
-      let bb = []
-      payload.forEach(book => {
-        let b = book.val()
-        b.name = book.key
-        bb.push(b)
-      })
-      state.bibleBooks = bb
     },
 
     createPlan (state, payload) {
@@ -36,14 +28,6 @@ export default {
 
   // A C T I O N S  (dispatches)
   actions: {
-    loadBiblebooks ({commit, dispatch}) {
-      bibleRef.once('value')
-        .then((data) => {
-          commit('setBiblebooks', data)
-        })
-        .catch((error) => dispatch('errorHandling', error))
-    },
-
     refreshPlans ({commit, dispatch}) {
       commit('setLoading', true)
       plansRef.once('value')
@@ -210,12 +194,21 @@ export default {
   // G E T T E R S
   getters: {
 
-    bibleBooks (state) {
-      if (state.bibleBooks === '') return ''
-      return state.bibleBooks.sort((bookA, bookB) => {
-        // console.log(bookA.id < bookB.id, bookA.name, bookB.name)
-        return bookA.id > bookB.id
-      })
+    bibleBooksList (state) {
+      if (state.bibleBooks === '') return []
+      let bb = state.bibleBooks
+      let bibleBooks = []
+      for (const key in bb) {
+        if (bb.hasOwnProperty(key)) {
+          // const element = bb[key]
+          bibleBooks.push(key)
+        }
+      }
+      return bibleBooks
+      // return state.bibleBooks.sort((bookA, bookB) => {
+      //   console.log(bookA.id < bookB.id, bookA.name, bookB.name)
+      //   return bookA.id > bookB.id
+      // })
     },
 
     newPlanId (state) {

@@ -1,6 +1,7 @@
 <template>
   <v-card>
 
+    <!-- show plan activity items -->
     <v-card-text class="grey lighten-3 pb-1">
       <v-list two-line>
 
@@ -57,8 +58,8 @@
     <v-slide-y-transition>
       <v-card-actions v-if="userOwnsThisPlan" v-show="!editGenericItem">
         <v-btn small class="primary" @click="addSong"><v-icon>record_voice_over</v-icon>&nbsp;Add Song</v-btn>
-        <v-btn small class="primary" @click="addScripture"><v-icon>local_library</v-icon>&nbsp; Add Scripture</v-btn>
-        <v-btn small class="primary" @click="editGenericItem=true"><v-icon>label</v-icon>&nbsp; Add Item</v-btn>
+        <v-btn small class="primary" @click="addScriptureRefDlg"><v-icon>local_library</v-icon>&nbsp; Add Scripture</v-btn>
+        <v-btn small class="primary" @click="editGenericItem=true"><v-icon>label</v-icon>&nbsp; Add Gen. Item</v-btn>
         <v-spacer></v-spacer>
         <v-btn small color="purple">big Plan</v-btn>
         <v-spacer></v-spacer>
@@ -149,13 +150,16 @@
         this.$store.dispatch('setDialog', {selectedPlan: this.plan.id})
         this.$router.push({name: 'addsongtoplan'})
       },
-      addScripture () {
-        this.$store.dispatch('setDialog', {field: 'scripture'})
+      addScriptureRefDlg () {
+        this.$store.dispatch('setDialog', {field: 'scriptureDlg'})
         if (this.dialog) {
           this.$store.dispatch('showDialog')
           this.$store.dispatch('hideDialog')
         }
         this.$store.dispatch('showDialog')
+      },
+      addScriptureRefItem () {
+        this.$store.dispatch('addActionItemToPlan', { value: this.dialog.value, planId: this.plan.id, type: 'ref' })
       },
       removeAction (item) {
         this.$store.dispatch('removeActionFromPlan', {
@@ -192,7 +196,7 @@
             obj.title = this.songs[action.value].title
             obj.book_ref = this.songs[action.value].book_ref
           }
-          if (action.type === 'text') {
+          if (action.type === 'text' || action.type === 'ref') {
             obj.icon = 'label'
             obj.title = action.value
           }
@@ -206,6 +210,11 @@
       this.$store.dispatch('hideDialog')
     },
     watch: {
+      dialog (val) {
+        if (val.field === 'scriptureRef' && val.value) {
+          this.addScriptureRefItem()
+        }
+      },
       planId () {
         this.createPlanActionsList()
       },
