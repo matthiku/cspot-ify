@@ -159,7 +159,7 @@
         this.$store.dispatch('showDialog')
       },
       addScriptureRefItem () {
-        this.$store.dispatch('addActionItemToPlan', { value: this.dialog.value, planId: this.plan.id, type: 'ref' })
+        this.$store.dispatch('addActionItemToPlan', { value: this.dialog.value, planId: this.plan.id, type: 'read' })
       },
       removeAction (item) {
         this.$store.dispatch('removeActionFromPlan', {
@@ -196,8 +196,12 @@
             obj.title = this.songs[action.value].title
             obj.book_ref = this.songs[action.value].book_ref
           }
-          if (action.type === 'text' || action.type === 'ref') {
+          if (action.type === 'text') {
             obj.icon = 'label'
+            obj.title = action.value
+          }
+          if (action.type === 'read') {
+            obj.icon = 'local_library'
             obj.title = action.value
           }
           this.actionList.push(obj)

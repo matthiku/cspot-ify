@@ -9,10 +9,11 @@
 
     <v-chip v-if="othersCounts" outline color="primary" class="plan-actions-title ma-0">
       <v-icon color="primary">menu</v-icon> &nbsp;
-      {{ othersCounts }} item{{ othersCounts > 1 ? 's' : ''}}
+      {{ othersCounts }} gen.item{{ othersCounts > 1 ? 's' : ''}}
     </v-chip>
 
     <v-chip v-if="scripturesCount" outline color="primary" class="plan-actions-title ma-0">
+      <v-icon color="primary">local_library</v-icon> &nbsp;
       {{ scripturesCount }} reading{{ scripturesCount > 1 ? 's' : ''}}
     </v-chip>
 
@@ -31,7 +32,7 @@ export default {
       return this.getCounter(this.plan.actionList, 'song')
     },
     scripturesCount () {
-      return this.getCounter(this.plan.actionList, 'scripture')
+      return this.getCounter(this.plan.actionList, 'read')
     },
     othersCounts () {
       return this.getCounter(this.plan.actionList, 'text')
