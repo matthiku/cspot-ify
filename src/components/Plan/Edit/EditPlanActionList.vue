@@ -8,9 +8,11 @@
         <!-- loop through all plan action items -->
         <template v-for="(item, index) in actionList">
 
-          <v-list-tile avatar :key="item.key">
+          <v-list-tile :draggable="userOwnsThisPlan" avatar :key="item.key">
 
-            <v-list-tile-avatar :title="item.value">
+            <v-list-tile-action v-if="userOwnsThisPlan" class="cursor-n-resize"><v-icon>menu</v-icon></v-list-tile-action>
+
+            <v-list-tile-avatar :title="item.type">
               <v-icon :class="item.color" class="white--text">{{ item.icon }}</v-icon>
             </v-list-tile-avatar>
 
