@@ -68,7 +68,7 @@ export default {
           id: key,
           icon: this.roles[item.role].icon,
           role: item.role,
-          userName: this.users[item.userId].name,
+          userName: this.users[item.userId].name || this.users[item.userId].email,
           warning: false
         })
       }

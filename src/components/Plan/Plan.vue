@@ -32,16 +32,16 @@
                   </v-list>
                 </v-card>
               </v-menu>
-              
+
               <!-- toolbar title showing Plan title and type -->
               <v-toolbar-title class="white--text">
-                {{ pageTitle }}: 
+                {{ pageTitle }}:
                 <v-chip large color="success" class="mr-0" elevation-4
                   :class="[ userIsAdmin ? 'cursor-pointer' : '' ]"
                   @click="openEditDialog('type')">
                   {{ (plan && plan.typeId) ? types.length ? types[plan.typeId].name : plan.typeId : 'Plan gone' }}</v-chip>
                 <app-edit-plan-type-dialog
-                  v-if="userIsAdmin" 
+                  v-if="userIsAdmin"
                   :plan="plan"
                   ></app-edit-plan-type-dialog>
               </v-toolbar-title>
@@ -106,18 +106,19 @@
                         <!-- show title, date and location -->
                         <v-flex v-else xs12 class="grey lighten-2">
                           <v-card-text class="mb-0 pt-1 pb-2">
-                            <div>                  
+                            <div>
                               <h2 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
                                 >{{
                                   plan.date | date
                                 }}<span v-if="plan.end">-{{ plan.end | time }}</span><app-edit-plan-date-time-dialog v-if="userOwnsThisPlan"
-                                    :plan="plan"></app-edit-plan-date-time-dialog>                                
+                                    :plan="plan"></app-edit-plan-date-time-dialog>
                               </h2>
+                              <h4 v-if="plan.info">{{ plan.info }}</h4>
 
                               <!-- show and edit plan STAFF -->
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.staff" :class="[showDetails.staff ? 'green lighten-3' : '']">
-                                  <div slot="header">                                    
+                                  <div slot="header">
                                     <span class="body-2 mr-3"><v-icon class="mr-3">supervisor_account</v-icon> Staff</span>
                                     <app-show-staff-chips v-if="!showDetails.staff" :plan="plan"></app-show-staff-chips>
                                   </div>
@@ -127,53 +128,57 @@
 
                               <v-divider></v-divider>
 
-                              <!-- show and edit plan INFO -->
-                              <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.info" :class="[showDetails.info ? 'green lighten-3' : '']">
-                                  <div slot="header">
-                                    <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Details</span> 
-                                    <span v-if="!showDetails.info" class="caption">({{
-                                        plan.info | sentenceMax(55, 'none')
-                                      }})</span>
-                                  </div>
-                                  <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
-                                </v-expansion-panel-content>
-                              </v-expansion-panel>
+                              <span v-show="showDetails.staff">
 
-                              <v-divider></v-divider>
+                                <!-- show and edit plan INFO -->
+                                <v-expansion-panel>
+                                  <v-expansion-panel-content v-model="showDetails.info" :class="[showDetails.info ? 'green lighten-3' : '']">
+                                    <div slot="header">
+                                      <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Details</span>
+                                      <span v-if="!showDetails.info" class="caption">({{
+                                          plan.info | sentenceMax(55, 'none')
+                                        }})</span>
+                                    </div>
+                                    <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
+                                  </v-expansion-panel-content>
+                                </v-expansion-panel>
 
-                              <!-- show and edit plan RESOURCES -->
-                              <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.resources" :class="[showDetails.resources ? 'green lighten-3' : '']">
-                                  <div slot="header"> 
-                                    <span class="body-2 mr-3"><v-icon class="mr-3">event_seat</v-icon> Resources</span>
-                                    <span v-if="!showDetails.resources" class="caption">(Room 1, Projector)</span></div>
-                                  <v-card>
-                                    <v-card-text class="grey lighten-3">
-                                      resources, resources, resources
-                                    </v-card-text>
-                                  </v-card>
-                                </v-expansion-panel-content>
-                              </v-expansion-panel>
+                                <v-divider></v-divider>
 
-                              <v-divider></v-divider>
+                                <!-- show and edit plan RESOURCES -->
+                                <v-expansion-panel>
+                                  <v-expansion-panel-content v-model="showDetails.resources" :class="[showDetails.resources ? 'green lighten-3' : '']">
+                                    <div slot="header">
+                                      <span class="body-2 mr-3"><v-icon class="mr-3">event_seat</v-icon> Resources</span>
+                                      <span v-if="!showDetails.resources" class="caption">(Room 1, Projector)</span></div>
+                                    <v-card>
+                                      <v-card-text class="grey lighten-3">
+                                        resources, resources, resources
+                                      </v-card-text>
+                                    </v-card>
+                                  </v-expansion-panel-content>
+                                </v-expansion-panel>
 
-                              <!-- show and edit plan NOTES -->
-                              <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.notes" :class="[showDetails.notes ? 'green lighten-3' : '']">
-                                  <div slot="header">
-                                    <span class="body-2 mr-3"><v-icon class="mr-3">loyalty</v-icon> Notes</span>
-                                    <span v-if="!showDetails.notes" class="caption">(none)</span>
-                                  </div>
-                                  <v-card>
-                                    <v-card-text class="grey lighten-3">
-                                      ...
-                                    </v-card-text>
-                                  </v-card>
-                                </v-expansion-panel-content>
-                              </v-expansion-panel>
+                                <v-divider></v-divider>
 
-                              <v-divider></v-divider>
+                                <!-- show and edit plan NOTES -->
+                                <v-expansion-panel>
+                                  <v-expansion-panel-content v-model="showDetails.notes" :class="[showDetails.notes ? 'green lighten-3' : '']">
+                                    <div slot="header">
+                                      <span class="body-2 mr-3"><v-icon class="mr-3">loyalty</v-icon> Notes</span>
+                                      <span v-if="!showDetails.notes" class="caption">(none)</span>
+                                    </div>
+                                    <v-card>
+                                      <v-card-text class="grey lighten-3">
+                                        ...
+                                      </v-card-text>
+                                    </v-card>
+                                  </v-expansion-panel-content>
+                                </v-expansion-panel>
+
+                                <v-divider></v-divider>
+
+                              </span>
 
                               <!-- show and edit plan ACTIVITIES -->
                               <v-expansion-panel>

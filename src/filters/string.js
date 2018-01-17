@@ -1,10 +1,19 @@
+// Display Filters to modify strings
+
 // extract just the first word from a sentence (ie. a string containing spaces)
 export const firstWord = (value) => {
   if (!value) return ''
   value = value.toString()
+  let isEmail = value.indexOf('@')
   let space = value.indexOf(' ')
-  if (space < 0) { return value }
-  return value.substr(0, space)
+  if (space > 0) {
+    return value.substr(0, space)
+  }
+  if (isEmail > 0) {
+    let name = value.substr(0, isEmail)
+    return name.charAt(0).toUpperCase() + name.slice(1)
+  }
+  return value
 }
 
 // uppercase first letter in a string
