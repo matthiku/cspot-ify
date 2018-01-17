@@ -137,8 +137,19 @@ export default {
         dispatch('errorHandling', 'Error when trying to add action item: action type missing!')
         return
       }
+      if (!payload.seqNo) {
+        dispatch('errorHandling', 'Error when trying to add action item: seqNo missing!')
+        return
+      }
       commit('setLoading', true)
-      plansRef.child(payload.planId).child('actions').push({ value: payload.value, type: payload.type })
+      plansRef
+        .child(payload.planId)
+          .child('actions')
+            .push({
+              value: payload.value,
+              type: payload.type,
+              seqNo: payload.seqNo
+            })
         .then(() => {
           commit('appendMessage', '"' + payload.type + '" item added to this plan')
           dispatch('refreshPlans')

@@ -440,10 +440,15 @@
         if (!props.expanded) this.fab = false
       },
       addSelectedSongToPlan (id) {
-        if (!id || !this.dialog.selectedPlan) return
+        if (!id || !this.dialog.selectedPlan || this.dialog.seqNo === undefined || this.dialog.seqNo === null) return
 
         this.planAddDialog = false
-        this.$store.dispatch('addActionItemToPlan', { value: id, planId: this.dialog.selectedPlan, type: 'song' })
+        this.$store.dispatch('addActionItemToPlan', {
+          value: id,
+          planId: this.dialog.selectedPlan,
+          type: 'song',
+          seqNo: this.dialog.seqNo
+        })
 
         if (this.openPlanAfterAddingSong) {
           this.$router.push({name: 'plan', params: { planId: this.dialog.selectedPlan }})

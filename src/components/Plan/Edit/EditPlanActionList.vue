@@ -8,9 +8,18 @@
         <!-- loop through all plan action items -->
         <template v-for="(item, index) in actionList">
 
-          <v-list-tile :draggable="userOwnsThisPlan" avatar :key="item.key">
+          <v-list-tile
+              :id="'activity-item-' + index"
+              :draggable="userOwnsThisPlan" 
+              @dragstart="drag"
+              @drop="drop"
+              @dragover="dragover"
+              avatar :key="item.key">
 
-            <v-list-tile-action v-if="userOwnsThisPlan" class="cursor-n-resize"><v-icon>menu</v-icon></v-list-tile-action>
+            <v-list-tile-action
+                :id="'drop-item-' + index"
+                v-if="userOwnsThisPlan"
+                class="cursor-n-resize"><v-icon>menu</v-icon></v-list-tile-action>
 
             <v-list-tile-avatar :title="item.type">
               <v-icon :class="item.color" class="white--text">{{ item.icon }}</v-icon>
@@ -134,6 +143,10 @@
     computed: {
       plans () {
         return this.$store.getters.plans
+      },
+      activitiesCount () {
+        if (!this.plan || !this.plan.actionList) return 0
+        return this.plan.actionList.length
       }
     },
 
@@ -145,6 +158,7 @@
         genItemText: '',
         showMenu: false,
         actionList: [],
+        targetId: null,
         menuItems: [
           { title: 'Edit this item' },
           { title: 'Add item above' },
@@ -155,6 +169,20 @@
     },
 
     methods: {
+      drop (event) {
+        event.preventDefault()
+        var data = event.dataTransfer.getData('text')
+        console.log('source item:', data)
+        console.log('target item:', this.targetId)
+        // event.target.appendChild(document.getElementById(data))
+      },
+      dragover (event) {
+        event.preventDefault()
+        if (event.target.id) this.targetId = event.target.id
+      },
+      drag (event) {
+        event.dataTransfer.setData('text', event.target.id)
+      },
       isEmpty (what) {
         if (what !== undefined && what !== '' & what !== null) return false
         return true
@@ -162,12 +190,28 @@
       addGenItem () {
         if (!this.genItemText) return
         this.editGenericItem = false
-        this.$store.dispatch('addActionItemToPlan', { value: this.genItemText, planId: this.plan.id, type: 'text' })
+        this.$store.dispatch('addActionItemToPlan', {
+          value: this.genItemText,
+          planId: this.plan.id,
+          type: 'text',
+          seqNo: this.activitiesCount
+        })
         this.genItemText = ''
       },
       addSong () {
-        this.$store.dispatch('setDialog', {selectedPlan: this.plan.id})
+        this.$store.dispatch('setDialog', {
+          selectedPlan: this.plan.id,
+          seqNo: this.activitiesCount
+        })
         this.$router.push({name: 'addsongtoplan'})
+      },
+      addScriptureRefItem () {
+        this.$store.dispatch('addActionItemToPlan', {
+          value: this.dialog.value,
+          planId: this.plan.id,
+          type: 'read',
+          seqNo: this.activitiesCount
+        })
       },
       addScriptureRefDlg () {
         this.$store.dispatch('setDialog', {field: 'scriptureDlg'})
@@ -176,9 +220,6 @@
           this.$store.dispatch('hideDialog')
         }
         this.$store.dispatch('showDialog')
-      },
-      addScriptureRefItem () {
-        this.$store.dispatch('addActionItemToPlan', { value: this.dialog.value, planId: this.plan.id, type: 'read' })
       },
       removeAction (item) {
         this.$store.dispatch('removeActionFromPlan', {
@@ -208,6 +249,7 @@
             type: action.type,
             value: action.value ? action.value : 0,
             key,
+            seqNo: action.seqNo,
             warning: false
           }
           if (action.type === 'song' && this.songs[action.value]) {
@@ -228,7 +270,7 @@
           }
           this.actionList.push(obj)
         }
-        this.plan.actionList = this.actionList
+        this.plan.actionList = this.actionList.sort((elemA, elemB) => elemA.seqNo > elemB.seqNo)
       }
     },
     created () {
