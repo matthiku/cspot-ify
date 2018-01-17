@@ -1,4 +1,14 @@
 export default {
+  data () {
+    return {
+      activityColours: {
+        song: 'indigo lighten-3',
+        read: 'cyan lighten-3',
+        text: 'lime darken-2'
+      }
+    }
+  },
+
   computed: {
     types () {
       return this.$store.getters.types

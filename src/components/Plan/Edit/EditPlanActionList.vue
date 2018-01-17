@@ -3,36 +3,41 @@
 
     <!-- show plan activity items -->
     <v-card-text class="grey lighten-3 pb-1">
-      <v-list two-line>
+      <v-list two-line dense>
 
         <!-- loop through all plan action items -->
-        <v-list-tile avatar v-for="item in actionList" v-bind:key="item.key">
+        <template v-for="(item, index) in actionList">
 
-          <v-list-tile-avatar :title="item.value">
-            <v-icon class="grey lighten-1 white--text">{{ item.icon }}</v-icon>
-          </v-list-tile-avatar>
+          <v-list-tile avatar :key="item.key">
 
-          <!-- show actual item detail -->
-          <v-list-tile-content v-if="!item.warning ">
-            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-            <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
-          </v-list-tile-content>
+            <v-list-tile-avatar :title="item.value">
+              <v-icon :class="item.color" class="white--text">{{ item.icon }}</v-icon>
+            </v-list-tile-avatar>
 
-          <!-- view when deleting an item -->
-          <v-list-tile-content v-if="item.warning" >
-            <v-list-tile-sub-title class="red--text mt-0 pt-0">Removing {{ item.book_ref }} ({{ item.title }})?
-              <v-btn flat small @click="removeAction(item)" color="red">Yes<v-icon>info</v-icon></v-btn>
-              <v-btn flat small @click="item.warning = false">Cancel<v-icon>highlight_off</v-icon></v-btn>
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
+            <!-- show actual item detail -->
+            <v-list-tile-content v-if="!item.warning ">
+              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+              <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
+            </v-list-tile-content>
 
-          <!-- action buttons -->
-          <v-list-tile-action v-if="!item.warning && userOwnsThisPlan">
-            <v-btn icon ripple title="remove this item" @click="item.warning = true">
-              <v-icon color="red lighten-1">delete</v-icon>
-            </v-btn>
-          </v-list-tile-action>
-        </v-list-tile>
+            <!-- view when deleting an item -->
+            <v-list-tile-content v-if="item.warning" >
+              <v-list-tile-sub-title class="red--text mt-0 pt-0">Removing {{ item.book_ref }} ({{ item.title }})?
+                <v-btn flat small @click="removeAction(item)" color="red">Yes<v-icon>info</v-icon></v-btn>
+                <v-btn flat small @click="item.warning = false">Cancel<v-icon>highlight_off</v-icon></v-btn>
+              </v-list-tile-sub-title>
+            </v-list-tile-content>
+
+            <!-- action buttons -->
+            <v-list-tile-action v-if="!item.warning && userOwnsThisPlan">
+              <v-btn icon ripple title="remove this item" @click="item.warning = true">
+                <v-icon color="red lighten-1">delete</v-icon>
+              </v-btn>
+            </v-list-tile-action>
+          </v-list-tile>
+
+          <v-divider v-if="index + 1 < actionList.length" :key="item.key"></v-divider>
+        </template>
 
         <p class="text-xs-center ma-0">
           <span v-if="!actionList.length">(no items added yet)</span>
@@ -57,15 +62,27 @@
     <!-- action buttons -->
     <v-slide-y-transition>
       <v-card-actions v-if="userOwnsThisPlan" v-show="!editGenericItem">
-        <v-btn small class="primary" @click="addSong"><v-icon>record_voice_over</v-icon>&nbsp;Add Song</v-btn>
-        <v-btn small class="primary" @click="addScriptureRefDlg"><v-icon>local_library</v-icon>&nbsp; Add Scripture</v-btn>
-        <v-btn small class="primary" @click="editGenericItem=true"><v-icon>label</v-icon>&nbsp; Add Gen. Item</v-btn>
+
+        <v-btn :color="activityColours.song" small class="primary" @click="addSong">
+          <v-icon>record_voice_over</v-icon>
+          &nbsp;Add Song</v-btn>
+
+        <v-btn :color="activityColours.read" small class="primary" @click="addScriptureRefDlg">
+          <v-icon>local_library</v-icon>
+          &nbsp; Add Scripture</v-btn>
+
+        <v-btn :color="activityColours.text" small class="primary" @click="editGenericItem=true">
+          <v-icon>label</v-icon>
+          &nbsp; Add Gen. Item</v-btn>
+
         <v-spacer></v-spacer>
         <v-btn small color="purple">big Plan</v-btn>
+
         <v-spacer></v-spacer>
         <v-btn icon @click.native="show = !show">
           <v-icon>{{ show ? 'keyboard_arrow_up' : 'help_outline' }}</v-icon>
         </v-btn>
+
       </v-card-actions>
     </v-slide-y-transition>
 
@@ -192,15 +209,18 @@
             warning: false
           }
           if (action.type === 'song' && this.songs[action.value]) {
+            obj.color = this.activityColours.song
             obj.icon = 'record_voice_over'
             obj.title = this.songs[action.value].title
             obj.book_ref = this.songs[action.value].book_ref
           }
           if (action.type === 'text') {
+            obj.color = 'lime darken-2'
             obj.icon = 'label'
             obj.title = action.value
           }
           if (action.type === 'read') {
+            obj.color = 'cyan lighten-3'
             obj.icon = 'local_library'
             obj.title = action.value
           }
