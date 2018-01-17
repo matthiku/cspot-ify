@@ -107,7 +107,7 @@
                         <v-flex v-else xs12 class="grey lighten-2">
                           <v-card-text class="mb-0 pt-1 pb-2">
                             <div>
-                              <v-layout row>
+                              <v-layout row class="white-space-nowrap">
                                 <v-flex class="py-0">
                                   <h2 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
                                     >{{ plan.date | date }}
