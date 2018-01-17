@@ -3,7 +3,7 @@
 
     <!-- Show singe Plan -->
     <v-layout row justify-center>
-      <v-flex sm12 md10 lg8 xl6>
+      <v-flex md12 lg10 xl8>
         <v-card>
           <v-card-text>
 
@@ -98,7 +98,7 @@
 
                 <v-flex xs12>
                   <v-card class="mb-2">
-                    <v-container fluid>
+                    <v-container fluid fill-height>
                       <v-layout row>
 
                         <v-flex v-if="!plan" xs12>No plan found!</v-flex>
@@ -107,34 +107,58 @@
                         <v-flex v-else xs12 class="grey lighten-2">
                           <v-card-text class="mb-0 pt-1 pb-2">
                             <div>
-                              <h2 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
-                                >{{
-                                  plan.date | date
-                                }}<span v-if="plan.end">-{{ plan.end | time }}</span><app-edit-plan-date-time-dialog v-if="userOwnsThisPlan"
-                                    :plan="plan"></app-edit-plan-date-time-dialog>
-                              </h2>
-                              <h4 v-if="plan.info">{{ plan.info }}</h4>
+                              <v-layout row>
+                                <v-flex class="py-0">
+                                  <h2 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
+                                    >{{ plan.date | date }}
+                                    <span v-if="plan.end">-{{ plan.end | time }}</span>
+                                      <app-edit-plan-date-time-dialog
+                                          v-if="userOwnsThisPlan"
+                                          :plan="plan">
+                                      </app-edit-plan-date-time-dialog>
+                                  </h2>
+                                </v-flex>
+                                <v-flex class="text-xs-right">
+                                  <h4 v-if="plan.info">{{ plan.info }}</h4>
+                                </v-flex>
+                              </v-layout>
 
                               <!-- show and edit plan STAFF -->
                               <v-expansion-panel>
                                 <v-expansion-panel-content v-model="showDetails.staff" :class="[showDetails.staff ? 'green lighten-3' : '']">
+
                                   <div slot="header">
-                                    <span class="body-2 mr-3"><v-icon class="mr-3">supervisor_account</v-icon> Staff</span>
+                                    <span class="body-2 mr-3">
+                                      <v-icon class="mr-3">supervisor_account</v-icon>
+                                      Staff
+                                    </span>
+
                                     <app-show-staff-chips v-if="!showDetails.staff" :plan="plan"></app-show-staff-chips>
+
+                                    <span title="show Plan subtitle, resources and notes"
+                                        v-if="!showDetails.staff" class="text-xs-right">
+                                      <v-btn
+                                          @click.stop="showDetails.planDetails = !showDetails.planDetails"
+                                          small outline color="secondary" class="ma-0">
+                                        plan details
+                                      </v-btn>
+                                    </span>
                                   </div>
+
                                   <app-edit-plan-staff-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-field>
+
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
 
                               <v-divider></v-divider>
 
-                              <span v-show="showDetails.staff">
+                              <span v-show="showDetails.planDetails || showDetails.staff">
 
                                 <!-- show and edit plan INFO -->
                                 <v-expansion-panel>
                                   <v-expansion-panel-content v-model="showDetails.info" :class="[showDetails.info ? 'green lighten-3' : '']">
                                     <div slot="header">
-                                      <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Details</span>
+                                      <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Subtitle</span>
                                       <span v-if="!showDetails.info" class="caption">({{
                                           plan.info | sentenceMax(55, 'none')
                                         }})</span>
@@ -182,12 +206,12 @@
 
                               <!-- show and edit plan ACTIVITIES -->
                               <v-expansion-panel>
-                                <v-expansion-panel-content v-model="showDetails.items" :class="[showDetails.items ? 'green lighten-3' : '']">
+                                <v-expansion-panel-content v-model="showDetails.activities" :class="[showDetails.activities ? 'green lighten-3' : '']">
                                   <div slot="header">
                                     <span class="body-2 mr-3">
                                       <v-icon class="mr-3">list</v-icon> Activities
                                     </span>
-                                    <app-show-action-chips v-if="!showDetails.items" :plan="plan"></app-show-action-chips>
+                                    <app-show-action-chips v-if="!showDetails.activities" :plan="plan"></app-show-action-chips>
                                   </div>
 
                                   <app-edit-plan-action-list :planId="plan.id" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-action-list>
@@ -243,10 +267,11 @@ export default {
       fab: false,
       showDetails: {
         staff: false,
+        planDetails: false,
         resources: false,
         notes: false,
         info: false,
-        items: true
+        activities: true
       },
       openDateEditingDlg: false,
       editing: ''
@@ -271,10 +296,10 @@ export default {
       // open the staff list panel if no staff is assigned yet
       if (plan && !plan.staffList.length) {
         this.showDetails.staff = true
-        this.showDetails.items = false
+        this.showDetails.activities = false
       } else {
         this.showDetails.staff = false
-        this.showDetails.items = true
+        this.showDetails.activities = true
       }
       return plan
     },
@@ -316,7 +341,7 @@ export default {
     plan () {
       if (this.plan && !this.plan.staffList.length) {
         this.showDetails.staff = true
-        this.showDetails.items = false
+        this.showDetails.activities = false
       }
       if (this.plan) return
       // return to list of plans if this plan becomes void
