@@ -1,11 +1,11 @@
 <template>
-  <v-container fluid grid-list-xl>
+  <v-container fluid grid-list-xl class="px-1">
 
     <!-- Show singe Plan -->
     <v-layout row justify-center>
-      <v-flex md12 lg10 xl8>
+      <v-flex md12 lg10 xl8 class="pa-0">
         <v-card>
-          <v-card-text>
+          <v-card-text class="px-1">
 
             <!-- TITLE area -->
             <v-toolbar color="blue">
@@ -107,19 +107,26 @@
                         <v-flex v-else xs12 class="grey lighten-2">
                           <v-card-text class="mb-0 pt-1 pb-2">
                             <div>
-                              <v-layout row class="white-space-nowrap">
-                                <v-flex class="py-0">
+
+                              <!-- Plan Date and Time with subtitle -->
+                              <v-layout row wrap>
+                                <v-flex sm12 md7 class="py-0">
                                   <h2 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
-                                    >{{ plan.date | date }}
-                                    <span v-if="plan.end">-{{ plan.end | time }}</span>
-                                      <app-edit-plan-date-time-dialog
-                                          v-if="userOwnsThisPlan"
-                                          :plan="plan">
-                                      </app-edit-plan-date-time-dialog>
+                                    >{{ plan.date | date }}<span v-if="plan.end">-{{ plan.end | time }}</span>
+
+                                    <app-edit-plan-date-time-dialog
+                                        v-if="userOwnsThisPlan"
+                                        :plan="plan">
+                                    </app-edit-plan-date-time-dialog>
+
                                   </h2>
                                 </v-flex>
-                                <v-flex class="text-xs-right">
-                                  <h4 v-if="plan.info">{{ plan.info }}</h4>
+                                <!-- "subtitle" -->
+                                <v-flex sm12 md5 class="text-xs-center pt-0">
+                                  <h4 v-if="plan.info" 
+                                      :title="[ userOwnsThisPlan ? 'click to open editor' : '' ]"
+                                      @click="openPlanSubtitleEdit"
+                                      class="white-space-pre">{{ plan.info }}</h4>
                                 </v-flex>
                               </v-layout>
 
@@ -163,7 +170,9 @@
                                           plan.info | sentenceMax(55, 'none')
                                         }})</span>
                                     </div>
+
                                     <app-edit-plan-info-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-info-field>
+
                                   </v-expansion-panel-content>
                                 </v-expansion-panel>
 
@@ -309,6 +318,11 @@ export default {
   },
 
   methods: {
+    openPlanSubtitleEdit () {
+      if (!this.userOwnsThisPlan) return
+      this.showDetails.planDetails = true
+      this.showDetails.info = true
+    },
     openDateEditing () {
       if (!this.userOwnsThisPlan) return
       this.openDateEditingDlg = !this.openDateEditingDlg
