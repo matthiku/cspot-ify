@@ -27,7 +27,7 @@
 
             <!-- show actual item detail -->
             <v-list-tile-content v-if="!item.warning ">
-              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+              <v-list-tile-title>{{ item.seqNo }} - {{ item.title }}</v-list-tile-title>
               <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
             </v-list-tile-content>
 
@@ -169,20 +169,64 @@
     },
 
     methods: {
+      // the user dropped the element on a Plan Activity - now handle the move
       drop (event) {
         event.preventDefault()
-        var data = event.dataTransfer.getData('text')
-        console.log('source item:', data)
-        console.log('target item:', this.targetId)
-        // event.target.appendChild(document.getElementById(data))
+        // get the seqNo of the Activity that was dragged
+        let start = this.findIdNum(event.dataTransfer.getData('text'))
+        // get the seqNo of the target Activity
+        let end = this.findIdNum(this.targetId)
+        // if all went well we should have 2 different sequence numbers
+        if (!isNaN(start) && !isNaN(end) && start !== end) {
+          // change the seqNo of the dragged Activity so that it comes AFTER the target Activity
+          this.changeSeqNo(end, 1 * parseFloat(end) + 0.5)
+          this.changeSeqNo(start, parseFloat(end))
+          this.correctAllSeqNos()
+        }
       },
+      // modify the target id (seqNo) when the dragging goes over an Plan Activity
       dragover (event) {
         event.preventDefault()
         if (event.target.id) this.targetId = event.target.id
       },
+      // user begins the dragging - remember the corresponding seqNo of the Activity from where he started
       drag (event) {
         event.dataTransfer.setData('text', event.target.id)
       },
+      // the target html element contains an ID in the format xxx-xxx-id
+      findIdNum (id) {
+        if (!id) return false
+        let parts = id.split('-')
+        if (!parts.length === 3) return false
+        return parseInt(parts[2])
+      },
+      // find the Activity where seqNo is <from> and change it to <to>
+      changeSeqNo (from, to) {
+        this.actionList.forEach((elem) => {
+          if (elem.seqNo === from) {
+            elem.seqNo = to
+          }
+        })
+      },
+      correctAllSeqNos () {
+        // first, sort the array again with the new, intermediate seqNos
+        this.sortActionList()
+        // now change the seqNo into integers again
+        this.$store.commit('setLoading', true)
+        let idx = 0
+        this.actionList.forEach((elem) => {
+          elem.seqNo = idx++
+          // report the change back to the backend DB
+          this.$store.dispatch('updateActionItem', {
+            planId: this.plan.id,
+            key: elem.key,
+            field: 'seqNo',
+            newValue: elem.seqNo
+          })
+        })
+        this.$store.commit('setLoading', false)
+      },
+
       isEmpty (what) {
         if (what !== undefined && what !== '' & what !== null) return false
         return true
@@ -207,9 +251,9 @@
       },
       addScriptureRefItem () {
         this.$store.dispatch('addActionItemToPlan', {
-          value: this.dialog.value,
           planId: this.plan.id,
           type: 'read',
+          value: this.dialog.value,
           seqNo: this.activitiesCount
         })
       },
@@ -270,9 +314,13 @@
           }
           this.actionList.push(obj)
         }
+        this.sortActionList()
+      },
+      sortActionList () {
         this.plan.actionList = this.actionList.sort((elemA, elemB) => elemA.seqNo > elemB.seqNo)
       }
     },
+
     created () {
       this.createPlanActionsList()
       this.$store.dispatch('hideDialog')

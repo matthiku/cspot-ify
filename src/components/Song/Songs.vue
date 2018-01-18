@@ -440,7 +440,7 @@
         if (!props.expanded) this.fab = false
       },
       addSelectedSongToPlan (id) {
-        if (!id || !this.dialog.selectedPlan || this.dialog.seqNo === undefined || this.dialog.seqNo === null) return
+        if (!id || !this.dialog.selectedPlan || isNaN(this.dialog.seqNo)) return
 
         this.planAddDialog = false
         this.$store.dispatch('addActionItemToPlan', {

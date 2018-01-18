@@ -37,7 +37,7 @@ export default {
         .catch((error) => dispatch('errorHandling', error))
     },
     // load existing plans from the DB
-    loadPlans ({ commit }, payload) {
+    loadPlans ({commit}, payload) {
       // console.log('updating local plan list with updated values from Server')
       let plans = []
       // payload is a firebase data snapshot
@@ -137,19 +137,20 @@ export default {
         dispatch('errorHandling', 'Error when trying to add action item: action type missing!')
         return
       }
-      if (!payload.seqNo) {
+      if (isNaN(parseInt(payload.seqNo))) {
         dispatch('errorHandling', 'Error when trying to add action item: seqNo missing!')
         return
       }
       commit('setLoading', true)
+      const newObj = {
+        value: payload.value,
+        type: payload.type,
+        seqNo: payload.seqNo
+      }
       plansRef
         .child(payload.planId)
-          .child('actions')
-            .push({
-              value: payload.value,
-              type: payload.type,
-              seqNo: payload.seqNo
-            })
+        .child('actions')
+        .push(newObj)
         .then(() => {
           commit('appendMessage', '"' + payload.type + '" item added to this plan')
           dispatch('refreshPlans')
@@ -157,9 +158,26 @@ export default {
         })
         .catch((error) => dispatch('errorHandling', error))
     },
+    updateActionItem ({state, commit, dispatch}, payload) {
+      let loadHandling = 'local'
+      if (!state.loading) {
+        commit('setLoading', true)
+      } else {
+        loadHandling = 'remote'
+      }
+      const updateObj = {}
+      updateObj[payload.field] = payload.newValue
+      plansRef
+        .child(payload.planId)
+          .child('actions')
+            .child(payload.key)
+              .update(updateObj)
+                .then(() => { if (loadHandling === 'local') commit('setLoading', false) })
+                .catch((error) => dispatch('errorHandling', error))
+    },
     // remove an action from a plan
     // - - payload must contain plan id and action id
-    removeActionFromPlan ({ commit, dispatch }, payload) {
+    removeActionFromPlan ({commit, dispatch}, payload) {
       commit('setLoading', true)
       plansRef.child(payload.planId).child('actions').child(payload.actionId).remove()
         .then(() => {
