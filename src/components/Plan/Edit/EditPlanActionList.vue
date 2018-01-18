@@ -18,9 +18,11 @@
               avatar>
 
             <v-list-tile-action
+                title="drag items to re-arrange sequence"
                 :id="'drop-item-' + index"
                 v-if="userOwnsThisPlan"
-                class="cursor-n-resize"><v-icon>menu</v-icon></v-list-tile-action>
+                class="cursor-n-resize"
+              ><v-icon>swap_vert</v-icon></v-list-tile-action>
 
             <v-list-tile-avatar :title="item.type">
               <v-icon :class="item.color" class="white--text">{{ item.icon }}</v-icon>
@@ -29,6 +31,7 @@
             <!-- show actual item detail -->
             <v-list-tile-content v-if="!item.warning" class="show-on-hover">
               <v-list-tile-title>
+                {{ item.seqNo }} - 
                 <span  :id="item.key"
                     :contenteditable="userOwnsThisPlan && item.type === 'text'"
                     @keydown.enter.stop="updateActivityText"
@@ -101,7 +104,8 @@
           &nbsp; Add Gen. Item</v-btn>
 
         <v-spacer></v-spacer>
-        <v-btn small color="purple">big Plan</v-btn>
+        <v-btn small color="purple" @click="$store.commit('setLoading', true)">
+          big Plan</v-btn>
 
         <v-spacer></v-spacer>
         <v-btn icon @click.native="show = !show">
@@ -230,12 +234,12 @@
         if (!id) return false
         let parts = id.split('-')
         if (!parts.length === 3) return false
-        return parts[2]
+        return parseInt(parts[2])
       },
       // find the Activity where seqNo is <from> and change it to <to>
       changeSeqNo (from, to) {
         this.actionList.forEach((elem) => {
-          if (elem.seqNo === from) {
+          if (parseInt(elem.seqNo) === parseInt(from)) {
             elem.seqNo = to
           }
         })
@@ -247,16 +251,24 @@
         this.$store.commit('setLoading', true)
         let idx = 0
         this.actionList.forEach((elem) => {
+          // correct the seqNo
           elem.seqNo = idx++
           // report the change back to the backend DB
-          this.$store.dispatch('updateActionItem', {
+          let obj = {
             planId: this.plan.id,
             key: elem.key,
             field: 'seqNo',
             newValue: elem.seqNo
-          })
+          }
+          this.$store.dispatch('updateActionItem', obj)
+            .then(() => {
+              // after the last action, make sure we update the local data
+              if (idx >= this.actionList.length) {
+                this.$store.commit('setMessage', 'Plan Activities sequence updated.')
+                // this.$store.dispatch('refreshPlans').then()
+              }
+            })
         })
-        this.$store.commit('setLoading', false)
       },
 
       isEmpty (what) {

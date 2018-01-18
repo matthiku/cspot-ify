@@ -158,9 +158,9 @@ export default {
         })
         .catch((error) => dispatch('errorHandling', error))
     },
-    updateActionItem ({state, commit, dispatch}, payload) {
+    updateActionItem ({rootState, commit, dispatch}, payload) {
       let loadHandling = 'local'
-      if (!state.loading) {
+      if (!rootState.shared.loading) {
         commit('setLoading', true)
       } else {
         loadHandling = 'remote'
