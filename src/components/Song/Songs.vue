@@ -38,7 +38,7 @@
             </template>
 
             <template slot="items" slot-scope="props">
-              <tr class="show-add-button"
+              <tr class="show-on-hover"
                   :class="[props.expanded ? 'blue-grey lighten-2' : '']">
 
                 <td class="cursor-pointer text-xs-right no-wrap"
@@ -70,6 +70,7 @@
                       title="add this song to your plan"><v-icon>add</v-icon></v-btn>
                 </td>
 
+                <!-- these values are included but invisible, so that they can be searched -->
                 <td class="pa-0"><span class="invisible">{{ props.item.title_2 }}</span></td>
                 <td class="pa-0"><span class="invisible">{{ props.item.lyrics }}</span></td>
 
@@ -460,13 +461,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .on-hover-only {
-    display: none;
-  }
-  .show-add-button:hover .on-hover-only {
-    display: inline;
-  }
-  .invisible {
-    display: none;
-  }
 </style>

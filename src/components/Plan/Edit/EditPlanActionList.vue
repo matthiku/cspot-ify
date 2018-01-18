@@ -11,10 +11,11 @@
           <v-list-tile
               :id="'activity-item-' + index"
               :draggable="userOwnsThisPlan" 
+              :key="item.key"
               @dragstart="drag"
               @drop="drop"
               @dragover="dragover"
-              avatar :key="item.key">
+              avatar>
 
             <v-list-tile-action
                 :id="'drop-item-' + index"
@@ -26,8 +27,21 @@
             </v-list-tile-avatar>
 
             <!-- show actual item detail -->
-            <v-list-tile-content v-if="!item.warning ">
-              <v-list-tile-title>{{ item.seqNo }} - {{ item.title }}</v-list-tile-title>
+            <v-list-tile-content v-if="!item.warning" class="show-on-hover">
+              <v-list-tile-title>
+                <span  :id="item.key"
+                    :contenteditable="userOwnsThisPlan && item.type === 'text'"
+                    @keydown.enter.stop="updateActivityText"
+                    class="py-1 pr-1"
+                  >
+                  {{ item.title }}
+                </span>
+                <span
+                    v-if="userOwnsThisPlan && item.type === 'text'"
+                    class="on-hover-only"
+                    title="click text to edit"
+                  ><v-icon>edit</v-icon></span> 
+              </v-list-tile-title>
               <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
             </v-list-tile-content>
 
@@ -169,6 +183,24 @@
     },
 
     methods: {
+      updateActivityText (event) {
+        event.preventDefault()
+        if (!this.userOwnsThisPlan) return
+        let key = event.target.id
+        if (!key) return
+        // update the text on the backend DB
+        this.$store.dispatch('updateActionItem', {
+          planId: this.plan.id,
+          key,
+          field: 'value',
+          newValue: event.target.outerText
+        }).then(() => {
+          // stop the content editing
+          event.srcElement.contentEditable = false
+          event.srcElement.contentEditable = true
+        })
+      },
+
       // the user dropped the element on a Plan Activity - now handle the move
       drop (event) {
         event.preventDefault()
@@ -198,7 +230,7 @@
         if (!id) return false
         let parts = id.split('-')
         if (!parts.length === 3) return false
-        return parseInt(parts[2])
+        return parts[2]
       },
       // find the Activity where seqNo is <from> and change it to <to>
       changeSeqNo (from, to) {
