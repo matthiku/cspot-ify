@@ -11,7 +11,7 @@ import { store } from './store'
 
 Vue.use(Vuetify, {
   theme: {
-    primary: 'RGB(64, 174, 72)'
+    primary: '#40AE48' // = 'RGB(64, 174, 72)'
   }
 })
 Vue.config.productionTip = false

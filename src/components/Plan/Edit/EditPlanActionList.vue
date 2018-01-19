@@ -11,7 +11,7 @@
           <v-list-tile
               :id="'activity-item-' + index"
               :draggable="userOwnsThisPlan" 
-              :key="item.key"
+              :key="index"
               @dragstart="drag"
               @drop="drop"
               @dragover="dragover"
@@ -91,15 +91,15 @@
     <v-slide-y-transition>
       <v-card-actions v-if="userOwnsThisPlan" v-show="!editGenericItem">
 
-        <v-btn :color="activityColours.song" small class="primary" @click="addSong">
+        <v-btn :color="activityColours.song" small class="white--text" @click="addSong">
           <v-icon>record_voice_over</v-icon>
           &nbsp;Add Song</v-btn>
 
-        <v-btn :color="activityColours.read" small class="primary" @click="addScriptureRefDlg">
+        <v-btn :color="activityColours.read" small class="white--text" @click="addScriptureRefDlg">
           <v-icon>local_library</v-icon>
           &nbsp; Add Scripture</v-btn>
 
-        <v-btn :color="activityColours.text" small class="primary" @click="editGenericItem=true">
+        <v-btn :color="activityColours.text" small class="white--text" @click="editGenericItem=true">
           <v-icon>label</v-icon>
           &nbsp; Add Gen. Item</v-btn>
 
