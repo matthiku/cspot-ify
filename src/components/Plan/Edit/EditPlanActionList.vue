@@ -31,7 +31,7 @@
             <!-- show actual item detail -->
             <v-list-tile-content v-if="!item.warning" class="show-on-hover">
               <v-list-tile-title>
-                {{ item.seqNo }} - 
+                ({{ item.seqNo }})
                 <span  :id="item.key"
                     :contenteditable="userOwnsThisPlan && item.type === 'text'"
                     @keydown.enter.stop="updateActivityText"
@@ -57,9 +57,14 @@
             </v-list-tile-content>
 
             <!-- action buttons -->
-            <v-list-tile-action v-if="!item.warning && userOwnsThisPlan">
-              <v-btn icon ripple title="remove this item" @click="item.warning = true">
-                <v-icon color="red lighten-1">delete</v-icon>
+            <v-list-tile-action class="align-items-center flex-direction-row">
+              <v-btn icon><v-icon>airplay</v-icon></v-btn>
+              <v-btn 
+                  v-if="!item.warning && userOwnsThisPlan"
+                  title="remove this item"
+                  @click="item.warning = true"
+                  icon ripple 
+                ><v-icon color="red lighten-1">delete</v-icon>
               </v-btn>
             </v-list-tile-action>
           </v-list-tile>
