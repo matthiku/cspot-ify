@@ -6,7 +6,7 @@ import EditPlanDateTimeDialog from './components/Plan/Edit/EditPlanDateTimeDialo
 import EditPlanTypeDialog from './components/Plan/Edit/EditPlanTypeDialog'
 import EditPlanStaffDialog from './components/Plan/Edit/EditPlanStaffDialog'
 import EditPlanInfoField from './components/Plan/Edit/EditPlanInfoField'
-import EditPlanStaffField from './components/Plan/Edit/EditPlanStaffField'
+import EditPlanStaffList from './components/Plan/Edit/EditPlanStaffList'
 import EditPlanActionList from './components/Plan/Edit/EditPlanActionList'
 import EditPlanActionScriptureDialog from './components/Plan/Edit/EditPlanActionScriptureDialog'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
@@ -29,7 +29,7 @@ export default function sharedComponents () {
 
   Vue.component('app-edit-plan-action-scripture-dialog', EditPlanActionScriptureDialog)
   Vue.component('app-edit-plan-action-list', EditPlanActionList)
-  Vue.component('app-edit-plan-staff-field', EditPlanStaffField)
+  Vue.component('app-edit-plan-staff-field', EditPlanStaffList)
   Vue.component('app-edit-plan-info-field', EditPlanInfoField)
   Vue.component('app-edit-plan-staff-dialog', EditPlanStaffDialog)
   Vue.component('app-edit-plan-type-dialog', EditPlanTypeDialog)
