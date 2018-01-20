@@ -152,7 +152,7 @@
                                     </span>
                                   </div>
 
-                                  <app-edit-plan-staff-field :plan="plan" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-field>
+                                  <app-edit-plan-staff-list :planId="plan.id" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-list>
 
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
@@ -297,16 +297,14 @@ export default {
       } else {
         plan = this.$store.getters.plan(this.$route.params.planId)
       }
-      if (!plan) {
-        // this.$router.push({name: 'plans'})
-      }
+
       // create Staff List property of plan
       this.createStaffList(plan)
       // open the staff list panel if no staff is assigned yet
-      if (plan && !plan.staffList.length) {
+      if (plan && !plan.staffList.length && !this.pageStatus.hasOwnProperty('showDetails')) {
         this.showDetails.staff = true
         this.showDetails.activities = false
-      } else {
+      } else if (!this.pageStatus.hasOwnProperty('showDetails')) {
         this.showDetails.staff = false
         this.showDetails.activities = true
       }
@@ -314,6 +312,9 @@ export default {
     },
     userOwnsThisPlan () {
       return this.userOwnsPlan(this.plan)
+    },
+    pageStatus () {
+      return this.$store.getters.pageStatus
     }
   },
 
@@ -353,14 +354,25 @@ export default {
 
   watch: {
     plan () {
-      if (this.plan && !this.plan.staffList.length) {
+      if (this.pageStatus.hasOwnProperty('showDetails')) this.showDetails = this.pageStatus.showDetails
+      if (this.plan && !this.plan.staffList.length && !this.pageStatus.hasOwnProperty('showDetails')) {
         this.showDetails.staff = true
         this.showDetails.activities = false
       }
       if (this.plan) return
-      // return to list of plans if this plan becomes void
+      // return to list of plans if this plan became void meanwhile
       this.$router.push({name: 'plans'})
     }
+  },
+  mounted () {
+    if (this.pageStatus.hasOwnProperty('showDetails')) this.showDetails = this.pageStatus.showDetails
+  },
+  updated () {
+    this.pageStatus.showDetails = this.showDetails
+    console.log(this.$route.name)
+  },
+  beforeDestroy () {
+    this.pageStatus.showDetails = this.showDetails
   }
 }
 </script>

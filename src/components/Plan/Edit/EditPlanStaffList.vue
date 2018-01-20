@@ -54,11 +54,17 @@ import planMixins from '../mixins'
 export default {
   mixins: [genericMixins, planMixins],
 
-  props: ['plan', 'userOwnsThisPlan'],
+  props: ['planId', 'userOwnsThisPlan'],
 
   data () {
     return {
       items: []
+    }
+  },
+
+  computed: {
+    plan () {
+      return this.$store.getters.plan(this.planId)
     }
   },
 
@@ -67,6 +73,13 @@ export default {
       this.$store.dispatch('removeStaffFromPlan', {
         planId: this.plan.id,
         staffId: item.id
+      })
+      .then(() => {
+        this.createStaffList()
+        item.warning = false
+        // remove the local staff from the staffList array
+        let idx = this.items.find((el) => el.id === item.id)
+        if (idx) this.items.splice(idx, 1)
       })
     }
   },

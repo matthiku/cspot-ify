@@ -101,6 +101,7 @@ export default {
           role: this.role.text
         }
       }).then(() => {
+        this.createStaffList()
         this.person = null
         this.role = null
       })

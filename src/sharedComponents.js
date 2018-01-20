@@ -29,7 +29,7 @@ export default function sharedComponents () {
 
   Vue.component('app-edit-plan-action-scripture-dialog', EditPlanActionScriptureDialog)
   Vue.component('app-edit-plan-action-list', EditPlanActionList)
-  Vue.component('app-edit-plan-staff-field', EditPlanStaffList)
+  Vue.component('app-edit-plan-staff-list', EditPlanStaffList)
   Vue.component('app-edit-plan-info-field', EditPlanInfoField)
   Vue.component('app-edit-plan-staff-dialog', EditPlanStaffDialog)
   Vue.component('app-edit-plan-type-dialog', EditPlanTypeDialog)

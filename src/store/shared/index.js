@@ -7,7 +7,9 @@ export default {
     search: { filter: '' },
     dialogShow: false,
     dialog: { field: '', item: null, updated: false },
-    admin: { selectedTab: '' }
+    admin: { selectedTab: '' },
+    // object to save the status of pages (open or closed drawers for instance)
+    pageStatus: {}
   },
 
   mutations: {
@@ -102,6 +104,9 @@ export default {
     },
     admin (state) {
       return state.admin
+    },
+    pageStatus (state) {
+      return state.pageStatus
     }
   }
 }
