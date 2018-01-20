@@ -64,7 +64,7 @@
         <v-card-actions>
           <v-btn color="yellow darken-3" flat="flat" @click.native="cancel">Cancel</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="red darken-1" flat="flat" @click.native="book = ''">Reset</v-btn>
+          <v-btn color="red darken-1" flat="flat" :disabled="!book" @click.native="book = ''">Reset</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" :disabled="!version" @click.native="submit">Set</v-btn>
         </v-card-actions>

@@ -110,7 +110,7 @@
 
                               <!-- Plan Date and Time with subtitle -->
                               <v-layout row wrap>
-                                <v-flex sm12 md7 class="py-0">
+                                <v-flex sm12 md8 class="py-0">
                                   <h2 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
                                     >{{ plan.date | date }}<span v-if="plan.end">-{{ plan.end | time }}</span>
 
@@ -122,7 +122,7 @@
                                   </h2>
                                 </v-flex>
                                 <!-- "subtitle" -->
-                                <v-flex sm12 md5 class="text-xs-center pt-0">
+                                <v-flex sm12 md4 class="text-xs-center pt-0">
                                   <h4 v-if="plan.info" 
                                       :title="[ userOwnsThisPlan ? 'click to open editor' : '' ]"
                                       @click="openPlanSubtitleEdit"

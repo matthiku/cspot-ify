@@ -14,15 +14,18 @@
               :key="index"
               @dragstart="drag"
               @drop="drop"
+              @dragenter="dragenter"
+              @dragleave="dragleave"
               @dragover="dragover"
+              @dragend="dragend"
               avatar>
 
-            <v-list-tile-action
-                title="drag items to re-arrange sequence"
+            <v-list-tile-action title="drag items to re-arrange sequence"
                 :id="'drop-item-' + index"
                 v-if="userOwnsThisPlan"
                 class="cursor-n-resize"
-              ><v-icon>swap_vert</v-icon></v-list-tile-action>
+              ><v-icon>swap_vert</v-icon>
+            </v-list-tile-action>
 
             <v-list-tile-avatar :title="item.type">
               <v-icon :class="item.color" class="white--text">{{ item.icon }}</v-icon>
@@ -35,7 +38,7 @@
                 <span  :id="item.key"
                     :contenteditable="userOwnsThisPlan && item.type === 'text'"
                     @keydown.enter.stop="updateActivityText"
-                    class="py-1 pr-1"
+                    class="white-space-normal py-1 pr-1"
                   >
                   {{ item.title }}
                 </span>
@@ -48,6 +51,7 @@
               <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
             </v-list-tile-content>
 
+
             <!-- view when deleting an item -->
             <v-list-tile-content v-if="item.warning" >
               <v-list-tile-sub-title class="red--text mt-0 pt-0">Removing {{ item.book_ref }} ({{ item.title }})?
@@ -56,17 +60,44 @@
               </v-list-tile-sub-title>
             </v-list-tile-content>
 
+
             <!-- action buttons -->
-            <v-list-tile-action class="align-items-center flex-direction-row">
-              <v-btn icon><v-icon>airplay</v-icon></v-btn>
-              <v-btn 
-                  v-if="!item.warning && userOwnsThisPlan"
+            <v-list-tile-action v-if="!item.warning">
+              <v-btn icon ripple
+                  title="play sond on youtube"
+                  ><v-icon color="red">subscriptions</v-icon>
+              </v-btn>
+            </v-list-tile-action>
+
+            <v-list-tile-action v-if="!item.warning">
+              <v-btn icon ripple
+                  title="start presentation here"
+                  ><v-icon>airplay</v-icon>
+              </v-btn>
+            </v-list-tile-action>
+
+            <v-list-tile-action v-if="!item.warning && userOwnsThisPlan">
+              <v-btn icon ripple                 
                   title="remove this item"
                   @click="item.warning = true"
-                  icon ripple 
                 ><v-icon color="red lighten-1">delete</v-icon>
               </v-btn>
             </v-list-tile-action>
+
+            <v-list-tile-action v-if="!item.warning">
+              <!-- sample menu option -->
+              <v-menu offset-x open-on-hover full-width>
+                <v-btn icon ripple slot="activator">
+                  <v-icon>menu</v-icon>
+                </v-btn>
+                <v-list>
+                  <v-list-tile v-for="mItem in menuItems" :key="mItem.title" @click="mSelect(mItem, item)">
+                    <v-list-tile-title>{{ mItem.title }}</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </v-list-tile-action>
+
           </v-list-tile>
 
           <v-divider v-if="index + 1 < actionList.length" :key="item.key"></v-divider>
@@ -78,17 +109,6 @@
       </v-list>
     </v-card-text>
 
-    <!-- sample menu option -->
-    <v-menu v-if="'just for' < 'a test'" offset-y v-model="showMenu" absolute full-width>
-      <v-card-text class="grey lighten-3" slot="activator">
-        Lorem ipsum dolor sit amet. This is an item with a menu
-      </v-card-text>
-      <v-list>
-        <v-list-tile v-for="item in menuItems" :key="item.title" @click="">
-          <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-menu>
 
     <app-edit-plan-action-scripture-dialog></app-edit-plan-action-scripture-dialog>
 
@@ -151,7 +171,19 @@
     </v-slide-y-transition>
 
   </v-card>
+
 </template>
+
+<style>
+  .white-space-normal {
+    white-space: normal;
+  }
+  .drop-insert-indicator {
+    background-color:aqua;
+    height: 0.5em;
+    line-height: 0.7;
+  }
+</style>
 
 
 <script>
@@ -192,6 +224,11 @@
     },
 
     methods: {
+      // user selected an action on a listed plan activity (in the hamburger menu)
+      mSelect (action, activity) {
+        console.log(action.title, activity.title)
+      },
+
       updateActivityText (event) {
         event.preventDefault()
         if (!this.userOwnsThisPlan) return
@@ -212,6 +249,7 @@
 
       // the user dropped the element on a Plan Activity - now handle the move
       drop (event) {
+        event.target.style.opacity = '1'
         event.preventDefault()
         // get the seqNo of the Activity that was dragged
         let start = this.findIdNum(event.dataTransfer.getData('text'))
@@ -228,11 +266,59 @@
       // modify the target id (seqNo) when the dragging goes over an Plan Activity
       dragover (event) {
         event.preventDefault()
-        if (event.target.id) this.targetId = event.target.id
+      },
+      dragenter (event) {
+        let targetLi = this.getParent(event, '.list__tile')
+        if (!targetLi) return
+        if (this.targetId === targetLi.id) return
+        this.targetId = targetLi.id
+
+        this.destroyOldInsertIndicator()
+        let kid = document.createElement('li')
+        kid.classList.add('drop-insert-indicator')
+        let parent = targetLi.parentElement.parentElement
+        parent.insertBefore(kid, targetLi.parentElement)
+      },
+      destroyOldInsertIndicator () {
+        let elms = document.getElementsByClassName('drop-insert-indicator')
+        if (!elms.length) return
+        elms[0].remove()
+      },
+      dragleave (event) {
+        let targetLi = this.getParent(event, '.list__tile')
+        if (!targetLi) return
+        if (targetLi.id === this.targetId) return
+        targetLi.classList.remove('dragged-over')
+      },
+      dragend (event) {
+        event.target.style.opacity = '1'
+        this.destroyOldInsertIndicator()
       },
       // user begins the dragging - remember the corresponding seqNo of the Activity from where he started
       drag (event) {
+        event.target.style.opacity = '0.3'
         event.dataTransfer.setData('text', event.target.id)
+      },
+      removeClass (className) {
+        let elems = document.getElementsByClassName(className)
+        if (elems && elems.length) {
+          Array.prototype.forEach.call(elems, (el) => {
+            el.classList.remove(className)
+          })
+        }
+      },
+      // each event contains a path-an array of parent elements. Returns the one identified by 'selector'
+      getParent (event, selector) {
+        if (!event.path || !event.path.length || !selector) return
+        let found = event.path.find((elem) => {
+          if (elem.localName === 'body' || elem.name === '') return false
+          // is 'selector' the name of the html element?
+          if (elem.localName === selector) return true
+          // is 'selector' one of the classes?
+          if (elem.classList && elem.classList.contains(selector.substr(1))) return true
+        })
+        // console.log('FOUND', found.id)
+        return found
       },
       // the target html element contains an ID in the format xxx-xxx-id
       findIdNum (id) {
