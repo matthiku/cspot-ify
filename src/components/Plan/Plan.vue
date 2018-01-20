@@ -301,10 +301,10 @@ export default {
       // create Staff List property of plan
       this.createStaffList(plan)
       // open the staff list panel if no staff is assigned yet
-      if (plan && !plan.staffList.length && !this.pageStatus.hasOwnProperty('showDetails')) {
+      if (plan && !plan.staffList.length && !this.pageStatus.hasOwnProperty(plan.id)) {
         this.showDetails.staff = true
         this.showDetails.activities = false
-      } else if (!this.pageStatus.hasOwnProperty('showDetails')) {
+      } else if (plan && !this.pageStatus.hasOwnProperty(plan.id)) {
         this.showDetails.staff = false
         this.showDetails.activities = true
       }
@@ -349,13 +349,25 @@ export default {
         field: that,
         value: this.plan[that]
       })
+    },
+    savePageStatus () {
+      console.log(this.plan)
+      if (this.plan === undefined) return
+      if (this.pageStatus.hasOwnProperty(this.plan.id)) {
+        console.log('updating', this.showDetails.staff)
+        this.pageStatus[this.plan.id].showDetails = this.showDetails
+      } else {
+        console.log('creating', this.showDetails.staff)
+        this.pageStatus[this.plan.id] = {}
+        this.pageStatus[this.plan.id].showDetails = this.showDetails
+      }
     }
   },
 
   watch: {
     plan () {
-      if (this.pageStatus.hasOwnProperty('showDetails')) this.showDetails = this.pageStatus.showDetails
-      if (this.plan && !this.plan.staffList.length && !this.pageStatus.hasOwnProperty('showDetails')) {
+      if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
+      if (this.plan && !this.plan.staffList.length && !this.pageStatus.hasOwnProperty(this.plan.id)) {
         this.showDetails.staff = true
         this.showDetails.activities = false
       }
@@ -365,14 +377,15 @@ export default {
     }
   },
   mounted () {
-    if (this.pageStatus.hasOwnProperty('showDetails')) this.showDetails = this.pageStatus.showDetails
+    if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
   },
   updated () {
-    this.pageStatus.showDetails = this.showDetails
-    console.log(this.$route.name)
+    console.log('updated', this.showDetails.staff, this.plan)
+    this.savePageStatus()
   },
   beforeDestroy () {
-    this.pageStatus.showDetails = this.showDetails
+    console.log('beforeDestroy', this.showDetails.staff)
+    this.savePageStatus()
   }
 }
 </script>
