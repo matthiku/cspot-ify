@@ -35,13 +35,13 @@
             <v-list-tile-content v-if="!item.warning" class="show-on-hover">
               <v-list-tile-title>
                 ({{ item.seqNo }})
-                <span  :id="item.key"
+                <strong  :id="item.key"
                     :contenteditable="userOwnsThisPlan && item.type === 'text'"
                     @keydown.enter.stop="updateActivityText"
                     class="white-space-normal py-1 pr-1"
                   >
                   {{ item.title }}
-                </span>
+                </strong>
                 <span
                     v-if="userOwnsThisPlan && item.type === 'text'"
                     class="on-hover-only"
