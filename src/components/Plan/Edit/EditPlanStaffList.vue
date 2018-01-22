@@ -14,7 +14,7 @@
           <!-- show actual role and staff detail -->
           <v-list-tile-content v-show="!item.warning">
             <v-list-tile-title>{{ item.userName }}</v-list-tile-title>
-            <v-list-tile-sub-title>{{ item.role }}</v-list-tile-sub-title>
+            <v-list-tile-sub-title>{{ item.role | ucFirst }}</v-list-tile-sub-title>
           </v-list-tile-content>
 
           <v-list-tile-content v-show="item.warning">

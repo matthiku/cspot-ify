@@ -1,20 +1,45 @@
 <template>
   <span>
 
-    <v-chip v-if="songsCount" outline color="primary" class="plan-actions-title ma-0">
-      <v-icon color="primary">record_voice_over</v-icon> &nbsp;
-      {{ songsCount }} 
-      song{{ songsCount > 1 ? 's' : ''}}
+    <v-chip outline
+        v-if="songsCount"
+        color="primary"
+        class="plan-actions-title ma-0"
+      ><v-tooltip bottom lazy>
+        <span slot="activator">
+          <v-icon color="primary">record_voice_over</v-icon>
+          {{ songsCount }}
+          song{{ songsCount > 1 ? 's' : ''}}
+        </span>
+        <span>number of songs</span>
+      </v-tooltip>
     </v-chip>
 
-    <v-chip v-if="othersCounts" outline color="primary" class="plan-actions-title ma-0">
-      <v-icon color="primary">menu</v-icon> &nbsp;
-      {{ othersCounts }} gen.item{{ othersCounts > 1 ? 's' : ''}}
+    <v-chip outline
+        v-if="othersCounts"
+        color="primary"
+        class="plan-actions-title ma-0"
+      ><v-tooltip bottom lazy>
+        <span slot="activator">      
+          <v-icon color="primary">menu</v-icon>
+          {{ othersCounts }} gen.item{{ othersCounts > 1 ? 's' : ''}}
+        </span>
+        <span>generic items</span>
+      </v-tooltip>
     </v-chip>
 
-    <v-chip v-if="scripturesCount" outline color="primary" class="plan-actions-title ma-0">
-      <v-icon color="primary">local_library</v-icon> &nbsp;
-      {{ scripturesCount }} reading{{ scripturesCount > 1 ? 's' : ''}}
+    <v-chip
+        v-if="scripturesCount"
+        outline
+        color="primary"
+        class="plan-actions-title ma-0"
+      ><v-tooltip bottom lazy>
+        <span slot="activator">
+          <v-icon color="primary">local_library</v-icon>
+          {{ scripturesCount }} reading{{ scripturesCount > 1 ? 's' : ''}}
+        </span>
+        <span>number of scripture readings</span>
+      </v-tooltip>
     </v-chip>
 
     <small v-if="songsCount + scripturesCount + othersCounts === 0">(none)</small>

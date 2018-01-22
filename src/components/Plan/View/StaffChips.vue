@@ -1,19 +1,21 @@
 <template>
   <span>
 
-      <v-chip
+      <v-chip outline 
           v-for="(staff, index) in staffList"
           :key="index"
-          :title="staff.role | ucFirst"
-          outline 
           color="primary"
           class="plan-actions-title my-0 caption"
         >
-        <v-icon color="primary">{{ staff.icon }}</v-icon>
-        &nbsp;
-        <span>
-          {{ staff.userName | firstWord }}
-        </span>
+        <v-tooltip bottom lazy>
+          <span slot="activator">
+            <v-icon color="primary">{{ staff.icon }}</v-icon>
+            <span>
+              {{ staff.userName | firstWord }}
+            </span>
+          </span>
+          <span>{{ staff.role | ucFirst }}</span>
+        </v-tooltip>
       </v-chip>
 
       <span 

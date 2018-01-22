@@ -137,19 +137,25 @@
                                   <div slot="header">
                                     <span class="body-2 mr-3">
                                       <v-icon class="mr-3">supervisor_account</v-icon>
-                                      Staff
+                                      Staff <span v-if="plan.staffList && plan.staffList.length">({{ plan.staffList.length }})</span>
                                     </span>
 
                                     <app-show-staff-chips v-if="!showDetails.staff" :plan="plan"></app-show-staff-chips>
 
-                                    <span title="show Plan subtitle, resources and notes"
-                                        v-if="!showDetails.staff" class="text-xs-right">
+                                    <v-tooltip bottom lazy
+                                        v-if="!showDetails.staff" class="text-xs-right"
+                                      >
                                       <v-btn
+                                          slot="activator"
                                           @click.stop="showDetails.planDetails = !showDetails.planDetails"
                                           small outline color="secondary" class="ma-0">
+                                        <span class="hidden-md-and-down">
+                                          <span>{{ showDetails.planDetails ? 'hide' : 'show' }}&nbsp</span>
+                                        </span>
                                         plan details
                                       </v-btn>
-                                    </span>
+                                      <span>show Plan subtitle, resources and notes</span>
+                                    </v-tooltip>
                                   </div>
 
                                   <app-edit-plan-staff-list :planId="plan.id" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-list>
@@ -218,7 +224,9 @@
                                 <v-expansion-panel-content v-model="showDetails.activities" :class="[showDetails.activities ? 'green lighten-3' : '']">
                                   <div slot="header">
                                     <span class="body-2 mr-3">
-                                      <v-icon class="mr-3">list</v-icon> Activities
+                                      <v-icon class="mr-3">list</v-icon>
+                                      Order of Service
+                                      <span v-if="plan.actionList && plan.actionList.length">({{ plan.actionList.length }})</span>
                                     </span>
                                     <app-show-action-chips v-if="!showDetails.activities" :plan="plan"></app-show-action-chips>
                                   </div>
@@ -351,13 +359,10 @@ export default {
       })
     },
     savePageStatus () {
-      console.log(this.plan)
       if (this.plan === undefined) return
       if (this.pageStatus.hasOwnProperty(this.plan.id)) {
-        console.log('updating', this.showDetails.staff)
         this.pageStatus[this.plan.id].showDetails = this.showDetails
       } else {
-        console.log('creating', this.showDetails.staff)
         this.pageStatus[this.plan.id] = {}
         this.pageStatus[this.plan.id].showDetails = this.showDetails
       }
@@ -377,14 +382,13 @@ export default {
     }
   },
   mounted () {
+    if (this.plan === undefined) return
     if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
   },
   updated () {
-    console.log('updated', this.showDetails.staff, this.plan)
     this.savePageStatus()
   },
   beforeDestroy () {
-    console.log('beforeDestroy', this.showDetails.staff)
     this.savePageStatus()
   }
 }
