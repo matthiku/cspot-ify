@@ -53,6 +53,7 @@ export default {
 
     // update firebase user table
     updateUser ({commit, dispatch}, payload) {
+      if (!payload.id) return
       usersRef.child(payload.id).update(payload)
         .then(() => {
           commit('setLoading', false)
@@ -117,6 +118,12 @@ export default {
           // Sign-out successful.
           commit('setLoading', false)
           commit('setUser', null)
+          // clear the state
+          commit('setUsers', null)
+          commit('setTypes', [])
+          commit('setSongs', [])
+          commit('setPlans', [])
+          commit('setRoles', [])
         })
         .catch(error => dispatch('errorHandling', error))
     },
@@ -130,8 +137,9 @@ export default {
         .then(user => {
           commit('setLoading', false)
           commit('setMessage', '')
+          dispatch('loadAllItems')
         })
-        .catch(error => dispatch('errorHandling', error.message ? error.message : error))
+        .catch(error => dispatch('errorHandling', error))
     },
 
     sendEmailVerification ({commit, dispatch}) {

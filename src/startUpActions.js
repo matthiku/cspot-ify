@@ -22,16 +22,11 @@ export default function startUpActions (store, router) {
   })
 
   function refreshAllItems () {
-    if (!store.users) store.dispatch('refreshUsers')
-    if (!store.roles) store.dispatch('refreshRoles')
-    if (!store.types) store.dispatch('refreshTypes')
-    if (!store.songs) store.dispatch('refreshSongs')
-    if (!store.plans) store.dispatch('refreshPlans')
-    // if (!store.plans) store.dispatch('loadBiblebooks')
+    store.dispatch('loadAllItems')
   }
   setTimeout(() => {
     // check if the initial loading (see below) had been successful
-    refreshAllItems
+    refreshAllItems()
   }, 2000)
 
   // sync with existing PLANS from firebase
@@ -47,6 +42,7 @@ export default function startUpActions (store, router) {
     }
     store.dispatch('loadTypes', snap)
   })
+  // .catch(error => store.dispatch('errorHandling', 'TYPES table: ' + error))
 
   // sync with ROLES table
   rolesRef.on('value', snap => {

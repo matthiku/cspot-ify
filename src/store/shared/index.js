@@ -49,6 +49,14 @@ export default {
   },
 
   actions: {
+    loadAllItems ({rootState, dispatch}) {
+      console.log('dispatching all get actions')
+      if (!rootState.user.users) dispatch('refreshUsers')
+      if (!rootState.role.roles) dispatch('refreshRoles')
+      if (!rootState.type.types) dispatch('refreshTypes')
+      if (!rootState.song.songs) dispatch('refreshSongs')
+      if (!rootState.plan.plans) dispatch('refreshPlans')
+    },
     clearError ({ commit }) {
       commit('clearError')
     },
@@ -74,7 +82,11 @@ export default {
       commit('showDialog')
     },
     errorHandling ({ commit }, payload) {
-      commit('setError', payload)
+      let text = payload
+      // show typical attributes of error messages if available
+      if (text.message) text = text.message
+      if (text.code) text = text.code
+      commit('setError', text)
       console.log(payload)
       commit('setLoading', false)
     }
