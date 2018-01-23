@@ -133,7 +133,8 @@
                               <v-expansion-panel>
 
                                 <!-- show and edit plan STAFF -->
-                                <v-expansion-panel-content v-model="showDetails.staff" :class="[showDetails.staff ? 'green lighten-3' : '']">
+                                <v-expansion-panel-content
+                                    v-model="showDetails.staff" :class="[showDetails.staff ? 'green lighten-3' : '']">
 
                                   <div slot="header">
                                     <span class="body-2 mr-3">
@@ -148,8 +149,10 @@
                                       >
                                       <v-btn
                                           slot="activator"
-                                          @click.stop="showDetails.planDetails = !showDetails.planDetails"
-                                          small outline color="secondary" class="ma-0">
+                                          small outline 
+                                          color="grey lighten-1"
+                                          class="ma-0"
+                                          @click.stop="showDetails.planDetails = !showDetails.planDetails">
                                         <span class="hidden-md-and-down">
                                           <span>{{ showDetails.planDetails ? 'hide' : 'show' }}&nbsp</span>
                                         </span>
@@ -205,7 +208,8 @@
                                 </v-expansion-panel-content>
 
                                 <!-- show and edit plan ACTIVITIES -->
-                                <v-expansion-panel-content v-model="showDetails.activities" :class="[showDetails.activities ? 'green lighten-3' : '']">
+                                <v-expansion-panel-content
+                                    v-model="showDetails.activities" :class="[showDetails.activities ? 'green lighten-3' : '']">
                                   <div slot="header">
                                     <span class="body-2 mr-3">
                                       <v-icon class="mr-3">list</v-icon>

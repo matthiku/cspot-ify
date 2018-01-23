@@ -44,7 +44,8 @@
                 <td class="cursor-pointer text-xs-right no-wrap"
                     @click="toggleExpanded(props)"
                     :title="[props.expanded ? 'click for less details' : 'click for more details']"
-                  ><v-icon>{{ props.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</v-icon>{{ props.item.id }}
+                  ><v-icon>{{ props.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</v-icon>
+                  {{ props.item.id }}
                 </td>
 
                 <td :title="props.item.lyrics">
@@ -364,8 +365,8 @@
         headers: [
           { text: 'id', value: 'id', align: 'center', class: 'px-1' },
           { text: 'Title', value: 'title', align: 'left', class: 'px-1' },
-          { text: '', value: 'title_2', class: 'pa-0' },
-          { text: '', value: 'lyrics', class: 'pa-0' },
+          { text: ' ', value: 'title_2', class: 'pa-0', width: '1px' },
+          { text: '', value: 'lyrics', class: 'pa-0', width: '1px' },
           { text: 'Author', value: 'author', align: 'left', class: 'pl-4' },
           { text: 'Book Ref.', value: 'book_ref', align: 'left', class: 'px-1' },
           { text: 'License', value: 'license', align: 'center', class: 'pl-0' },
