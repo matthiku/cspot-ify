@@ -131,7 +131,7 @@ export default {
           commit('setLoading', false)
           commit('setMessage', '')
         })
-        .catch(error => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error.message ? error.message : error))
     },
 
     sendEmailVerification ({commit, dispatch}) {
