@@ -21,12 +21,9 @@ export default function startUpActions (store, router) {
     }
   })
 
-  function refreshAllItems () {
-    store.dispatch('loadAllItems')
-  }
   setTimeout(() => {
     // check if the initial loading (see below) had been successful
-    refreshAllItems()
+    store.dispatch('loadAllItems')
   }, 2000)
 
   // sync with existing PLANS from firebase

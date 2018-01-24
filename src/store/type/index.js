@@ -16,9 +16,7 @@ export default {
   },
   actions: {
     refreshTypes ({commit, dispatch}) {
-      console.log(
-        'updating local list of TYPES with full one-off snapshot from Server'
-      )
+      console.log('updating local list of TYPES with full one-off snapshot from Server')
       typesRef
         .once('value')
         .then(data => {

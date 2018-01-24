@@ -18,9 +18,7 @@ export default {
 
   actions: {
     refreshSongs ({commit, dispatch}) {
-      console.log(
-        'updating local list of TYPES with full one-off snapshot from Server'
-      )
+      console.log('updating local list of TYPES with full one-off snapshot from Server')
       songsRef
         .once('value')
         .then(data => {

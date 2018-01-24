@@ -137,6 +137,7 @@ export default {
         .then(user => {
           commit('setLoading', false)
           commit('setMessage', '')
+          console.log(user)
           dispatch('loadAllItems')
         })
         .catch(error => dispatch('errorHandling', error))
