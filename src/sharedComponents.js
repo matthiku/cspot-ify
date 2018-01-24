@@ -13,6 +13,7 @@ import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 import ShowListOfPlans from './components/Plan/View/PlansView.vue'
 import ShowActionsChips from './components/Plan/View/ActionsChips.vue'
 import ShowStaffChips from './components/Plan/View/StaffChips.vue'
+import ShowYoutubeModal from './components/Plan/View/YoutubeModal.vue'
 import ShowSimplePlanList from './components/Plan/View/PlanSelectList.vue'
 
 import EditSongField from './components/Song/Edit/EditSongField'
@@ -36,6 +37,7 @@ export default function sharedComponents () {
   Vue.component('app-edit-plan-date-time-dialog', EditPlanDateTimeDialog)
   Vue.component('app-delete-plan-dialog', DeletePlanDialog)
   Vue.component('app-show-list-of-plans', ShowListOfPlans)
+  Vue.component('app-show-youtube-modal', ShowYoutubeModal)
   Vue.component('app-show-staff-chips', ShowStaffChips)
   Vue.component('app-show-action-chips', ShowActionsChips)
   Vue.component('app-show-simple-plan-list', ShowSimplePlanList)

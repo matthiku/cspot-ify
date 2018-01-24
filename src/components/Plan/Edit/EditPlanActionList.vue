@@ -62,26 +62,29 @@
 
 
             <!-- action buttons -->
-            <v-list-tile-action v-if="!item.warning">
-              <v-btn icon ripple
-                  title="play sond on youtube"
-                  ><v-icon color="red">subscriptions</v-icon>
-              </v-btn>
+            <v-list-tile-action 
+                v-if="!item.warning && item.type === 'song' && songs[item.value] &&  songs[item.value].youtube_id">               
+                <!-- modal to show youtube videos -->
+                <app-show-youtube-modal :youtube-id="songs[item.value].youtube_id"></app-show-youtube-modal>
             </v-list-tile-action>
 
             <v-list-tile-action v-if="!item.warning">
-              <v-btn icon ripple
-                  title="start presentation here"
-                  ><v-icon>airplay</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <v-btn icon ripple slot="activator"
+                    ><v-icon>airplay</v-icon>
+                </v-btn>
+                <span>start presentation here (once implemented)</span>
+              </v-tooltip>
             </v-list-tile-action>
 
             <v-list-tile-action v-if="!item.warning && userOwnsThisPlan">
-              <v-btn icon ripple                 
-                  title="remove this item"
-                  @click="item.warning = true"
-                ><v-icon color="red lighten-1">delete</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <v-btn icon ripple  slot="activator"
+                    @click="item.warning = true"
+                  ><v-icon color="red lighten-1">delete</v-icon>
+                </v-btn>
+                <span>remove this item</span>
+              </v-tooltip>
             </v-list-tile-action>
 
             <v-list-tile-action v-if="!item.warning">
@@ -109,7 +112,7 @@
       </v-list>
     </v-card-text>
 
-
+    <!-- provide dialog to add a scripture reference activity -->
     <app-edit-plan-action-scripture-dialog></app-edit-plan-action-scripture-dialog>
 
     <!-- action buttons -->
@@ -405,6 +408,14 @@
           planId: this.plan.id,
           actionId: item.key
         })
+      },
+
+      openYoutubeModal (id) {
+        this.$store.commit('setDialog', {
+          type: 'youtube-modal',
+          value: id
+        })
+        this.$store.commit('showDialog')
       },
 
       // populate the local plan by finding it with the given plan ID

@@ -115,12 +115,11 @@
                       field="youtube_id"
                       field-name="Youtube ID"
                       maxLength="15"
-                    ></app-edit-song-field>
-                  <a  v-else-if="props.item.youtube_id" target="new"
-                      class="youtube-link"
-                      title="play song clip in new tab"
-                      :href="'https://www.youtube.com/watch?v=' + props.item.youtube_id"
-                    ><v-icon class="youtube-link">subscriptions</v-icon></a>
+                    ></app-edit-song-field>                  
+                  <!-- modal to show youtube videos -->
+                  <app-show-youtube-modal v-else-if="props.item.youtube_id"
+                      :youtube-id="props.item.youtube_id"
+                    ></app-show-youtube-modal>
                 </td>
 
               </tr>
