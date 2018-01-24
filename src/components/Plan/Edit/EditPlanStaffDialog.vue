@@ -24,6 +24,7 @@
               <v-select
                 v-bind:items="rolesList"
                 v-model="role"
+                class="input-group--focused"
                 label="Select task:"               
                 single-line return-object
               ></v-select>              

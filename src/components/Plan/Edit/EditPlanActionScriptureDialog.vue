@@ -55,6 +55,7 @@
                     :disabled="!chapter"
                     :items="dialogValues.versions"
                     autocomplete
+                    @keyup.enter="submit"
                     hint="Select the Bible Version"></v-select>
               </v-flex>
 

@@ -7,28 +7,28 @@
         slot="activator"
       ><v-icon class="grey--text lighten-1">edit</v-icon></v-btn>
 
-    <v-card>
+    <v-card tabindex="0" contenteditable="true" @keyup.esc="dateEditingDlg=false">
       <v-card-title>
-        <span>Edit Plan Date and Time</span>
+        <h3>Edit Plan Date and Time</h3>
       </v-card-title>
 
       <v-card-text>
         <template>
           <!-- show plan DATE picker -->
-          <v-layout row wrap>
+          <v-layout row wrap tabindex="1" contenteditable="true" @keyup.esc="dateEditingDlg=false">
 
             <v-flex xs11 sm5>
               <v-menu
-                lazy
-                :close-on-content-click="false"
-                v-model="startDateMenu"
-                transition="scale-transition"
-                offset-y
-                full-width
-                :nudge-right="40"
-                max-width="290px"
-                min-width="290px"
-              >
+                  lazy
+                  :close-on-content-click="false"
+                  v-model="startDateMenu"
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  :nudge-right="40"
+                  max-width="290px"
+                  min-width="290px"
+                >
                 <v-text-field
                   slot="activator"
                   label="Pick the plan date"

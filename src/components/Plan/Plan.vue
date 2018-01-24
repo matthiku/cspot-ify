@@ -145,16 +145,16 @@
                                     <app-show-staff-chips v-if="!showDetails.staff" :plan="plan"></app-show-staff-chips>
 
                                     <v-tooltip bottom lazy
-                                        v-if="!showDetails.staff" class="text-xs-right"
+                                        v-if="!showDetails.staff"
                                       >
                                       <v-btn
                                           slot="activator"
                                           small outline 
                                           color="grey lighten-1"
-                                          class="ma-0"
+                                          class="ml-4 my-0"
                                           @click.stop="showDetails.planDetails = !showDetails.planDetails">
                                         <span class="hidden-md-and-down">
-                                          <span>{{ showDetails.planDetails ? 'hide' : 'show' }}&nbsp</span>
+                                          <span>{{ showDetails.planDetails ? 'hide' : 'show' }}&nbsp;</span>
                                         </span>
                                         plan details
                                       </v-btn>
