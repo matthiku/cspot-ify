@@ -8,15 +8,24 @@
             <!-- show title, date and location -->
             <v-flex>
               <v-card-title primary-title class="my-0 py-0">
-                <div @click="showSinglePlan(plan.id)" class="cursor-pointer">                  
+
+                <div @click="showSinglePlan(plan.id)" class="cursor-pointer">   
+
                   <h3 class="white--text mb-0">
                     {{ plan.date | dateShort }}<span v-if="plan.end">-{{ plan.end | time }}</span> - 
                     <span style="font-style: italic;">{{ types.length ? types[plan.typeId].name : plan.typeId }}</span>
                   </h3>
-                  <div><strong>Staff: </strong>
+
+                  <div>
+                    <strong>Staff: </strong>
                     <app-show-staff-chips :plan="plan"></app-show-staff-chips>
+                    <span v-if="plan.actions">
+                      {{ Object.keys(plan.actions).length }} items</span>
+                    <small v-else>(empty plan)</small>
                   </div>
+
                   <div v-if="plan.info"><strong>Note: </strong>{{ plan.info }}</div>
+
                 </div>
 
                 <v-spacer></v-spacer>

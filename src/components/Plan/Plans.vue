@@ -32,7 +32,7 @@
 
                 <v-flex xs12 mb-2 v-if="!plans.length && !loading">
                   There are no Plans.<br>
-                  <v-btn :to="{name: 'createplan'}">Create one!</v-btn>
+                  <v-btn v-if="userIsAdmin" :to="{name: 'createplan'}">Create one!</v-btn>
                 </v-flex>
 
                 <!-- iterate through each registered plan -->
