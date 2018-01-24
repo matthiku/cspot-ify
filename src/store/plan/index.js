@@ -38,7 +38,6 @@ export default {
     },
     // load existing plans from the DB
     loadPlans ({commit}, payload) {
-      // console.log('updating local plan list with updated values from Server')
       let plans = []
       // payload is a firebase data snapshot
       payload.forEach(plan => {

@@ -51,30 +51,32 @@ export default {
   actions: {
     loadAllItems ({rootState, dispatch}) {
       if (!rootState.user.user) {
-        console.log('user not signed in')
+        console.log('user not signed in!', rootState.user.user)
         return
       }
-      console.log('dispatching all get actions', rootState)
       if (!rootState.user.users) {
-        console.log('getting users') // object
         dispatch('refreshUsers')
       }
       if (!rootState.role.roles || rootState.role.roles.length === 0) {
-        console.log('getting roles') // object
         dispatch('refreshRoles')
       }
       if (!rootState.type.types || rootState.type.types.length === 0) {
-        console.log('getting types') // array
         dispatch('refreshTypes')
       }
-      if (!rootState.song.songs) {
-        console.log('getting songs') // array
+      if (!rootState.song.songs || rootState.song.songs.length === 0) {
         dispatch('refreshSongs')
       }
-      if (!rootState.plan.plans) {
-        console.log('getting plans') // array
+      if (!rootState.plan.plans || rootState.plan.plans.length === 0) {
         dispatch('refreshPlans')
       }
+    },
+    clearAllItems ({commit}) {
+      commit('setUser', null)
+      commit('setUsers', null)
+      commit('setTypes', [])
+      commit('setSongs', [])
+      commit('setPlans', [])
+      commit('setRoles', [])
     },
     clearError ({ commit }) {
       commit('clearError')

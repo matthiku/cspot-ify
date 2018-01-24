@@ -9,6 +9,7 @@ export default function startUpActions (store, router) {
       store.dispatch('setUser', user)
       store.dispatch('fetchUserData', user)
     } else {
+      // user is not signed in yet, so we store the desired page and let the user sign in first
       let from = store.getters.oldRoute
       if (from && from.name !== 'signin' && from.name !== 'home') {
         from = '?from=' + from.name
@@ -22,9 +23,9 @@ export default function startUpActions (store, router) {
   })
 
   setTimeout(() => {
-    // check if the initial loading (see below) had been successful
+    // check if the initial loading of data (see below) had already been successful
     store.dispatch('loadAllItems')
-  }, 2000)
+  }, 3000)
 
   // sync with existing PLANS from firebase
   plansRef.on('value', snap => {

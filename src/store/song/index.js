@@ -22,7 +22,7 @@ export default {
       songsRef
         .once('value')
         .then(data => {
-          commit('setSongs', data)
+          dispatch('loadSongs', data)
         })
         .catch(error => dispatch('errorHandling', error))
     },

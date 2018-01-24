@@ -20,7 +20,7 @@ export default {
       typesRef
         .once('value')
         .then(data => {
-          commit('setTypes', data)
+          dispatch('loadTypes', data)
         })
         .catch(error => dispatch('errorHandling', error))
     },

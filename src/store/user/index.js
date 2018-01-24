@@ -29,11 +29,12 @@ export default {
   actions: {
     refreshUsers ({commit, dispatch}) {
       console.log('updating local USERS list with full one-off snapshot from Server')
-      usersRef.once('value')
-      .then((data) => {
-        dispatch('setUser', data)
-      })
-      .catch((error) => dispatch('errorHandling', error))
+      usersRef
+        .once('value')
+        .then((data) => {
+          commit('setUsers', data.val())
+        })
+        .catch((error) => dispatch('errorHandling', error))
     },
 
     // called from -> startUpActions <- only!
@@ -48,6 +49,8 @@ export default {
         providerData: payload.providerData
       }
       commit('setUser', userData)
+      // here we should check the Vuex store with dispatch(loadallitems)
+      dispatch('loadAllItems')
       dispatch('updateUser', userData)
     },
 
@@ -117,13 +120,8 @@ export default {
         .then(() => {
           // Sign-out successful.
           commit('setLoading', false)
-          commit('setUser', null)
-          // clear the state
-          commit('setUsers', null)
-          commit('setTypes', [])
-          commit('setSongs', [])
-          commit('setPlans', [])
-          commit('setRoles', [])
+          // clear the local state
+          dispatch('clearAllItems')
         })
         .catch(error => dispatch('errorHandling', error))
     },
@@ -137,8 +135,6 @@ export default {
         .then(user => {
           commit('setLoading', false)
           commit('setMessage', '')
-          console.log(user)
-          dispatch('loadAllItems')
         })
         .catch(error => dispatch('errorHandling', error))
     },
