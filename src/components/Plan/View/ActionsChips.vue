@@ -42,7 +42,7 @@
       </v-tooltip>
     </v-chip>
 
-    <small v-if="songsCount + scripturesCount + othersCounts === 0">(none)</small>
+    <small v-if="songsCount + scripturesCount + othersCounts === 0">(empty)</small>
 
   </span>
 </template>
